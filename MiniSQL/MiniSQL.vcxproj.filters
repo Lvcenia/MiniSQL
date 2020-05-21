@@ -1,0 +1,79 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="资源文件">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="BufferManager">
+      <UniqueIdentifier>{afb04b51-f937-49be-80ee-6fab50c1b7fc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="API">
+      <UniqueIdentifier>{9d379589-b9f6-42b4-96b1-564d10f2656d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="CatalogManager">
+      <UniqueIdentifier>{8feb5940-acb3-4e8d-a026-6c7ca01f71ac}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="IndexManager">
+      <UniqueIdentifier>{398e2789-46a1-4cae-a964-1a494bfe6529}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Interpreter">
+      <UniqueIdentifier>{bdd47562-1e94-476c-b4cd-70143010d7ac}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="MiniSQL">
+      <UniqueIdentifier>{90169475-89eb-45d4-8ccf-5c90b2acc750}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="RecordManager">
+      <UniqueIdentifier>{0f04f8f4-de0d-4764-9348-ad31d12addaf}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="API.cpp">
+      <Filter>API</Filter>
+    </ClCompile>
+    <ClCompile Include="Generals.cpp">
+      <Filter>MiniSQL</Filter>
+    </ClCompile>
+    <ClCompile Include="main.cpp">
+      <Filter>MiniSQL</Filter>
+    </ClCompile>
+    <ClCompile Include="Interpreter.cpp">
+      <Filter>Interpreter</Filter>
+    </ClCompile>
+    <ClCompile Include="IndexManager.cpp">
+      <Filter>IndexManager</Filter>
+    </ClCompile>
+    <ClCompile Include="CatalogManager.cpp">
+      <Filter>CatalogManager</Filter>
+    </ClCompile>
+    <ClCompile Include="BufferManager.cpp">
+      <Filter>BufferManager</Filter>
+    </ClCompile>
+    <ClCompile Include="RecordManager.cpp">
+      <Filter>RecordManager</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="API.h">
+      <Filter>API</Filter>
+    </ClInclude>
+    <ClInclude Include="Generals.h">
+      <Filter>MiniSQL</Filter>
+    </ClInclude>
+    <ClInclude Include="Interpreter.h">
+      <Filter>Interpreter</Filter>
+    </ClInclude>
+    <ClInclude Include="IndexManager.h">
+      <Filter>IndexManager</Filter>
+    </ClInclude>
+    <ClInclude Include="CatalogManager.h">
+      <Filter>CatalogManager</Filter>
+    </ClInclude>
+    <ClInclude Include="BufferManager.h">
+      <Filter>BufferManager</Filter>
+    </ClInclude>
+    <ClInclude Include="RecordManager.h">
+      <Filter>RecordManager</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>
