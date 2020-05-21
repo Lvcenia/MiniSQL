@@ -16,6 +16,7 @@ public:
 	QueryResult InsertValuesInto();
 	QueryResult Select();
 	QueryResult DeleteFromTable();
+	QueryResult Update();
 
 
 
