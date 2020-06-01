@@ -2,6 +2,7 @@
 #include <string>
 #include <vector>
 #include "BPTNode.h"
+#include "../Generals.h"
 using namespace std;
 
 class BPTree {
@@ -34,3 +35,4 @@ private:
 	Type type;
 	bool(*Comp)(const string& a, const string& b);
 };
+
