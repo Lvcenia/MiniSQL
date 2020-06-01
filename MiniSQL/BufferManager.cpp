@@ -1,5 +1,10 @@
 #include "BufferManager.h"
 
+//#define _BufferManager_DEBUG_
+#ifdef _BufferManager_DEBUG_
+#include<iostream>
+#endif
+
 BufferManager::BufferManager() :
 	cur_file(NULL), cur_filename("")
 {
@@ -62,6 +67,9 @@ void BufferManager::delFile(const string&filename)
 	for (int i = 0; i < BLOCKNUM; i++) {
 		if (blocks[i].getFileName() == fn) {
 			blocks[i].clear();
+#ifdef _BufferManager_DEBUG_
+			std::cout << "clear block:" << i << std::endl;
+#endif
 		}
 	}
 	//删除磁盘上的该文件
@@ -212,3 +220,20 @@ void BufferManager::setBlockNotPinned(int index)
 {
 	blocks[index].setPinnedBit(false);
 }
+
+
+#ifdef _BufferManager_DEBUG_
+#include<Windows.h>
+int main()
+{
+	BufferManager bm;
+	bm.newFile("test");
+	char buffer[] = "这是一条测试数据";
+	bm.writeARecord((BYTE *)buffer, strlen(buffer), "test", 20);
+	bm.writeARecord((BYTE *)"这还是一条测试数据", strlen("这还是一条测试数据"), "test", 100);
+	std::cout << bm.fetchARecord("test", 20) << std::endl;
+	bm.delFile("test");
+	system("pause");
+	return 0;
+}
+#endif // _BufferManager_DEBUG_

@@ -7,6 +7,7 @@
 #include "BufferManager.h"
 using namespace std;
 
+/*
 //主函数
 int main()
 {
@@ -41,4 +42,4 @@ int main()
 
 }
 
-
+*/
