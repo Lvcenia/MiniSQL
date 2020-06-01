@@ -1,6 +1,6 @@
 #include "BufferManager.h"
 
-//#define _BufferManager_DEBUG_
+#define _BufferManager_DEBUG_
 #ifdef _BufferManager_DEBUG_
 #include<iostream>
 #endif
@@ -84,6 +84,7 @@ void BufferManager::writeABlock(const int& index)
 {
 	string fn = blocks[index].getFileName();
 	FILE* fp = fopen(fn.c_str(), "rb+");
+	if (fp == NULL) throw FileOperateException("Fail to open ", fn);
 	fseek(fp, blocks[index].getTag()*BLOCKSIZE, SEEK_SET);
 	fwrite(blocks[index].getBlockData(), BLOCKSIZE, 1, fp);
 	fclose(fp);
@@ -99,7 +100,9 @@ int BufferManager::fetchABlock(const string&filename, const ADDRESS& tag)
 	if (cur_filename != filename || cur_file == NULL)
 	{
 		if (cur_file != NULL) fclose(cur_file);
-		cur_file = fopen(filename.c_str(), "rb+");
+		if ((cur_file = fopen(filename.c_str(), "rb+")) == NULL) {
+			throw FileOperateException("Fail to open ", filename);
+		}
 		cur_filename = filename;
 	}
 
@@ -227,12 +230,18 @@ void BufferManager::setBlockNotPinned(int index)
 int main()
 {
 	BufferManager bm;
-	bm.newFile("test");
+	//bm.newFile("test");
 	char buffer[] = "这是一条测试数据";
-	bm.writeARecord((BYTE *)buffer, strlen(buffer), "test", 20);
-	bm.writeARecord((BYTE *)"这还是一条测试数据", strlen("这还是一条测试数据"), "test", 100);
-	std::cout << bm.fetchARecord("test", 20) << std::endl;
-	bm.delFile("test");
+	try {
+		bm.writeARecord((BYTE *)buffer, strlen(buffer), "test", 20);
+		bm.setBlockPinned(0);
+		bm.writeARecord((BYTE *)"这还是一条测试数据", strlen("这还是一条测试数据"), "test", 100);
+		std::cout << bm.fetchARecord("test", 20) << std::endl;
+		bm.delFile("test");
+	}
+	catch (FileOperateException &ex) {
+		std::cout << ex.what() << std::endl;
+	}
 	system("pause");
 	return 0;
 }
