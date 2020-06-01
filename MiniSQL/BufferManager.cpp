@@ -1,6 +1,6 @@
 #include "BufferManager.h"
 
-#define _BufferManager_DEBUG_
+//#define _BufferManager_DEBUG_
 #ifdef _BufferManager_DEBUG_
 #include<iostream>
 #endif
