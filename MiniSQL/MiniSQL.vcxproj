@@ -152,7 +152,6 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="API.cpp" />
-    <ClCompile Include="ArrayList.cpp" />
     <ClCompile Include="BufferManager.cpp" />
     <ClCompile Include="CatalogManager.cpp" />
     <ClCompile Include="Generals.cpp" />
@@ -163,7 +162,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="API.h" />
-    <ClInclude Include="ArrayList.h" />
     <ClInclude Include="BufferManager.h" />
     <ClInclude Include="CatalogManager.h" />
     <ClInclude Include="Generals.h" />
