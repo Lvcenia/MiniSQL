@@ -18,6 +18,13 @@ public:
 	void moveToTail(int index);
 	int getHead();
 };
+
+class ArrayList
+{
+public:
+	ArrayList();
+	~ArrayList();
+};
 #endif // !_ARRAYLIST_
 
 
