@@ -14,12 +14,17 @@ ArrayList::ArrayList() :
 ArrayList::~ArrayList()
 {
 }
-
+/*
+	获取队列头部编号
+*/
 int ArrayList::getHead()
 {
 	return head;
 }
 
+/*
+	作用:将指定编号移到队列尾部
+*/
 void ArrayList::moveToTail(int index)
 {
 	if (index == tail)

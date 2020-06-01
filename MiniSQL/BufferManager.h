@@ -36,11 +36,11 @@ public:
 class Block
 {
 private:
-	BYTE data[BLOCKSIZE];
-	bool isDirty;
-	bool isPinned;
-	ADDRESS tag;
-	string filename;
+	BYTE data[BLOCKSIZE];	//缓冲区数据
+	bool isDirty;			//记录缓冲区中数据是否和磁盘一样, 不一样则为true,否则为false
+	bool isPinned;			//锁定标志
+	ADDRESS tag;			//数据块对应文件中数据位置
+	string filename;		//数据块所属文件名
 public:
 	Block():isDirty(false),isPinned(false) {}
 	~Block() {}
@@ -60,10 +60,10 @@ public:
 class BufferManager
 {
 private:
-	FILE * cur_file;
-	string cur_filename;
-	Block *blocks;
-	ArrayList subQueque;
+	FILE * cur_file;	//当前打开的文件指针
+	string cur_filename;	//当前打开的文件名
+	Block *blocks;			//数据块
+	ArrayList subQueque;	//数据块顺序队列
 	void writeABlock(const int& index);
 	int fetchABlock(const std::string& filename, const ADDRESS& address);
 	int substitute(const std::string& filename, const ADDRESS& tag, BYTE* buffer);

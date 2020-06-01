@@ -4,6 +4,7 @@
 #define BLOCKSIZE 4096
 #define BLOCKNUM 10
 
+//数据块顺序队列类
 class ArrayList
 {
 private:

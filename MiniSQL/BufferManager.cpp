@@ -138,7 +138,77 @@ int BufferManager::substitute(const string& filename, const ADDRESS& tag, BYTE* 
 	return iterator;
 }
 
+/*
+	作用:检查在缓冲区中是否有对应filename,偏移量为tag的数据块
+	返回值: 若存在对应的, 则返回数据块的编号,不存在则返回-1
+*/
 int BufferManager::hit(const string& fileName, const ADDRESS& tag)
 {
+	for (int i = 0; i < BLOCKNUM; i++)
+	{
+		if (blocks[i].getFileName() == fileName && blocks[i].getTag() == tag)
+		{
+			return i;
+		}
+	}
+	return -1;
+}
 
+/*
+	作用:查询name文件中偏移量在缓冲区中的地址
+	返回值:缓冲区地址
+*/
+BYTE* BufferManager::fetchARecord(const string&name, const ADDRESS& address)
+{
+	int blockIndex;
+	int tag = address / BLOCKSIZE;
+	string fn = name + ".data";
+	if ((blockIndex = hit(fn, tag)) == -1) {
+		//缓冲区中不存在要查的记录,则从磁盘中加载
+		blockIndex = fetchABlock(fn, tag);
+	}
+	else {
+		//将活跃的数据块放到尾部
+		subQueque.moveToTail(blockIndex);
+	}
+
+	//记录地址在数据块地址基础上的偏移量
+	int offset = address - tag * BLOCKSIZE;
+	return blocks[blockIndex].getBlockData() + offset;
+}
+
+/*
+	作用:将record记录写在文件对应位置的缓冲区上
+*/
+void BufferManager::writeARecord(BYTE* record, int len, const string& name, const ADDRESS& address)
+{
+	int blockIndex;
+	int tag = address / BLOCKSIZE;
+	string fn = name + ".data";
+	if ((blockIndex = hit(fn, tag)) == -1) {
+		//缓冲区中不存在要写的记录,则从磁盘中加载
+		blockIndex = fetchABlock(fn, tag);
+	}
+	else {
+		//将活跃的数据块放到尾部
+		subQueque.moveToTail(blockIndex);
+	}
+
+	//记录地址在数据块地址基础上的偏移量
+	int offset = address - tag * BLOCKSIZE;
+	memcpy(blocks[blockIndex].getBlockData() + offset, record, len);
+
+	blocks[blockIndex].setDirtyBit(true);
+}
+
+//将指定数据块设为pinned
+void BufferManager::setBlockPinned(int index)
+{
+	blocks[index].setPinnedBit(true);
+}
+
+//将指定数据块设为not pinned
+void BufferManager::setBlockNotPinned(int index)
+{
+	blocks[index].setPinnedBit(false);
 }
