@@ -36,3 +36,12 @@ void ArrayList::moveToTail(int index)
 	if (index == head)
 		head = next;
 }
+
+ArrayList::ArrayList()
+{
+}
+
+
+ArrayList::~ArrayList()
+{
+}
