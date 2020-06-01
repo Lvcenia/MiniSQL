@@ -28,31 +28,61 @@ public:
 
 };
 
+enum Type
+{
+	INT,
+	CHAR,
+	FLOAT,
+	UNDEFINEDTYPE
+};
+
 class Attribute
 {
 private:
 	string name;
-	TYPE type;
+	Type type;
 	int length;
 	int offset;
 	bool isUnique;
 	bool isPrimaryKey;
 public:
-	Attribute() :isUnique(false), isPrimaryKey(false) {}
-	Attribute(const std::string& attribute, TYPE type, int length, bool isUnique, bool isPrimary)
-		:name(attribute), type(type), length(length), isUnique(isUnique), isPrimaryKey(isPrimary) {};
-	const std::string& getAttribute()const { return name; }
-	void setAttribute(const std::string& attr) { name = attr; }
-	TYPE getType()const { return type; }
-	void setType(TYPE type);
-	int getLength()const { return length; }
-	void setLength(int len) { length = len; }
-	bool isUnique()const { return isUnique; }
-	void setUnique(bool flag) { isUnique = flag; }
-	bool isPrimary()const { return isPrimaryKey; }
-	void setPrimary(bool flag) { isPrimaryKey = flag; }
-	void setOffset(const int off) { offset = off; }
-	int getOffset() { return offset; }
-	~Attribute() {}
+	Attribute();
+	Attribute(const std::string& attributeName, Type type, int length, bool isUnique, bool isPrimary);
+	virtual ~Attribute();
+	string getAttributeName();
+	void setAttributeName(string name);
+	Type getType();
+	void setType(Type type);
+	int getLength();
+	void setLength(int length);
+	bool isUnique();
+	void setUnique(bool value);
+	bool isPrimary();
+	void setPrimary(bool value);
+	void setOffset(int offset);
+	int getOffset();
 };
 
+class Table
+{
+public:
+	Table();
+	Table(string tableName, const vector<Attribute>& attributes);
+	~Table();
+	string getTableName();
+	void setTableName(string tableName);
+	const vector<Attribute>& getAttributes();
+	void setAttributes(const vector<Attribute>& attributes);
+	int getPrimaryKeyIndex();
+	void setPrimaryKeyIndex(int primaryKeyIndex);
+	int getRowLength();
+	void addAttribute(Attribute& attribute);
+	bool hasAttribute(string attributeName);
+	const Attribute& getAttribute(string attributeName);//若未找到，则抛出异常
+	
+private:
+	string name;
+	vector<Attribute> attributes;
+	int primaryKeyIndex;//-1 if no primary key
+	int rowLength;
+};
