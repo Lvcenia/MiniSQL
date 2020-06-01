@@ -1,5 +1,5 @@
 #pragma once
-/*°üº¬Ò»Ğ©È«¾Ö·¶Î§ÄÚµÄÊı¾İÀà£¬±ÈÈç²éÑ¯½á¹û*/
+/*åŒ…å«ä¸€äº›å…¨å±€èŒƒå›´å†…çš„æ•°æ®ç±»ï¼Œæ¯”å¦‚æŸ¥è¯¢ç»“æœ*/
 #include <string>
 #include<cstring>
 #include<vector>
@@ -19,12 +19,40 @@ public:
 	QueryResult(const string& cont);
 	~QueryResult();
 	QueryState state;
-	//½á¹ûµÄÄÚÈİ
+	//ç»“æœçš„å†…å®¹
 	string content;
-	//Ó°ÏìµÄĞĞÊı
+	//å½±å“çš„è¡Œæ•°
 	int affectedRows;
-	//queryµÄÖ´ĞĞÊ±¼ä
+	//queryçš„æ‰§è¡Œæ—¶é—´
 	double execTime;
 
+};
+
+class Attribute
+{
+private:
+	string name;
+	TYPE type;
+	int length;
+	int offset;
+	bool isUnique;
+	bool isPrimaryKey;
+public:
+	Attribute() :isUnique(false), isPrimaryKey(false) {}
+	Attribute(const std::string& attribute, TYPE type, int length, bool isUnique, bool isPrimary)
+		:name(attribute), type(type), length(length), isUnique(isUnique), isPrimaryKey(isPrimary) {};
+	const std::string& getAttribute()const { return name; }
+	void setAttribute(const std::string& attr) { name = attr; }
+	TYPE getType()const { return type; }
+	void setType(TYPE type);
+	int getLength()const { return length; }
+	void setLength(int len) { length = len; }
+	bool isUnique()const { return isUnique; }
+	void setUnique(bool flag) { isUnique = flag; }
+	bool isPrimary()const { return isPrimaryKey; }
+	void setPrimary(bool flag) { isPrimaryKey = flag; }
+	void setOffset(const int off) { offset = off; }
+	int getOffset() { return offset; }
+	~Attribute() {}
 };
 
