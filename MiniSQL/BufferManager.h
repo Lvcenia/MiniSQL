@@ -63,20 +63,20 @@ private:
 	FILE * cur_file;
 	string cur_filename;
 	Block *blocks;
-	ArrayList substitutionQue;
-	void writeABlock(const int& blockIndex);
+	ArrayList subQueque;
+	void writeABlock(const int& index);
 	int fetchABlock(const std::string& filename, const ADDRESS& address);
 	int substitute(const std::string& filename, const ADDRESS& tag, BYTE* buffer);
-	int hit(const std::string& fileName, const ADDRESS& tag);
+	int hit(const std::string& filename, const ADDRESS& tag);
 public:
 	BufferManager();
 	~BufferManager();
 	bool newFile(const std::string& filename);
-	void delFile(const std::string& name);
+	void delFile(const std::string& filename);
 	BYTE* fetchARecord(const std::string& name, const ADDRESS& address);
-	void writeARecord(BYTE* record, int recordLength, const std::string& name, const ADDRESS& address);
-	void setBlockPinned(int blockIndex);
-	void setBlockNotPinned(int blockIndex);
+	void writeARecord(BYTE* record, int len, const std::string& name, const ADDRESS& address);
+	void setBlockPinned(int index);
+	void setBlockNotPinned(int index);
 	static BufferManager* getBufferManager();
 };
 
