@@ -17,7 +17,7 @@ bool BPTree::CompFloat(const string& a, const string& b)
 	return atof(a.c_str()) < atof(b.c_str());
 }
 
-BPTree::BPTree(int m, TYPE type)
+BPTree::BPTree(int m, Type type)
 {
 	root = NULL;
 	maxKeyCount = m;
@@ -40,7 +40,7 @@ BPTree::BPTree(int m, TYPE type)
 	}
 }
 
-BPTree::BPTree(int m, TYPE type, int attributeLength, int offsetInRecord) : BPTree(m, type)
+BPTree::BPTree(int m, Type type, int attributeLength, int offsetInRecord) : BPTree(m, type)
 {
 	length = attributeLength;
 	offset = offsetInRecord;
@@ -112,7 +112,7 @@ int BPTree::GetLength()
 	return length;
 }
 
-TYPE BPTree::GetType()
+Type BPTree::GetType()
 {
 	return type;
 }
