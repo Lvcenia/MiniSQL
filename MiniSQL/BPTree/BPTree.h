@@ -10,8 +10,8 @@ public:
 	static bool CompChar(const string& a, const string& b);
 	static bool CompFloat(const string& a, const string& b);
 
-	BPTree(int m, TYPE type);
-	BPTree(int m, TYPE type, int attributeLength, int offsetInRecord);
+	BPTree(int m, Type type);
+	BPTree(int m, Type type, int attributeLength, int offsetInRecord);
 	virtual ~BPTree();
 	void SetRoot(BPTNode* root);
 	void Insert(string key, int address);
@@ -20,7 +20,7 @@ public:
 	int GetMaxKeyCount();
 	int GetOffset();
 	int GetLength();
-	TYPE GetType();
+	Type GetType();
 	BPTLeafNode* GetLeafWithKey(string key);
 	BPTLeafNode* GetFirstLeaf();
 
@@ -31,7 +31,6 @@ private:
 	int maxKeyCount;
 	int offset;
 	int length;
-	TYPE type;
+	Type type;
 	bool(*Comp)(const string& a, const string& b);
 };
-
