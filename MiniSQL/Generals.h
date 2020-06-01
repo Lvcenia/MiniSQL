@@ -1,5 +1,5 @@
 #pragma once
-/*°üº¬Ò»Ğ©È«¾Ö·¶Î§ÄÚµÄÊı¾İÀà£¬±ÈÈç²éÑ¯½á¹û*/
+/*åŒ…å«ä¸€äº›å…¨å±€èŒƒå›´å†…çš„æ•°æ®ç±»ï¼Œæ¯”å¦‚æŸ¥è¯¢ç»“æœ*/
 #include <string>
 #include<cstring>
 #include<vector>
@@ -15,14 +15,14 @@ enum QueryState
 	Fail
 };
 
-//¼ÇÂ¼Ò»´ÎÓÃ»§²Ù×÷ÊÇ·ñ³É¹¦µÄÊı¾İÀà£¬ÓÉAPI»òinterpreterÉú³É²¢´«µİµ½×îÍâ²ã£¬ÔÚÖ÷Ñ­»·ÖĞÏÔÊ¾
-//Èç¹û²Ù×÷³É¹¦£¬²»ÓÃÌîµÚËÄ¸ö²ÎÊı
+//è®°å½•ä¸€æ¬¡ç”¨æˆ·æ“ä½œæ˜¯å¦æˆåŠŸçš„æ•°æ®ç±»ï¼Œç”±APIæˆ–interpreterç”Ÿæˆå¹¶ä¼ é€’åˆ°æœ€å¤–å±‚ï¼Œåœ¨ä¸»å¾ªç¯ä¸­æ˜¾ç¤º
+//å¦‚æœæ“ä½œæˆåŠŸï¼Œä¸ç”¨å¡«ç¬¬å››ä¸ªå‚æ•°
 class RecordBuffer;
 class QueryResult
 {
 public:
 	QueryResult() {};
-	//³É¹¦Ê±ÓÃÕâ¸ö
+	//æˆåŠŸæ—¶ç”¨è¿™ä¸ª
 	QueryResult(QueryState state, int affcRows, double exectime,RecordBuffer& rb)
 	{
 		this->state = state;
@@ -37,7 +37,7 @@ public:
 			break;
 		}
 	}
-	//³ö´íÊ±ÓÃÕâ¸ö
+	//å‡ºé”™æ—¶ç”¨è¿™ä¸ª
 	QueryResult(QueryState state, exception e = exception(""))
 	{
 		stringstream fmt;
@@ -53,33 +53,80 @@ public:
 
 	~QueryResult() {};
 	QueryState state;
-	//½á¹ûµÄÄÚÈİ
+	//ç»“æœçš„å†…å®¹
 	string content;
-	//Ó°ÏìµÄĞĞÊı
+	//å½±å“çš„è¡Œæ•°
 	int affectedRows;
-	//queryµÄÖ´ĞĞÊ±¼ä
+	//queryçš„æ‰§è¡Œæ—¶é—´
 	double execTime;
 	
 };
 
 
+enum Type
+{
+	INT,
+	CHAR,
+	FLOAT,
+	UNDEFINEDTYPE
+};
+
+class Attribute
+{
+private:
+	string name;
+	Type type;
+	int length;
+	int offset;
+	bool isUnique;
+	bool isPrimaryKey;
+public:
+	Attribute();
+	Attribute(const std::string& attributeName, Type type, int length, bool isUnique, bool isPrimary);
+	virtual ~Attribute();
+	string getAttributeName();
+	void setAttributeName(string name);
+	Type getType();
+	void setType(Type type);
+	int getLength();
+	void setLength(int length);
+	bool isUnique();
+	void setUnique(bool value);
+	bool isPrimary();
+	void setPrimary(bool value);
+	void setOffset(int offset);
+	int getOffset();
+};
+
 class Table
 {
 public:
 	Table();
+	Table(string tableName, const vector<Attribute>& attributes);
 	~Table();
-	string tableName;
-
-
+	string getTableName();
+	void setTableName(string tableName);
+	const vector<Attribute>& getAttributes();
+	void setAttributes(const vector<Attribute>& attributes);
+	int getPrimaryKeyIndex();
+	void setPrimaryKeyIndex(int primaryKeyIndex);
+	int getRowLength();
+	void addAttribute(Attribute& attribute);
+	bool hasAttribute(string attributeName);
+	const Attribute& getAttribute(string attributeName);//è‹¥æœªæ‰¾åˆ°ï¼Œåˆ™æŠ›å‡ºå¼‚å¸¸
+	
 private:
-
+	string name;
+	vector<Attribute> attributes;
+	int primaryKeyIndex;//-1 if no primary key
+	int rowLength;
 };
 
 
 
 
 
-//¼ÇÂ¼²éÑ¯½á¹ûµÄ»º´æÀà£¬È«¾ÖÎ¨Ò»
+//è®°å½•æŸ¥è¯¢ç»“æœçš„ç¼“å­˜ç±»ï¼Œå…¨å±€å”¯ä¸€
 class RecordBuffer
 {
 public:
