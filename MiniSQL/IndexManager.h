@@ -29,8 +29,8 @@ public:
 	IndexManager();
 	IndexManager(list<string> indexNames);
 	virtual ~IndexManager();
-	void createIndex(string indexName, string attributeName, string tableName);
-	void dropIndex(string name);
+	const QueryResult& createIndex(string indexName, string attributeName, string tableName);
+	const QueryResult& dropIndex(string name);
 
 private:
 	map<string, BPTree*> indexDictionary;
