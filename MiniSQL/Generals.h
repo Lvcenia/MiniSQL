@@ -71,6 +71,15 @@ enum Type
 	UNDEFINEDTYPE
 };
 
+struct AttributeInfo {
+	char name[32];
+	Type type;
+	int length;
+	int offset;
+	int isUnique;
+	int isPrimaryKey;
+};
+
 class Attribute
 {
 private:
@@ -83,6 +92,7 @@ private:
 public:
 	Attribute();
 	Attribute(const std::string& attributeName, Type type, int length, bool isUnique, bool isPrimary);
+	Attribute(const AttributeInfo& info);
 	virtual ~Attribute();
 	string getAttributeName();
 	void setAttributeName(string name);
@@ -90,19 +100,30 @@ public:
 	void setType(Type type);
 	int getLength();
 	void setLength(int length);
-	bool isUnique();
+	bool isUniqueKey();
 	void setUnique(bool value);
 	bool isPrimary();
 	void setPrimary(bool value);
 	void setOffset(int offset);
 	int getOffset();
+	AttributeInfo GetInfo();
+};
+
+#define MAXAttributeCount 32
+struct TableHeader {
+	char tableName[32];
+	int rowLength;
+	AttributeInfo attributes[MAXAttributeCount];
+	int primaryKeyIndex;
+	int recordCount;
 };
 
 class Table
 {
 public:
-	Table();
-	Table(string tableName, const vector<Attribute>& attributes);
+	Table();//Do not use
+	Table(string tableName, const vector<Attribute>& attributes);//create a new table
+	Table(const TableHeader& header);//create from file
 	~Table();
 	string getTableName();
 	void setTableName(string tableName);
@@ -114,12 +135,14 @@ public:
 	void addAttribute(Attribute& attribute);
 	bool hasAttribute(string attributeName);
 	const Attribute& getAttribute(string attributeName);//若未找到，则抛出异常
+	TableHeader GetTableHeader();
 	
 private:
 	string name;
 	vector<Attribute> attributes;
 	int primaryKeyIndex;//-1 if no primary key
 	int rowLength;
+	int recordCount;
 };
 
 
