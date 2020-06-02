@@ -12,13 +12,14 @@ Attribute::Attribute()
 {
 }
 
-Attribute::Attribute(const std::string & name, Type type, int length, bool isUnique, bool isPrimary)
+Attribute::Attribute(const std::string & name, Type type, int length, bool isUnique, bool isPrimary, int offset)
 {
 	this->name = name;
 	this->type = type;
 	this->length = length;
 	this->isUnique = isUnique;
 	this->isPrimaryKey = isPrimary;
+	this->offset = offset;
 }
 
 Attribute::Attribute(const AttributeInfo & info)
@@ -28,6 +29,7 @@ Attribute::Attribute(const AttributeInfo & info)
 	this->length = info.length;
 	this->isUnique = info.isUnique;
 	this->isPrimaryKey = info.isPrimaryKey;
+	this->offset = info.offset;
 }
 
 Attribute::~Attribute(){}
@@ -116,8 +118,12 @@ Table::Table()
 Table::Table(string tableName, const vector<Attribute>& attributes)
 {
 	this->recordCount = 0;
+	this->recordLength = 0;
 	this->name = tableName;
 	this->attributes = vector<Attribute>(attributes);
+	for (auto attribute : attributes) {
+		this->recordLength += attribute.getLength();
+	}
 	this->rowLength = attributes.size();
 	this->primaryKeyIndex = -1;
 	for (int i = 0; i < rowLength; i++) {
@@ -134,6 +140,7 @@ Table::Table(const TableHeader & header)
 	this->name = string(header.tableName);
 	this->primaryKeyIndex = header.primaryKeyIndex;
 	this->rowLength = header.rowLength;
+	this->recordLength = header.recordLength;
 	for (int i = 0; i < rowLength; i++) {
 		this->attributes.push_back(Attribute(header.attributes[i]));
 	}
@@ -215,8 +222,19 @@ TableHeader Table::GetTableHeader()
 	header.primaryKeyIndex = primaryKeyIndex;
 	header.rowLength = rowLength;
 	header.recordCount = recordCount;
+	header.recordLength = recordLength;
 	for (i = 0; i < rowLength; i++) {
 		header.attributes[i] = attributes[i].GetInfo();
 	}
 	return header;
+}
+
+int Table::getRecordLength()
+{
+	return recordLength;
+}
+
+int Table::getRecordCount()
+{
+	return recordCount;
 }
