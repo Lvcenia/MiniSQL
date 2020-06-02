@@ -16,20 +16,20 @@ class Interpreter
 public:
 	Interpreter() {};
 	~Interpreter() {};
-	QueryResult executeSql(const std::string& sql);
-	void parse(const std::string& sql);
-	void check();
-	QueryResult execute();
+	QueryResult executeSql(const std::string& sql); // 总执行
+	void parse(const std::string& sql); // 总语法分析
+	void check(); // 语句检查
+	QueryResult execute(); // 执行
 	//void print();
 	void readInput(const std::string& s);
-	void executeFile(const std::string& fileName);
-	std::shared_ptr<StatementBlock>& gettPtr() { return tptr; }
+	void executeFile(const std::string& fileName); // 执行文件
+	std::shared_ptr<StatementBlock>& gettPtr() { return tptr; } 
 	std::vector<std::shared_ptr<StatementBlock>>& getVsb() { return vStatementBlock; }
 	//void setRecordBuffer(RECORDBUFFER& rb) { this->rb = &rb; }
 	//RECORDBUFFER& getRecordBuffer() { return *rb; }
 private:
 	typedef std::string::iterator Iterator;
-
+	// 各类语句分析
 	std::vector<std::string> split(std::string s, std::string::value_type c);
 	void createTableParser(Iterator& begin, Iterator end);
 	void createIndexParser(Iterator& begin, Iterator end);
@@ -40,7 +40,7 @@ private:
 	void deleteParser(Iterator& begin, Iterator end);
 	void quitParser(Iterator& begin, Iterator end);
 	void execfileParser(Iterator& begin, Iterator end);
-
+	// 各类语句信息类的指针集
 	std::vector<std::shared_ptr<StatementBlock>> vStatementBlock;
 	std::string tmpStoredSql;
 	//RECORDBUFFER* rb;
