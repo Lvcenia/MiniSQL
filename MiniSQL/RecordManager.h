@@ -38,7 +38,7 @@ public:
 	const QueryResult& insertValues(string tableName, const vector<string>& values);//先只考虑全值插入，意思values的个数等于属性个数
 	const QueryResult& deleteValues(string tableName, const vector<Condition>& conditions);
 	const QueryResult& selectValues(string tableName, const vector<Condition>& conditions);
-	const QueryResult& selectValues(vector<string> attributes, string tableName, const vector<Condition>& conditions);
+	const QueryResult& selectValues(const vector<string>& attributes, string tableName, const vector<Condition>& conditions);
 
 private:
 	BufferManager* bufferManager;
