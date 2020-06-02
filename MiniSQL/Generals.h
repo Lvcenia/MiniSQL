@@ -91,7 +91,7 @@ private:
 	bool isPrimaryKey;
 public:
 	Attribute();
-	Attribute(const std::string& attributeName, Type type, int length, bool isUnique, bool isPrimary);
+	Attribute(const std::string& attributeName, Type type, int length, bool isUnique, bool isPrimary, int offset);
 	Attribute(const AttributeInfo& info);
 	virtual ~Attribute();
 	string getAttributeName();
@@ -115,6 +115,7 @@ struct TableHeader {
 	int rowLength;
 	AttributeInfo attributes[MAXAttributeCount];
 	int primaryKeyIndex;
+	int recordLength;
 	int recordCount;
 };
 
@@ -136,12 +137,15 @@ public:
 	bool hasAttribute(string attributeName);
 	const Attribute& getAttribute(string attributeName);//若未找到，则抛出异常
 	TableHeader GetTableHeader();
+	int getRecordLength();//获取记录长度
+	int getRecordCount();//获取记录数
 	
 private:
 	string name;
 	vector<Attribute> attributes;
 	int primaryKeyIndex;//-1 if no primary key
 	int rowLength;
+	int recordLength;
 	int recordCount;
 };
 
