@@ -37,6 +37,31 @@ int main()
 
 	}
 
+	string sql;
+	while (1)
+	{
+		string line;
+		getline(cin, line);
+
+		sql += (line + ' ');
+		//find a semicolon
+		if (line.find_first_of(';') < line.size())
+		{
+			while (sql.back() == ' ' || sql.back() == '\t')
+				sql = sql.substr(0, sql.length() - 1);
+			if (sql.back() != ';' || sql.find_first_of(';') < sql.size() - 1)
+				cout << "ERROR: There is some characters at the end of the sql after the semicolon;" << endl;
+			else
+			{
+				//QueryResult res =  interperter.executeSql(sql);
+				//cout << res.content;
+			}
+			cout << "MiniSql->>";
+			sql.clear();
+		}
+		else
+			cout << ">>>";
+
 	cout << "*******************Bye!*******************" << endl;
 	return 0;
 
