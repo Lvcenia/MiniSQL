@@ -41,3 +41,23 @@ private:
 	int GetEndOffset(string fileName);
 	int GetNextToEndOffset(string fileName, int recordLength);
 };
+
+class IndexManager {
+public:
+	static IndexManager* getIndexManager(vector<string> indexNames);//使用该函数获取IndexManager对象
+
+	IndexManager();
+	IndexManager(list<string> indexNames);
+	virtual ~IndexManager();
+	const QueryResult& createIndex(string indexName, const Attribute& attributeInfo, const Table& tableInfo);
+	const QueryResult& dropIndex(string name);
+
+private:
+	map<string, BPTree*> indexDictionary;
+	BufferManager* bufferManager;
+
+	void CreateFromFile(string name);
+	void SaveToFile(string name);
+	int GetEndOffset(string fileName);
+	int GetNextToEndOffset(string fileName, int recordLength);
+};
