@@ -21,6 +21,15 @@ Attribute::Attribute(const std::string & name, Type type, int length, bool isUni
 	this->isPrimaryKey = isPrimary;
 }
 
+Attribute::Attribute(const AttributeInfo & info)
+{
+	this->name = string(info.name);
+	this->type = info.type;
+	this->length = info.length;
+	this->isUnique = info.isUnique;
+	this->isPrimaryKey = info.isPrimaryKey;
+}
+
 Attribute::~Attribute(){}
 
 string Attribute::getAttributeName()
@@ -53,7 +62,7 @@ void Attribute::setLength(int length)
 	this->length = length;
 }
 
-bool Attribute::isUnique()
+bool Attribute::isUniqueKey()
 {
 	return isUnique;
 }
@@ -83,12 +92,30 @@ int Attribute::getOffset()
 	return offset;
 }
 
+AttributeInfo Attribute::GetInfo()
+{
+	AttributeInfo info;
+	int i;
+	for (i = 0; i < (int)this->name.length(); i++) {
+		info.name[i] = this->name[i];
+	}
+	info.name[i] = '\0';
+	info.length = length;
+	info.offset = offset;
+	info.type = type;
+	info.isPrimaryKey = isPrimaryKey;
+	info.isUnique = isUnique;
+
+	return info;
+}
+
 Table::Table()
 {
 }
 
 Table::Table(string tableName, const vector<Attribute>& attributes)
 {
+	this->recordCount = 0;
 	this->name = tableName;
 	this->attributes = vector<Attribute>(attributes);
 	this->rowLength = attributes.size();
@@ -98,6 +125,17 @@ Table::Table(string tableName, const vector<Attribute>& attributes)
 			this->primaryKeyIndex = i;
 			break;
 		}
+	}
+}
+
+Table::Table(const TableHeader & header)
+{
+	this->recordCount = header.recordCount;
+	this->name = string(header.tableName);
+	this->primaryKeyIndex = header.primaryKeyIndex;
+	this->rowLength = header.rowLength;
+	for (int i = 0; i < rowLength; i++) {
+		this->attributes.push_back(Attribute(header.attributes[i]));
 	}
 }
 
@@ -164,4 +202,21 @@ const Attribute& Table::getAttribute(string attributeName)
 		}
 	}
 	throw exception("Attribute Not Found!");
+}
+
+TableHeader Table::GetTableHeader()
+{
+	TableHeader header;
+	int i;
+	for (i = 0; i < (int)name.length(); i++) {
+		header.tableName[i] = name[i];
+	}
+	header.tableName[i] = '\0';
+	header.primaryKeyIndex = primaryKeyIndex;
+	header.rowLength = rowLength;
+	header.recordCount = recordCount;
+	for (i = 0; i < rowLength; i++) {
+		header.attributes[i] = attributes[i].GetInfo();
+	}
+	return header;
 }
