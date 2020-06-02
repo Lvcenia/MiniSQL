@@ -1,11 +1,44 @@
 #include "Generals.h"
+#include <iostream>
 
 RecordBuffer::RecordBuffer()
 {
 }
 
+RecordBuffer::RecordBuffer(const vector<string>& content)
+{
+	this->content = vector<string>(content);
+}
+
 RecordBuffer::~RecordBuffer()
 {
+}
+
+void RecordBuffer::output()
+{
+	for (auto info : content) {
+		cout << info << endl;
+	}
+}
+
+void RecordBuffer::addContent(string info)
+{
+	this->content.push_back(info);
+}
+
+void RecordBuffer::clearContent()
+{
+	this->content.clear();
+}
+
+const vector<string>& RecordBuffer::getContent()
+{
+	return this->content;
+}
+
+int RecordBuffer::getLineCount()
+{
+	return content.size();
 }
 
 Attribute::Attribute()
