@@ -158,10 +158,16 @@ class RecordBuffer
 {
 public:
 	RecordBuffer();
+	RecordBuffer(const vector<string>& content);
 	~RecordBuffer();
+	void output();//简易输出
+	void addContent(string info);//追加内容
+	void clearContent();//清空
+	const vector<string>& getContent();//获取内容
+	int getLineCount();//获取行数
 
 private:
-
+	vector<string> content;
 };
 
 
