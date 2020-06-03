@@ -8,38 +8,34 @@
 using namespace std;
 
 #define BLOCKSIZE 4096
-#define INT_STRING_SIZE 10
-#define FLOAT_INTEGER_SIZE 10 //Integer part length of a float number
-#define FLOAT_DECIMAL_SIZE 9//decimal part length of a float number
 #define HEADER_BLOCK_OFFSET 1*BLOCKSIZE//record offset
-
-typedef unsigned char BYTE;
-
-struct INDEXFILEHEADER{
-	BYTE indexName[32];
-	Type type;
-	int attributeLength;
-	int offsetInRecord;
-	int fanOut;
-	int elementCount;
-};
+typedef int ADDRESS;
 
 class IndexManager {
 public:
-	static IndexManager* getIndexManager(vector<string> indexNames);//使用该函数获取IndexManager对象
-
 	IndexManager();
-	IndexManager(list<string> indexNames);
-	virtual ~IndexManager();
-	const QueryResult& createIndex(string indexName, const Attribute& attributeInfo, const Table& tableInfo);
-	const QueryResult& dropIndex(string name);
+	IndexManager(list<string> indexName);
+	~IndexManager();
+	const QueryResult& createIndex(const string &indexName, Attribute &attribute, const int &recordLength, const string &fileName);/*create Index of a relation Cautious, if you create an unique index on an integer or float, do not use IM to process where A<xx A>xx query*/
+	const QueryResult& dropIndex(const string &indexName); /*delet/drop index indexfile and index in this function*/
+	const QueryResult& deleteValues(const string &indexName, const list<string> &indexList, list<Condition> conditions, const string &fileName, const int &recordLength);/*delete values specified by expression*/
+	const QueryResult& deleteValues(const string &primaryIndexName, const list<string> &primaryKeyValues, const list<string> &indexList, const string &fileName, const int recordLength);/*delete values specified by list of key*/
+	const QueryResult& deleteValuesAll(const string &indexName);/*delete all the values*/
+	const QueryResult& selectValues(const string &indexName, const list<string> &attributes, Table& table, list<Condition> conditions, const string &fileName);/*select values specified by expressions*/
+	const QueryResult& insertValues(const string &indexName, string indexKey, const ADDRESS &recordOffset);/*insert indexkey to bplus tree after insertion with RM*/
+	bool keyExists(const string &indexName, string keyValue, const int length);/*find if a key exists in index specified by indexName*/
+	static IndexManager* getIndexManagerPtr(list<string> indexName) { static IndexManager im(indexName); return &im; }/*get an instance of IndexManager*/
 
 private:
 	map<string, BPTree*> indexDictionary;
 	BufferManager* bufferManager;
+	CatalogManager* catalogManager;
+
 
 	void CreateFromFile(string name);
 	void SaveToFile(string name);
-	int GetEndOffset(string fileName);
-	int GetNextToEndOffset(string fileName, int recordLength);
+	ADDRESS getEndOffset(const string &fileName);
+	ADDRESS getNextToEndOffset(const string &fileName, const int &recordLength);
+	void deleteRecordFromFile(const string &keyIndexName, const list<string> &indexList, const string &fileName, const ADDRESS &recordOffset, const int &recordLength);
+	void renewEndOffset(const string &fileName, const int &recordLength);
 };
