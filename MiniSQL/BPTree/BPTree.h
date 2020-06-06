@@ -5,6 +5,17 @@
 #include "../Generals.h"
 using namespace std;
 
+struct IndexHeader {
+	char indexName[32];
+	char tableName[32];
+	char attributeName[32];
+	Type type;
+	int attributeLength;
+	int offsetInRecord;
+	int fanOut;
+	int elementCount;
+};
+
 class BPTree {
 public:
 	static bool CompInt(const string& a, const string& b);
@@ -13,6 +24,8 @@ public:
 
 	BPTree(int m, Type type);
 	BPTree(int m, Type type, int attributeLength, int offsetInRecord);
+	BPTree(string name, Attribute& attributeInfo, string tableName);
+	BPTree(const IndexHeader& header);
 	virtual ~BPTree();
 	void SetRoot(BPTNode* root);
 	void Insert(string key, int address);
@@ -24,6 +37,7 @@ public:
 	Type GetType();
 	BPTLeafNode* GetLeafWithKey(string key);
 	BPTLeafNode* GetFirstLeaf();
+	const IndexHeader& GetHeader();
 
 	void Debug();
 
@@ -34,5 +48,9 @@ private:
 	int length;
 	Type type;
 	bool(*Comp)(const string& a, const string& b);
+	string name;
+	string tableName;
+	string attributeName;
+	int elementCount;
 };
 

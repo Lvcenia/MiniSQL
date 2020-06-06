@@ -1,6 +1,7 @@
 #include "BPTree.h"
 #include "BPTLeafNode.h"
 #include "BPTNoneLeafNode.h"
+#define BLOCKSIZE 4096
 
 bool BPTree::CompInt(const string& a, const string& b)
 {
@@ -46,6 +47,45 @@ BPTree::BPTree(int m, Type type, int attributeLength, int offsetInRecord) : BPTr
 	offset = offsetInRecord;
 }
 
+BPTree::BPTree(string name, Attribute & attributeInfo, string tableName)
+{
+	root = NULL;
+	this->name = name;
+	this->attributeName = attributeInfo.getAttributeName();
+	this->tableName = tableName;
+	this->type = attributeInfo.getType();
+	switch (type)
+	{
+	case INT:
+		Comp = CompInt;
+		break;
+	case CHAR:
+		Comp = CompChar;
+		break;
+	case FLOAT:
+		Comp = CompFloat;
+		break;
+	default:
+		Comp = NULL;
+		throw exception("Type Undefined!");
+		break;
+	}
+	this->offset = attributeInfo.getOffset();
+	this->length = attributeInfo.getLength();
+	this->elementCount = 0;
+	this->maxKeyCount = (BLOCKSIZE - 4) / (attributeInfo.getLength() + sizeof(int)) - 1;
+}
+
+BPTree::BPTree(const IndexHeader & header) : BPTree(header.fanOut - 1, header.type)
+{
+	this->length = header.attributeLength;
+	this->offset = header.offsetInRecord;
+	this->name = string(header.indexName);
+	this->attributeName = string(header.attributeName);
+	this->tableName = string(header.tableName);
+	this->elementCount = header.elementCount;
+}
+
 BPTree::~BPTree()
 {
 	delete root;
@@ -63,10 +103,11 @@ void BPTree::Insert(string key, int address)
 	}
 	try {
 		root->AddKey(key, address);
+		elementCount++;
 	}
 	catch (const std::exception& e)
 	{
-		cout << e.what() << endl;
+		throw e;
 	}
 }
 
@@ -76,10 +117,11 @@ void BPTree::Delete(string key)
 		try
 		{
 			root->DeleteKey(key);
+			elementCount--;
 		}
 		catch (const std::exception& e)
 		{
-			cout << e.what() << endl;
+			
 		}
 	}
 }
@@ -136,6 +178,31 @@ BPTLeafNode * BPTree::GetFirstLeaf()
 		return NULL;
 	}
 	return root->FindFirstLeaf();
+}
+
+const IndexHeader & BPTree::GetHeader()
+{
+	IndexHeader header;
+	header.attributeLength = length;
+	header.elementCount = elementCount;
+	header.fanOut = maxKeyCount + 1;
+	header.offsetInRecord = offset;
+	header.type = type;
+	int i;
+	for (i = 0; i < (int)name.length(); i++) {
+		header.indexName[i] = name[i];
+	}
+	header.indexName[i] = '\0';
+	for (i = 0; i < (int)attributeName.length(); i++) {
+		header.attributeName[i] = attributeName[i];
+	}
+	header.attributeName[i] = '\0';
+	for (i = 0; i < (int)tableName.length(); i++) {
+		header.tableName[i] = tableName[i];
+	}
+	header.tableName[i] = '\0';
+
+	return header;
 }
 
 void BPTree::Debug()
