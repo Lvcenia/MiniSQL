@@ -1,8 +1,4 @@
-/*@brief
-*@author tomstream@qq.com
-*@date 2015/10/28
-*@version 1.0
-*/
+
 #ifndef _EXCEPTION_H_
 #define _EXCEPTION_H_
 
