@@ -155,6 +155,7 @@
     <ClCompile Include="ArrayList.cpp" />
     <ClCompile Include="BufferManager.cpp" />
     <ClCompile Include="CatalogManager.cpp" />
+    <ClCompile Include="Exception.cpp" />
     <ClCompile Include="Functor.cpp" />
     <ClCompile Include="Generals.cpp" />
     <ClCompile Include="IndexManager.cpp" />
@@ -168,6 +169,7 @@
     <ClInclude Include="ArrayList.h" />
     <ClInclude Include="BufferManager.h" />
     <ClInclude Include="CatalogManager.h" />
+    <ClInclude Include="Exception.h" />
     <ClInclude Include="Functor.h" />
     <ClInclude Include="Generals.h" />
     <ClInclude Include="IndexManager.h" />
