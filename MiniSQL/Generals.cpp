@@ -16,6 +16,11 @@ OPERATOR reverseOperator(OPERATOR op)
 	default:return UNDEFINED;
 	}
 }
+void Expression::swap()
+{
+	std::swap(this->leftOperand, this->rightOperand);
+	op = reverseOperator(op);
+}
 
 
 
