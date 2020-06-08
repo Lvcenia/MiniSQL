@@ -64,7 +64,7 @@ void Interpreter::parse(const string& sql) {
 //	string s;
 //	for (auto& vsb : vStatementBlock) {
 //		try {
-//			vsb->check();
+//			//vsb->check();
 //		}
 //		catch (exception& e) {
 //			s += string(e.what()) + "\n";
@@ -94,9 +94,9 @@ void Interpreter::parse(const string& sql) {
 //	}
 //	vStatementBlock.clear();
 //}
-//
-//
-//
+
+
+
 // //各种语法分析
 //
 //void Interpreter::createIndexParser(Iterator& begin, Iterator end) {
@@ -329,17 +329,17 @@ void Interpreter::parse(const string& sql) {
 //
 //
 //
-//
-//
-//Interpreter::Interpreter()
-//{
-//	API::getAPIPtr();
-//}
-//
-//
-//void Interpreter::print()
-//{
-//	for (auto& vsb : vStatementBlock) {
-//		vsb->print();
-//	}
-//}
+////
+////
+////Interpreter::Interpreter()
+////{
+////	API::getAPIPtr();
+////}
+////
+////
+////void Interpreter::print()
+////{
+////	for (auto& vsb : vStatementBlock) {
+////		vsb->print();
+////	}
+////}
