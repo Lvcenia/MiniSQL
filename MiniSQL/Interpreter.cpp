@@ -98,6 +98,76 @@ QueryResult Interpreter::execute()
 
 
  //各种语法分析
+void Interpreter::createTableParser(Iterator& begin, Iterator end) {
+	string s;
+	Table table;
+	string primaryName;
+
+
+	s = readWord(begin, end, IsVariableName()); //read tableName
+	table.setTableName(s);
+
+	s = readWord(begin, end, IsString("("));
+
+	int state = 0;
+	for (;;) {
+		Attribute att;
+		//set attribute name
+		s = readWord(begin, end, IsVariableName());
+		//check primary key
+		if (s == "primary") {
+			readWord(begin, end, IsString("key"));
+			readWord(begin, end, IsString("("));
+			primaryName = readWord(begin, end, IsVariableName()); // single attribute primary key
+			readWord(begin, end, IsString(")"));
+		}
+		else {
+			att.setAttributeName(s);
+
+			//read type
+			s = readWord(begin, end);
+			Type type = stringToType(s);
+			if (type == UNDEFINEDTYPE)
+				throw GrammarError("undefined type: " + s);
+			else if (type == CHAR) {
+				readWord(begin, end, IsString("("));
+				s = readWord(begin, end, IsNum());
+				try {
+					int i = stoi(s);
+					if (i <= 0)
+						throw GrammarError("Cannot define the length of a string less than 1");
+					att.setType(CHAR);
+					att.setLength(i);
+				}
+				catch (invalid_argument& e) {
+					throw GrammarError("The length of a string should be a integer!");
+				}
+				readWord(begin, end, IsString(")"));
+			}
+			else {
+				att.setType(type);
+			}
+			s = readWord(begin, end, IsChar('u'));
+			if (s.length() > 0) {
+				readWord(begin, end, IsString("nique"));
+				att.setUnique(true);
+			}
+			table.addAttribute(att);
+		}
+		//check if the end is comming
+		s = readWord(begin, end, IsChar(')'));
+		if (s == ")") {
+			break;
+		}
+		else {
+			s = readWord(begin, end, IsString(","));
+		}
+	}
+
+	readToEnd(begin, end);
+	shared_ptr<StatementBlock> pSB(new CreateTableBlock(table, primaryName));
+	vStatementBlock.push_back(pSB);
+}
 
 void Interpreter::createIndexParser(Iterator& begin, Iterator end) {
 	string indexName = readWord(begin, end, IsVariableName());	//read index
