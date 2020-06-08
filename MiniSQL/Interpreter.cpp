@@ -1,10 +1,10 @@
-//#include "Interpreter.h"
-//#include "StatementBlock.h"
-//#include "Functor.h"
-//#include <iostream>
-//#include <algorithm>
-//#include <fstream>
-//#include <sstream>
+#include "Interpreter.h"
+#include "StatementBlock.h"
+#include "Functor.h"
+#include <iostream>
+#include <algorithm>
+#include <fstream>
+#include <sstream>
 ////#include "../Exception.h"
 ////#include "CatalogManager.h"
 ////#include "API.h"
