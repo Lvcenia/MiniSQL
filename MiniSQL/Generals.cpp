@@ -40,6 +40,17 @@ OPERATOR stringToOperator(std::string s)
 }
 
 
+Type stringToType(std::string s)
+{
+	if (s == "int")
+		return INT;
+	else if (s == "float")
+		return FLOAT;
+	else if (s == "char")
+		return CHAR;
+	else
+		return Type::UNDEFINEDTYPE;
+}
 
 
 RecordBuffer::RecordBuffer()
