@@ -1,6 +1,25 @@
 #include "Generals.h"
 #include <iostream>
 
+
+
+
+OPERATOR reverseOperator(OPERATOR op)
+{
+	switch (op) {
+	case GREATER: return LESS; break;
+	case LESS:return GREATER; break;
+	case EQUAL: return EQUAL; break;
+	case NOTEQUAL:return NOTEQUAL; break;
+	case GREATER_AND_EQUAL:return LESS_AND_EQUAL; break;
+	case LESS_AND_EQUAL:return GREATER_AND_EQUAL; break;
+	default:return UNDEFINED;
+	}
+}
+
+
+
+
 RecordBuffer::RecordBuffer()
 {
 }
