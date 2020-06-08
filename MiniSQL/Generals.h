@@ -104,6 +104,7 @@ enum Type
 	FLOAT,
 	UNDEFINEDTYPE
 };
+Type stringToType(std::string s);
 
 struct AttributeInfo {
 	char name[32];
