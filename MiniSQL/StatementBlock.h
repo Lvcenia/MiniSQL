@@ -158,12 +158,12 @@ class CheckType {
 public:
 	CheckType(){}
 	CheckType(const Table& table) :table(table) {};
-	bool isType(const std::string& s, TYPE type);
+	bool isType(const std::string& s, Type type);
 	bool isString(const std::string& s);
 	bool isFloat(const std::string& s);
 	bool isInt(const std::string& s);
 	bool isAttribute(const std::string& s);
-	TYPE isWhatType(const std::string& s);
+	Type isWhatType(const std::string& s);
 private:
 	Table table;
 };
@@ -188,6 +188,6 @@ auto compareFunc(OPERATOR oper)->bool(*)(T, T) {
 }
 
 
-bool compareExp(const std::string& left, const std::string& right, TYPE type, OPERATOR op);
+bool compareExp(const std::string& left, const std::string& right, Type type, OPERATOR op);
 
 #endif
