@@ -22,6 +22,23 @@ void Expression::swap()
 	op = reverseOperator(op);
 }
 
+OPERATOR stringToOperator(std::string s)
+{
+	if (s == "==")
+		return EQUAL;
+	else if (s == ">")
+		return GREATER;
+	else if (s == "<")
+		return LESS;
+	else if (s == "!=" || s == "<>")
+		return NOTEQUAL;
+	else if (s == ">=")
+		return GREATER_AND_EQUAL;
+	else if (s == "<=")
+		return LESS_AND_EQUAL;
+	else return OPERATOR::UNDEFINED;
+}
+
 
 
 
