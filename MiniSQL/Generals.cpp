@@ -137,6 +137,10 @@ Type Attribute::getType()
 void Attribute::setType(Type type)
 {
 	this->type = type;
+	if (type == INT)
+		this->length = sizeof(int);
+	else if (type == FLOAT)
+		this->length = sizeof(float);
 }
 
 int Attribute::getLength()
