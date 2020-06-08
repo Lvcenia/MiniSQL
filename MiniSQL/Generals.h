@@ -25,6 +25,7 @@ enum OPERATOR
 };
 
 OPERATOR reverseOperator(OPERATOR op);
+OPERATOR stringToOperator(std::string s);
 
 struct Operand
 {
