@@ -21,7 +21,7 @@ public:
 	void check(); // 语句检查
 	QueryResult execute(); // 执行
 	//void print();
-	void readInput(const std::string& s);
+	//void readInput(const std::string& s);
 	void executeFile(const std::string& fileName); // 执行文件
 	std::shared_ptr<StatementBlock>& gettPtr() { return tptr; } 
 	std::vector<std::shared_ptr<StatementBlock>>& getVsb() { return vStatementBlock; }
@@ -29,8 +29,9 @@ public:
 	//RECORDBUFFER& getRecordBuffer() { return *rb; }
 private:
 	typedef std::string::iterator Iterator;
+	//std::vector<std::string> split(std::string s, std::string::value_type c);
+
 	// 各类语句分析
-	std::vector<std::string> split(std::string s, std::string::value_type c);
 	void createTableParser(Iterator& begin, Iterator end);
 	void createIndexParser(Iterator& begin, Iterator end);
 	void dropTableParser(Iterator& begin, Iterator end);

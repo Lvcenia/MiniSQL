@@ -183,7 +183,7 @@ void Interpreter::createIndexParser(Iterator& begin, Iterator end) {
 }
 
 void Interpreter::dropTableParser(Iterator& begin, Iterator end) {
-	string s = readWord(begin, end, IsVariableName()); //read table
+	string s = readWord(begin, end, IsVariableName()); //read table name
 	shared_ptr<StatementBlock> pSB(new DropTableBlock(s));
 
 	readToEnd(begin, end);
@@ -191,7 +191,7 @@ void Interpreter::dropTableParser(Iterator& begin, Iterator end) {
 }
 
 void Interpreter::dropIndexParser(Iterator& begin, Iterator end) {
-	string s = readWord(begin, end, IsVariableName()); //read index 
+	string s = readWord(begin, end, IsVariableName()); //read index name
 	shared_ptr<StatementBlock> pSB(new DropIndexBlock(s));
 	readToEnd(begin, end);
 	vStatementBlock.push_back(pSB);
@@ -208,7 +208,7 @@ void Interpreter::selectParser(Iterator& begin, Iterator end) {
 	}
 	else {
 		while (true) {
-			s = readWord(begin, end, IsVariableName());//read attribute
+			s = readWord(begin, end, IsVariableName());//read attributes
 			attributeList.push_back(s);
 			s = readWord(begin, end, IsChar(','));
 			if (s.length() == 0) {
@@ -224,15 +224,14 @@ void Interpreter::selectParser(Iterator& begin, Iterator end) {
 	try {
 		s = readWord(begin, end);
 	}
-	//catch (EndOfString) {
-	catch (exception) {
+	catch (EndOfString) {
 		shared_ptr<StatementBlock> pSB(new SelectBlock(sb));
 		vStatementBlock.push_back(pSB);
 		return;
 	}
-	//if (s != "where")throw GrammarError("illegal where");//read where
-	//list<Expression> expList = readExp(begin, end);// read exps
-	//sb.setExpressions(expList);
+	if (s != "where")throw GrammarError("illegal where");//read where
+	list<Expression> expList = readExp(begin, end);// read exps
+	sb.setExpressions(expList);
 
 	readToEnd(begin, end);
 	shared_ptr<StatementBlock> pSB(new SelectBlock(sb));
@@ -266,21 +265,19 @@ void Interpreter::insertParser(Iterator& begin, Iterator end) {
 
 void Interpreter::deleteParser(Iterator& begin, Iterator end) {
 	readWord(begin, end, IsString("from"));  //read from
-	string s = readWord(begin, end, IsVariableName());  //read table
+	string s = readWord(begin, end, IsVariableName());  //read table name
 	string tableName = s;
 
 	try {
 		s = readWord(begin, end);
 	}
-	//catch (EndOfString e) {
-	catch (exception) {
+	catch (EndOfString e) {
 			shared_ptr<StatementBlock> pSB(new DeleteBlock(tableName));
 		vStatementBlock.push_back(pSB);
 		return;
 	}
 	if (s != "where")
-		;
-		//throw GrammarError("illegal delete operation");
+		throw GrammarError("illegal delete operation");
 	auto exps = readExp(begin, end);
 
 	readToEnd(begin, end);
@@ -293,13 +290,12 @@ void Interpreter::quitParser(Iterator& begin, Iterator end) {
 	try {
 		readWord(begin, end);
 	}
-	catch (exception) {
-	//catch (EndOfString e) {
+	catch (EndOfString e) {
 		shared_ptr<StatementBlock> pSB(new QuitBlock);
 		vStatementBlock.push_back(pSB);
 		return;
 	}
-	//throw GrammarError("Words are forbidden to be followed by quit");
+	throw GrammarError("Words are forbidden to be followed by quit");
 }
 
 void Interpreter::execfileParser(Iterator & begin, Iterator end)
@@ -312,42 +308,7 @@ void Interpreter::execfileParser(Iterator & begin, Iterator end)
 }
 
 
-vector<string> Interpreter::split(string s, string::value_type c) {
-	stringstream ss(s);
-	vector<string> ret;
-	string tmp;
-	while (getline(ss, tmp, c)) {
-		ret.push_back(tmp);
-	}
-	return move(ret);
-}
 
-void Interpreter::readInput(const string & s)
-{
-	static bool inQuota = false;
-	auto iter1 = s.begin();
-	auto iter2 = iter1;
-	for (; iter2 != s.end(); iter2++) {
-		if (*iter2 == '\'') {
-			inQuota = !inQuota;
-		}
-		if (!inQuota) {
-			if (*iter2 == ';') {
-				tmpStoredSql += string(iter1, iter2);
-				try {
-					parse(tmpStoredSql);
-				}
-				catch (exception& e) {
-					//printOut(e.what());
-				}
-				check(); execute();
-				iter1 = iter2 + 1;
-				tmpStoredSql.clear();
-			}
-		}
-	}
-	tmpStoredSql += string(iter1, iter2);
-}
 
 void Interpreter::executeFile(const string & fileName)
 {
@@ -397,6 +358,44 @@ void Interpreter::executeFile(const string & fileName)
 	execute();
 }
 
+
+//vector<string> Interpreter::split(string s, string::value_type c) {
+//	stringstream ss(s);
+//	vector<string> ret;
+//	string tmp;
+//	while (getline(ss, tmp, c)) {
+//		ret.push_back(tmp);
+//	}
+//	return move(ret);
+//}
+
+//void Interpreter::readInput(const string & s)
+//{
+//	static bool inQuota = false;
+//	auto iter1 = s.begin();
+//	auto iter2 = iter1;
+//	for (; iter2 != s.end(); iter2++) {
+//		if (*iter2 == '\'') {
+//			inQuota = !inQuota;
+//		}
+//		if (!inQuota) {
+//			if (*iter2 == ';') {
+//				tmpStoredSql += string(iter1, iter2);
+//				try {
+//					parse(tmpStoredSql);
+//				}
+//				catch (exception& e) {
+//					//printOut(e.what());
+//				}
+//				check(); 
+//				execute();
+//				iter1 = iter2 + 1;
+//				tmpStoredSql.clear();
+//			}
+//		}
+//	}
+//	tmpStoredSql += string(iter1, iter2);
+//}
 
 
 //
