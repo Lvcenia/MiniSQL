@@ -64,7 +64,7 @@ void Interpreter::check()
 	string s;
 	for (auto& vsb : vStatementBlock) {
 		try {
-			//vsb->check();
+			vsb->check();
 		}
 		catch (exception& e) {
 			s += string(e.what()) + "\n";
