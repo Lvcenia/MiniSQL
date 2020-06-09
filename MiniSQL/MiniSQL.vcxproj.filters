@@ -26,6 +26,9 @@
     <Filter Include="RecordManager">
       <UniqueIdentifier>{0f04f8f4-de0d-4764-9348-ad31d12addaf}</UniqueIdentifier>
     </Filter>
+    <Filter Include="IndexManager\BPTree">
+      <UniqueIdentifier>{a1616d02-3b5c-4980-a097-8bc6163676f3}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="API.cpp">
@@ -61,6 +64,18 @@
     <ClCompile Include="StatementBlock.cpp">
       <Filter>Interpreter</Filter>
     </ClCompile>
+    <ClCompile Include="BPTree\BPTNoneLeafNode.cpp">
+      <Filter>IndexManager\BPTree</Filter>
+    </ClCompile>
+    <ClCompile Include="BPTree\BPTree.cpp">
+      <Filter>IndexManager\BPTree</Filter>
+    </ClCompile>
+    <ClCompile Include="BPTree\BPTLeafNode.cpp">
+      <Filter>IndexManager\BPTree</Filter>
+    </ClCompile>
+    <ClCompile Include="BPTree\BPTNode.cpp">
+      <Filter>IndexManager\BPTree</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="API.h">
@@ -92,6 +107,18 @@
     </ClInclude>
     <ClInclude Include="StatementBlock.h">
       <Filter>Interpreter</Filter>
+    </ClInclude>
+    <ClInclude Include="BPTree\BPTNode.h">
+      <Filter>IndexManager\BPTree</Filter>
+    </ClInclude>
+    <ClInclude Include="BPTree\BPTNoneLeafNode.h">
+      <Filter>IndexManager\BPTree</Filter>
+    </ClInclude>
+    <ClInclude Include="BPTree\BPTree.h">
+      <Filter>IndexManager\BPTree</Filter>
+    </ClInclude>
+    <ClInclude Include="BPTree\BPTLeafNode.h">
+      <Filter>IndexManager\BPTree</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

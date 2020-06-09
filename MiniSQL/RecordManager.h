@@ -24,6 +24,7 @@ public:
 	OP getOP();
 	string getValue();
 	bool FitCondition(string attributeVal, Type type);
+	static bool GetMinimalConditoins(vector<Condition>& conditions, Type type);
 private:
 	string attributeName;
 	OP op;

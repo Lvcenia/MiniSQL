@@ -121,7 +121,7 @@ void BPTree::Delete(string key)
 		}
 		catch (const std::exception& e)
 		{
-			
+			throw e;
 		}
 	}
 }
@@ -134,7 +134,6 @@ int BPTree::FindAddress(string key)
 	}
 	catch (const std::exception& e)
 	{
-		cout << e.what() << endl;
 		return -1;
 	}
 }

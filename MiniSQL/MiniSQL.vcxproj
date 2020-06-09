@@ -153,6 +153,10 @@
   <ItemGroup>
     <ClCompile Include="API.cpp" />
     <ClCompile Include="ArrayList.cpp" />
+    <ClCompile Include="BPTree\BPTLeafNode.cpp" />
+    <ClCompile Include="BPTree\BPTNode.cpp" />
+    <ClCompile Include="BPTree\BPTNoneLeafNode.cpp" />
+    <ClCompile Include="BPTree\BPTree.cpp" />
     <ClCompile Include="BufferManager.cpp" />
     <ClCompile Include="CatalogManager.cpp" />
     <ClCompile Include="Functor.cpp" />
@@ -166,6 +170,10 @@
   <ItemGroup>
     <ClInclude Include="API.h" />
     <ClInclude Include="ArrayList.h" />
+    <ClInclude Include="BPTree\BPTLeafNode.h" />
+    <ClInclude Include="BPTree\BPTNode.h" />
+    <ClInclude Include="BPTree\BPTNoneLeafNode.h" />
+    <ClInclude Include="BPTree\BPTree.h" />
     <ClInclude Include="BufferManager.h" />
     <ClInclude Include="CatalogManager.h" />
     <ClInclude Include="Functor.h" />
