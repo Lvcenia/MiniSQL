@@ -156,18 +156,18 @@ public:
 	Attribute(const std::string& attributeName, Type type, int length, bool isUnique, bool isPrimary, int offset);
 	Attribute(const AttributeInfo& info);
 	virtual ~Attribute();
-	string getAttributeName();
+	string getAttributeName() const;
 	void setAttributeName(string name);
-	Type getType();
+	Type getType() const;
 	void setType(Type type);
-	int getLength();
+	int getLength() const;
 	void setLength(int length);
-	bool isUniqueKey();
+	bool isUniqueKey() const;
 	void setUnique(bool value);
-	bool isPrimary();
+	bool isPrimary() const;
 	void setPrimary(bool value);
 	void setOffset(int offset);
-	int getOffset();
+	int getOffset() const;
 	AttributeInfo GetInfo();
 };
 

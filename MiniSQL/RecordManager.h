@@ -5,6 +5,31 @@
 #include <list>
 #include <vector>
 #include <map>
+#define DeleteInfo "Deleted"
+
+class RecordIterator
+{
+public:
+	RecordIterator(int len, int tail) { nowOffset = BLOCKSIZE; recordLength = len; this->tail = tail; }
+	RecordIterator(int off, int len, int tail) { nowOffset = off; recordLength = len; this->tail = tail; }
+	void setTail(int tail) { this->tail = tail; }
+	RecordIterator& next() {
+		nowOffset += recordLength;
+		if (nowOffset % BLOCKSIZE + recordLength > BLOCKSIZE)
+			nowOffset = (nowOffset / BLOCKSIZE + 1) * BLOCKSIZE;
+		return *this;
+	}
+	bool hasNext() {
+		if ((nowOffset + recordLength) <= tail)
+			return true;
+		return false;
+	}
+	int value() { return nowOffset; }
+private:
+	int nowOffset;
+	int recordLength;
+	int tail;
+};
 
 //使用CatalogManager建表
 //结果返回后一定要更新TableInfo.recordLength
@@ -18,7 +43,7 @@ public:
 	const QueryResult& deleteValues(const Table& tableInfo, const vector<Condition>& conditions);
 	const QueryResult& selectValues(const Table& tableInfo, const vector<Condition>& conditions);
 	const QueryResult& selectValues(const vector<string>& attributes, const Table& tableInfo, const vector<Condition>& conditions);
-
+	static RecordManager* getRecordMangerPtr() { static RecordManager rm; return &rm; }
 private:
 	BufferManager* bufferManager;
 };

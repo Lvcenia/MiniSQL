@@ -366,8 +366,22 @@ void IndexManager::CreateFromFile(string name)
 
 void IndexManager::SaveToFile(string name)
 {
-	auto header = indexDictionary[name]->GetHeader();
+	auto currentIndex = indexDictionary[name];
+	auto header = currentIndex->GetHeader();
 	bufferManager->writeARecord((BYTE*)&header, sizeof(IndexHeader), name, 0);
+
+	auto curser = HEADER_BLOCK_OFFSET;
+	for (auto leaf = currentIndex->GetFirstLeaf(); leaf != NULL; leaf = leaf->GetRightNode()) {
+		for (auto key : *(leaf->GetKeys())) {
+			auto add = leaf->GetAddress(key);
+			if ((curser / 4096 + 1) * 4096 - curser < (header.attributeLength + 1 + sizeof(ADDRESS)) && curser % 4096 != 0)
+				curser = (curser / 4096 + 1) * 4096;
+			bufferManager->writeARecord((BYTE*)&add, sizeof(add), name, curser);
+			curser += sizeof(ADDRESS);
+			bufferManager->writeARecord((BYTE*)key.c_str(), key.length(), name, curser);
+			curser += header.attributeLength + 1;
+		}
+	}
 }
 
 ADDRESS IndexManager::getEndOffset(const string & fileName)

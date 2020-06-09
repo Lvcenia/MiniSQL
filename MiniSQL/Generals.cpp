@@ -477,7 +477,7 @@ Attribute::Attribute(const AttributeInfo & info)
 
 Attribute::~Attribute(){}
 
-string Attribute::getAttributeName()
+string Attribute::getAttributeName() const
 {
 	return name;
 }
@@ -487,7 +487,7 @@ void Attribute::setAttributeName(string name)
 	this->name = name;
 }
 
-Type Attribute::getType()
+Type Attribute::getType() const
 {
 	return type;
 }
@@ -501,7 +501,7 @@ void Attribute::setType(Type type)
 		this->length = sizeof(float);
 }
 
-int Attribute::getLength()
+int Attribute::getLength() const
 {
 	return length;
 }
@@ -511,7 +511,7 @@ void Attribute::setLength(int length)
 	this->length = length;
 }
 
-bool Attribute::isUniqueKey()
+bool Attribute::isUniqueKey() const
 {
 	return isUnique;
 }
@@ -521,7 +521,7 @@ void Attribute::setUnique(bool flag)
 	this->isUnique = flag;
 }
 
-bool Attribute::isPrimary()
+bool Attribute::isPrimary() const
 {
 	return isPrimaryKey;
 }
@@ -536,7 +536,7 @@ void Attribute::setOffset(int off)
 	this->offset = off;
 }
 
-int Attribute::getOffset()
+int Attribute::getOffset() const
 {
 	return offset;
 }
