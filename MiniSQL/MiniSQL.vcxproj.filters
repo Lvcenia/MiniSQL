@@ -1,134 +1,121 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="资源文件">
-      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
-      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
-    </Filter>
-    <Filter Include="BufferManager">
-      <UniqueIdentifier>{afb04b51-f937-49be-80ee-6fab50c1b7fc}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="API">
-      <UniqueIdentifier>{9d379589-b9f6-42b4-96b1-564d10f2656d}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="CatalogManager">
-      <UniqueIdentifier>{8feb5940-acb3-4e8d-a026-6c7ca01f71ac}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="IndexManager">
-      <UniqueIdentifier>{398e2789-46a1-4cae-a964-1a494bfe6529}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Interpreter">
-      <UniqueIdentifier>{bdd47562-1e94-476c-b4cd-70143010d7ac}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="MiniSQL">
-      <UniqueIdentifier>{90169475-89eb-45d4-8ccf-5c90b2acc750}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="RecordManager">
-      <UniqueIdentifier>{0f04f8f4-de0d-4764-9348-ad31d12addaf}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="IndexManager\BPTree">
-      <UniqueIdentifier>{a1616d02-3b5c-4980-a097-8bc6163676f3}</UniqueIdentifier>
-    </Filter>
-  </ItemGroup>
-  <ItemGroup>
+    <ClCompile Include="main.cpp" />
     <ClCompile Include="API.cpp">
       <Filter>API</Filter>
-    </ClCompile>
-    <ClCompile Include="Generals.cpp">
-      <Filter>MiniSQL</Filter>
-    </ClCompile>
-    <ClCompile Include="main.cpp">
-      <Filter>MiniSQL</Filter>
-    </ClCompile>
-    <ClCompile Include="Interpreter.cpp">
-      <Filter>Interpreter</Filter>
-    </ClCompile>
-    <ClCompile Include="IndexManager.cpp">
-      <Filter>IndexManager</Filter>
-    </ClCompile>
-    <ClCompile Include="CatalogManager.cpp">
-      <Filter>CatalogManager</Filter>
     </ClCompile>
     <ClCompile Include="BufferManager.cpp">
       <Filter>BufferManager</Filter>
     </ClCompile>
+    <ClCompile Include="BPTree\BPTLeafNode.cpp">
+      <Filter>IndexManager</Filter>
+    </ClCompile>
+    <ClCompile Include="BPTree\BPTNode.cpp">
+      <Filter>IndexManager</Filter>
+    </ClCompile>
+    <ClCompile Include="BPTree\BPTNoneLeafNode.cpp">
+      <Filter>IndexManager</Filter>
+    </ClCompile>
+    <ClCompile Include="BPTree\BPTree.cpp">
+      <Filter>IndexManager</Filter>
+    </ClCompile>
+    <ClCompile Include="IndexManager.cpp">
+      <Filter>IndexManager</Filter>
+    </ClCompile>
+    <ClCompile Include="Generals.cpp">
+      <Filter>Generals</Filter>
+    </ClCompile>
+    <ClCompile Include="CatalogManager.cpp">
+      <Filter>CatalogManager</Filter>
+    </ClCompile>
+    <ClCompile Include="ArrayList.cpp">
+      <Filter>Generals</Filter>
+    </ClCompile>
+    <ClCompile Include="Exception.cpp">
+      <Filter>Generals</Filter>
+    </ClCompile>
     <ClCompile Include="RecordManager.cpp">
       <Filter>RecordManager</Filter>
     </ClCompile>
-    <ClCompile Include="ArrayList.cpp">
-      <Filter>BufferManager</Filter>
-    </ClCompile>
-    <ClCompile Include="Functor.cpp">
+    <ClCompile Include="Interpreter.cpp">
       <Filter>Interpreter</Filter>
     </ClCompile>
     <ClCompile Include="StatementBlock.cpp">
       <Filter>Interpreter</Filter>
     </ClCompile>
-<<<<<<< HEAD
-    <ClCompile Include="BPTree\BPTNoneLeafNode.cpp">
-      <Filter>IndexManager\BPTree</Filter>
-    </ClCompile>
-    <ClCompile Include="BPTree\BPTree.cpp">
-      <Filter>IndexManager\BPTree</Filter>
-    </ClCompile>
-    <ClCompile Include="BPTree\BPTLeafNode.cpp">
-      <Filter>IndexManager\BPTree</Filter>
-    </ClCompile>
-    <ClCompile Include="BPTree\BPTNode.cpp">
-      <Filter>IndexManager\BPTree</Filter>
-=======
-    <ClCompile Include="Exception.cpp">
-      <Filter>MiniSQL</Filter>
->>>>>>> origin/develop
+    <ClCompile Include="Functor.cpp">
+      <Filter>Interpreter</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="API.h">
       <Filter>API</Filter>
     </ClInclude>
-    <ClInclude Include="Generals.h">
-      <Filter>MiniSQL</Filter>
+    <ClInclude Include="BufferManager.h">
+      <Filter>BufferManager</Filter>
     </ClInclude>
-    <ClInclude Include="Interpreter.h">
-      <Filter>Interpreter</Filter>
+    <ClInclude Include="BPTree\BPTree.h">
+      <Filter>IndexManager</Filter>
+    </ClInclude>
+    <ClInclude Include="BPTree\BPTLeafNode.h">
+      <Filter>IndexManager</Filter>
+    </ClInclude>
+    <ClInclude Include="BPTree\BPTNode.h">
+      <Filter>IndexManager</Filter>
+    </ClInclude>
+    <ClInclude Include="BPTree\BPTNoneLeafNode.h">
+      <Filter>IndexManager</Filter>
     </ClInclude>
     <ClInclude Include="IndexManager.h">
       <Filter>IndexManager</Filter>
     </ClInclude>
+    <ClInclude Include="Generals.h">
+      <Filter>Generals</Filter>
+    </ClInclude>
     <ClInclude Include="CatalogManager.h">
       <Filter>CatalogManager</Filter>
     </ClInclude>
-    <ClInclude Include="BufferManager.h">
-      <Filter>BufferManager</Filter>
+    <ClInclude Include="ArrayList.h">
+      <Filter>Generals</Filter>
+    </ClInclude>
+    <ClInclude Include="Exception.h">
+      <Filter>Generals</Filter>
     </ClInclude>
     <ClInclude Include="RecordManager.h">
       <Filter>RecordManager</Filter>
     </ClInclude>
-    <ClInclude Include="ArrayList.h">
-      <Filter>BufferManager</Filter>
-    </ClInclude>
-    <ClInclude Include="Functor.h">
+    <ClInclude Include="Interpreter.h">
       <Filter>Interpreter</Filter>
     </ClInclude>
     <ClInclude Include="StatementBlock.h">
       <Filter>Interpreter</Filter>
     </ClInclude>
-<<<<<<< HEAD
-    <ClInclude Include="BPTree\BPTNode.h">
-      <Filter>IndexManager\BPTree</Filter>
+    <ClInclude Include="Functor.h">
+      <Filter>Interpreter</Filter>
     </ClInclude>
-    <ClInclude Include="BPTree\BPTNoneLeafNode.h">
-      <Filter>IndexManager\BPTree</Filter>
-    </ClInclude>
-    <ClInclude Include="BPTree\BPTree.h">
-      <Filter>IndexManager\BPTree</Filter>
-    </ClInclude>
-    <ClInclude Include="BPTree\BPTLeafNode.h">
-      <Filter>IndexManager\BPTree</Filter>
-=======
-    <ClInclude Include="Exception.h">
-      <Filter>MiniSQL</Filter>
->>>>>>> origin/develop
-    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="API">
+      <UniqueIdentifier>{6d5f1aef-80d9-4bd5-b62b-ca7c5b60b000}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="BufferManager">
+      <UniqueIdentifier>{d59f0e7b-ab2d-4325-9fea-f220b659547c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="IndexManager">
+      <UniqueIdentifier>{47df72fd-125f-4be8-9ece-57f7171326eb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Generals">
+      <UniqueIdentifier>{07343302-ce91-4a08-9809-4a3437560ea9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="CatalogManager">
+      <UniqueIdentifier>{8a06ec8d-1875-42a4-ae31-49ea9341c21b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="RecordManager">
+      <UniqueIdentifier>{57d1f3f7-4683-48bb-aa93-8541895b78de}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Interpreter">
+      <UniqueIdentifier>{3915343f-6fbb-46e9-8ada-dd3b3894ec87}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
 </Project>
