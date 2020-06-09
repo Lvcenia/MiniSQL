@@ -9,6 +9,32 @@
 
 using namespace std;
 
+enum OP {
+	Equal,
+	NotEqual,
+	GreaterThan,
+	LessThan,
+	GreaterEqual,
+	LessEqual
+};
+
+//筛选条件请用Cnndition
+//目前只考虑简单的 （属性 op 值），有时间再加
+class Condition {
+public:
+	Condition(string attributeName, OP op, string value);
+	virtual ~Condition();
+	string getAttributeName();
+	OP getOP();
+	string getValue();
+	bool FitCondition(string attributeVal, Type type);
+	static bool GetMinimalConditoins(vector<Condition>& conditions, Type type);
+private:
+	string attributeName;
+	OP op;
+	string value;
+};
+
 
 struct Expression;
 struct Operand;

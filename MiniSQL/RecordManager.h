@@ -6,31 +6,6 @@
 #include <vector>
 #include <map>
 
-enum OP {
-	Equal,
-	NotEqual,
-	GreaterThan,
-	LessThan,
-	GreaterEqual,
-	LessEqual
-};
-
-//目前只考虑简单的 （属性 op 值），有时间再加
-class Condition {
-public:
-	Condition(string attributeName, OP op, string value);
-	virtual ~Condition();
-	string getAttributeName();
-	OP getOP();
-	string getValue();
-	bool FitCondition(string attributeVal, Type type);
-	static bool GetMinimalConditoins(vector<Condition>& conditions, Type type);
-private:
-	string attributeName;
-	OP op;
-	string value;
-};
-
 //使用CatalogManager建表
 //结果返回后一定要更新TableInfo.recordLength
 class RecordManager
