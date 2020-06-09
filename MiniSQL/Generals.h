@@ -9,6 +9,40 @@
 
 using namespace std;
 
+
+struct Expression;
+struct Operand;
+
+enum OPERATOR
+{
+	GREATER,
+	LESS,
+	EQUAL,
+	NOTEQUAL,
+	GREATER_AND_EQUAL,
+	LESS_AND_EQUAL,
+	UNDEFINED
+};
+
+OPERATOR reverseOperator(OPERATOR op);
+OPERATOR stringToOperator(std::string s);
+
+struct Operand
+{
+	std::string operandName;
+	bool isAttribute;
+};
+
+struct Expression
+{
+	Operand leftOperand;
+	Operand rightOperand;
+	OPERATOR op;
+	void swap();
+};
+
+
+
 enum QueryState
 {
 	Success,
@@ -70,6 +104,7 @@ enum Type
 	FLOAT,
 	UNDEFINEDTYPE
 };
+Type stringToType(std::string s);
 
 struct AttributeInfo {
 	char name[32];

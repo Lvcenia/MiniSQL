@@ -64,6 +64,7 @@
     <ClCompile Include="StatementBlock.cpp">
       <Filter>Interpreter</Filter>
     </ClCompile>
+<<<<<<< HEAD
     <ClCompile Include="BPTree\BPTNoneLeafNode.cpp">
       <Filter>IndexManager\BPTree</Filter>
     </ClCompile>
@@ -75,6 +76,10 @@
     </ClCompile>
     <ClCompile Include="BPTree\BPTNode.cpp">
       <Filter>IndexManager\BPTree</Filter>
+=======
+    <ClCompile Include="Exception.cpp">
+      <Filter>MiniSQL</Filter>
+>>>>>>> origin/develop
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -108,6 +113,7 @@
     <ClInclude Include="StatementBlock.h">
       <Filter>Interpreter</Filter>
     </ClInclude>
+<<<<<<< HEAD
     <ClInclude Include="BPTree\BPTNode.h">
       <Filter>IndexManager\BPTree</Filter>
     </ClInclude>
@@ -119,6 +125,10 @@
     </ClInclude>
     <ClInclude Include="BPTree\BPTLeafNode.h">
       <Filter>IndexManager\BPTree</Filter>
+=======
+    <ClInclude Include="Exception.h">
+      <Filter>MiniSQL</Filter>
+>>>>>>> origin/develop
     </ClInclude>
   </ItemGroup>
 </Project>

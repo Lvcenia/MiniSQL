@@ -53,6 +53,7 @@ int main()
 				cout << "ERROR: There is some characters at the end of the sql after the semicolon;" << endl;
 			else
 			{
+				//sql = sql.substr(0, sql.length() - 1);
 				//QueryResult res =  interperter.executeSql(sql);
 				//cout << res.content;
 			}

@@ -1,6 +1,58 @@
 #include "Generals.h"
 #include <iostream>
 
+
+
+
+OPERATOR reverseOperator(OPERATOR op)
+{
+	switch (op) {
+	case GREATER: return LESS; break;
+	case LESS:return GREATER; break;
+	case EQUAL: return EQUAL; break;
+	case NOTEQUAL:return NOTEQUAL; break;
+	case GREATER_AND_EQUAL:return LESS_AND_EQUAL; break;
+	case LESS_AND_EQUAL:return GREATER_AND_EQUAL; break;
+	default:return UNDEFINED;
+	}
+}
+void Expression::swap()
+{
+	std::swap(this->leftOperand, this->rightOperand);
+	op = reverseOperator(op);
+}
+
+OPERATOR stringToOperator(std::string s)
+{
+	if (s == "==")
+		return EQUAL;
+	else if (s == ">")
+		return GREATER;
+	else if (s == "<")
+		return LESS;
+	else if (s == "!=" || s == "<>")
+		return NOTEQUAL;
+	else if (s == ">=")
+		return GREATER_AND_EQUAL;
+	else if (s == "<=")
+		return LESS_AND_EQUAL;
+	else return OPERATOR::UNDEFINED;
+}
+
+
+Type stringToType(std::string s)
+{
+	if (s == "int")
+		return INT;
+	else if (s == "float")
+		return FLOAT;
+	else if (s == "char")
+		return CHAR;
+	else
+		return Type::UNDEFINEDTYPE;
+}
+
+
 RecordBuffer::RecordBuffer()
 {
 }
@@ -85,6 +137,10 @@ Type Attribute::getType()
 void Attribute::setType(Type type)
 {
 	this->type = type;
+	if (type == INT)
+		this->length = sizeof(int);
+	else if (type == FLOAT)
+		this->length = sizeof(float);
 }
 
 int Attribute::getLength()
