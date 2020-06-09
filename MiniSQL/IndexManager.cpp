@@ -67,7 +67,112 @@ const QueryResult & IndexManager::deleteValues(const string & indexName, const l
 	if (conditions.size() != 0) {
 		auto res = Condition::GetMinimalConditoins(conditions, currentIndex->GetType());
 		if (res) {
-
+			if (conditions[0].getOP() == Equal) {
+				auto add = currentIndex->FindAddress(conditions[0].getValue());
+				if (add == -1) {
+					auto end = clock();
+					auto time = (double)(end - start) / CLOCKS_PER_SEC;
+					RecordBuffer rb;
+					return QueryResult(Success, 0, time, rb);
+				}
+				else {
+					deleteRecordFromFile(indexName, indexList, fileName, add, recordLength);
+					currentIndex->Delete(conditions[0].getValue());
+					auto end = clock();
+					auto time = (double)(end - start) / CLOCKS_PER_SEC;
+					RecordBuffer rb;
+					return QueryResult(Success, 1, time, rb);
+				}
+			}
+			else if (conditions[0].getOP() == GreaterEqual) {
+				auto leaf = currentIndex->GetLeafWithKey(conditions[0].getValue());
+				bool addFlag = false;
+				if (leaf == NULL) {
+					currentIndex->Insert(conditions[0].getValue(), -1);
+					leaf = currentIndex->GetLeafWithKey(conditions[0].getValue());
+					addFlag = true;
+				}
+				vector<string> keyBuff;
+				int count = 0;
+				while (leaf != NULL) {
+					for (auto key : *(leaf->GetKeys())) {
+						if (Condition::FitAllConditions(conditions, currentIndex->GetType(), key)) {
+							int add = leaf->GetAddress(key);
+							if (add != -1) {
+								deleteRecordFromFile(indexName, indexList, fileName, add, recordLength);
+								count++;
+							}
+							keyBuff.push_back(key);
+						}
+					}
+					leaf = leaf->GetRightNode();
+				}
+				for (auto key : keyBuff) {
+					currentIndex->Delete(key);
+				}
+				if (addFlag) {
+					currentIndex->Delete(conditions[0].getValue());
+				}
+				auto end = clock();
+				auto time = (double)(end - start) / CLOCKS_PER_SEC;
+				RecordBuffer rb;
+				return QueryResult(Success, count, time, rb);
+			}
+			else if (conditions[0].getOP() == LessEqual) {
+				auto leaf = currentIndex->GetLeafWithKey(conditions[0].getValue());
+				bool addFlag = false;
+				if (leaf == NULL) {
+					currentIndex->Insert(conditions[0].getValue(), -1);
+					leaf = currentIndex->GetLeafWithKey(conditions[0].getValue());
+					addFlag = true;
+				}
+				vector<string> keyBuff;
+				int count = 0;
+				while (leaf != NULL) {
+					for (auto key : *(leaf->GetKeys())) {
+						if (Condition::FitAllConditions(conditions, currentIndex->GetType(), key)) {
+							int add = leaf->GetAddress(key);
+							if (add != -1) {
+								deleteRecordFromFile(indexName, indexList, fileName, add, recordLength);
+								count++;
+							}
+							keyBuff.push_back(key);
+						}
+					}
+					leaf = leaf->GetLeftNode();
+				}
+				for (auto key : keyBuff) {
+					currentIndex->Delete(key);
+				}
+				if (addFlag) {
+					currentIndex->Delete(conditions[0].getValue());
+				}
+				auto end = clock();
+				auto time = (double)(end - start) / CLOCKS_PER_SEC;
+				RecordBuffer rb;
+				return QueryResult(Success, count, time, rb);
+			}
+			else {
+				int count = 0;
+				vector<string> keyBuff;
+				for (auto leaf = currentIndex->GetFirstLeaf(); leaf != NULL; leaf = leaf->GetRightNode()) {
+					for (auto key : *(leaf->GetKeys())) {
+						if (Condition::FitAllConditions(conditions, currentIndex->GetType(), key)) {
+							int add = leaf->GetAddress(key);
+							deleteRecordFromFile(indexName, indexList, fileName, add, recordLength);
+							count++;
+							keyBuff.push_back(key);
+						}
+					}
+				}
+				for (auto key : keyBuff) {
+					currentIndex->Delete(key);
+				}
+				auto end = clock();
+				auto time = (double)(end - start) / CLOCKS_PER_SEC;
+				RecordBuffer rb;
+				return QueryResult(Success, count, time, rb);
+			}
 		}
 		else {
 			auto end = clock();
@@ -77,9 +182,163 @@ const QueryResult & IndexManager::deleteValues(const string & indexName, const l
 		}
 	}
 	else {
-
+		for (auto leaf = currentIndex->GetFirstLeaf(); leaf != NULL; leaf = leaf->GetRightNode()) {
+			for (auto key : *(leaf->GetKeys())) {
+				deleteRecordFromFile(indexName, indexList, fileName, leaf->GetAddress(key), recordLength);
+			}
+		}
+		int count = currentIndex->GetElementCount();
+		currentIndex->Clear();
+		auto end = clock();
+		auto time = (double)(end - start) / CLOCKS_PER_SEC;
+		RecordBuffer rb;
+		return QueryResult(Success, count, time, rb);
 	}
-	
+}
+
+const QueryResult& IndexManager::deleteValues(const string& primaryIndexName, const list<string>& primaryKeyValues, const list<string>& indexList, const string& fileName, const int recordLength)
+{
+	auto start = clock();
+	for (auto keyValue : primaryKeyValues) {
+		deleteRecordFromFile("", indexList, fileName, indexDictionary[primaryIndexName]->FindAddress(keyValue), recordLength);
+	}
+	auto end = clock();
+	auto time = (double)(end - start) / CLOCKS_PER_SEC;
+	RecordBuffer rb;
+	return QueryResult(Success, primaryKeyValues.size(), time, rb);
+}
+
+const QueryResult& IndexManager::deleteValuesAll(const string& indexName)
+{
+	auto start = clock();
+	indexDictionary[indexName]->Clear();
+	SaveToFile(indexName);
+	auto end = clock();
+	auto time = (double)(end - start) / CLOCKS_PER_SEC;
+	RecordBuffer rb;
+	return QueryResult(Success, 0, time, rb);
+}
+
+const QueryResult& IndexManager::selectValues(const string& indexName, const list<string>& attributes, Table& table, vector<Condition> conditions, const string& fileName)
+{
+	auto start = clock();
+	auto currentIndex = indexDictionary[indexName];
+	RecordBuffer rb;
+	if (conditions.size() != 0) {
+		auto res = Condition::GetMinimalConditoins(conditions, currentIndex->GetType());
+		if (res) {
+			if (conditions[0].getOP() == Equal) {
+				auto add = currentIndex->FindAddress(conditions[0].getValue());
+				if (add == -1) {
+					auto end = clock();
+					auto time = (double)(end - start) / CLOCKS_PER_SEC;
+					
+					return QueryResult(Success, 0, time, rb);
+				}
+				else {
+					PushToRecordBuffer(attributes, table, rb, add, fileName);
+					auto end = clock();
+					auto time = (double)(end - start) / CLOCKS_PER_SEC;
+					return QueryResult(Success, 0, time, rb);
+				}
+			}
+			else if (conditions[0].getOP() == GreaterEqual) {
+				auto leaf = currentIndex->GetLeafWithKey(conditions[0].getValue());
+				bool addFlag = false;
+				if (leaf == NULL) {
+					currentIndex->Insert(conditions[0].getValue(), -1);
+					leaf = currentIndex->GetLeafWithKey(conditions[0].getValue());
+					addFlag = true;
+				}
+				while (leaf != NULL) {
+					for (auto key : *(leaf->GetKeys())) {
+						if (Condition::FitAllConditions(conditions, currentIndex->GetType(), key)) {
+							int add = leaf->GetAddress(key);
+							if (add != -1) {
+								PushToRecordBuffer(attributes, table, rb, add, fileName);
+							}
+						}
+					}
+					leaf = leaf->GetRightNode();
+				}
+				if (addFlag) {
+					currentIndex->Delete(conditions[0].getValue());
+				}
+				auto end = clock();
+				auto time = (double)(end - start) / CLOCKS_PER_SEC;
+				return QueryResult(Success, 0, time, rb);
+			}
+			else if (conditions[0].getOP() == LessEqual) {
+				auto leaf = currentIndex->GetLeafWithKey(conditions[0].getValue());
+				bool addFlag = false;
+				if (leaf == NULL) {
+					currentIndex->Insert(conditions[0].getValue(), -1);
+					leaf = currentIndex->GetLeafWithKey(conditions[0].getValue());
+					addFlag = true;
+				}
+				while (leaf != NULL) {
+					for (auto key : *(leaf->GetKeys())) {
+						if (Condition::FitAllConditions(conditions, currentIndex->GetType(), key)) {
+							int add = leaf->GetAddress(key);
+							if (add != -1) {
+								PushToRecordBuffer(attributes, table, rb, add, fileName);
+							}
+						}
+					}
+					leaf = leaf->GetLeftNode();
+				}
+				if (addFlag) {
+					currentIndex->Delete(conditions[0].getValue());
+				}
+				auto end = clock();
+				auto time = (double)(end - start) / CLOCKS_PER_SEC;
+				return QueryResult(Success, 0, time, rb);
+			}
+			else {
+				for (auto leaf = currentIndex->GetFirstLeaf(); leaf != NULL; leaf = leaf->GetRightNode()) {
+					for (auto key : *(leaf->GetKeys())) {
+						if (Condition::FitAllConditions(conditions, currentIndex->GetType(), key)) {
+							int add = leaf->GetAddress(key);
+							PushToRecordBuffer(attributes, table, rb, add, fileName);
+						}
+					}
+				}
+				auto end = clock();
+				auto time = (double)(end - start) / CLOCKS_PER_SEC;
+				return QueryResult(Success, 0, time, rb);
+			}
+		}
+		else {
+			auto end = clock();
+			auto time = (double)(end - start) / CLOCKS_PER_SEC;
+			return QueryResult(Success, 0, time, rb);
+		}
+	}
+	else {
+		for (auto leaf = currentIndex->GetFirstLeaf(); leaf != NULL; leaf = leaf->GetRightNode()) {
+			for (auto key : *(leaf->GetKeys())) {
+				PushToRecordBuffer(attributes, table, rb, leaf->GetAddress(key), fileName);
+			}
+		}
+		auto end = clock();
+		auto time = (double)(end - start) / CLOCKS_PER_SEC;
+		return QueryResult(Success, 0, time, rb);
+	}
+}
+
+const QueryResult& IndexManager::insertValues(const string& indexName, string indexKey, const ADDRESS& recordOffset)
+{
+	auto start = clock();
+	indexDictionary[indexName]->Insert(indexKey, recordOffset);
+	auto end = clock();
+	auto time = (double)(end - start) / CLOCKS_PER_SEC;
+	RecordBuffer rb;
+	return QueryResult(Success, 0, time, rb);
+}
+
+bool IndexManager::keyExists(const string& indexName, string keyValue)
+{
+	return indexDictionary[indexName]->FindAddress(keyValue) != -1;
 }
 
 void IndexManager::CreateFromFile(string name)
@@ -127,6 +386,8 @@ ADDRESS IndexManager::getNextToEndOffset(const string & fileName, const int & re
 
 void IndexManager::deleteRecordFromFile(const string & keyIndexName, const list<string>& indexList, const string & fileName, const ADDRESS & recordOffset, const int & recordLength)
 {
+	if (recordOffset == -1)
+		return;
 	if (recordOffset == getNextToEndOffset(fileName, recordLength))/*renew End offset and delete key in every index that is not key index*/
 	{
 		renewEndOffset(fileName, recordLength);
@@ -154,6 +415,7 @@ void IndexManager::deleteRecordFromFile(const string & keyIndexName, const list<
 		BYTE* endRecordKey = bufferManager->fetchARecord(fileName, renewedEndOffset + indexDictionary[indexName]->GetOffset());/*the key of end record*/
 		char* tmpRecordString = new char[currentIndex->GetLength() + 1];
 		memcpy(tmpRecordString, deleteRecordKey, currentIndex->GetLength());
+		tmpRecordString[currentIndex->GetLength()] = '\0';
 		string recordString(tmpRecordString);
 		delete tmpRecordString;
 		currentIndex->Delete(recordString);
@@ -166,4 +428,31 @@ void IndexManager::renewEndOffset(const string & fileName, const int & recordLen
 {
 	auto renewedOffset = getNextToEndOffset(fileName, recordLength);
 	bufferManager->writeARecord((BYTE *)&renewedOffset, recordLength, fileName, 0);
+}
+
+void IndexManager::PushToRecordBuffer(const list<string> attributes, const Table& table, RecordBuffer& recordBuffer, const ADDRESS& address, const string& fileName)
+{
+	vector<string> buffVec;
+	for (auto attributeName : attributes) {
+		try
+		{
+			auto attribute = table.getAttribute(attributeName);
+			auto data = bufferManager->fetchARecord(fileName, address + attribute.getOffset());
+			char* buff = new char[attribute.getLength() + 1];
+			memcpy(buff, data, attribute.getLength());
+			buff[attribute.getLength()] = '\0';
+			buffVec.push_back(string(buff));
+			delete buff;
+		}
+		catch (const std::exception& e)
+		{
+			throw e;
+		}
+	}
+	string res = "";
+	for (auto val : buffVec) {
+		res.append(val);
+		res.append(" ");
+	}
+	recordBuffer.addContent(res);
 }

@@ -298,10 +298,16 @@ bool Condition::GetMinimalConditoins(vector<Condition>& conditions, Type type)
 	}
 	else {
 		if (lowFlag) {
-			conditions.push_back(Condition(name, lowInclude ? GreaterEqual : GreaterThan, lowVal));
+			conditions.push_back(Condition(name, GreaterEqual, lowVal));
+			if (!lowInclude) {
+				conditions.push_back(Condition(name, NotEqual, lowVal));
+			}
 		}
 		if (highFlag) {
-			conditions.push_back(Condition(name, highInclude ? LessEqual : LessThan, highVal));
+			conditions.push_back(Condition(name, LessEqual, highVal));
+			if (!highInclude) {
+				conditions.push_back(Condition(name, NotEqual, highVal));
+			}
 		}
 		for (auto ex : exclusives) {
 			bool flagHI = false;
@@ -342,6 +348,16 @@ bool Condition::GetMinimalConditoins(vector<Condition>& conditions, Type type)
 		}
 	}
 
+	return true;
+}
+
+bool Condition::FitAllConditions(const vector<Condition>& conditions, Type type, string value)
+{
+	for (auto condition : conditions) {
+		if (!condition.FitCondition(value, type)) {
+			return false;
+		}
+	}
 	return true;
 }
 
@@ -581,7 +597,7 @@ Table::~Table()
 {
 }
 
-string Table::getTableName()
+string Table::getTableName() const
 {
 	return name;
 }
@@ -591,7 +607,7 @@ void Table::setTableName(string tableName)
 	this->name = tableName;
 }
 
-const vector<Attribute>& Table::getAttributes()
+const vector<Attribute>& Table::getAttributes() const
 {
 	// TODO: 在此处插入 return 语句
 	return this->attributes;
@@ -602,7 +618,7 @@ void Table::setAttributes(const vector<Attribute>& attributes)
 	this->attributes = vector<Attribute>(attributes);
 }
 
-int Table::getPrimaryKeyIndex()
+int Table::getPrimaryKeyIndex() const
 {
 	return primaryKeyIndex;
 }
@@ -612,7 +628,7 @@ void Table::setPrimaryKeyIndex(int primaryKeyIndex)
 	this->primaryKeyIndex = primaryKeyIndex;
 }
 
-int Table::getRowLength()
+int Table::getRowLength() const
 {
 	return rowLength;
 }
@@ -632,14 +648,17 @@ bool Table::hasAttribute(string attributeName)
 	return false;
 }
 
-const Attribute& Table::getAttribute(string attributeName)
+const Attribute& Table::getAttribute(string attributeName) const
 {
 	for (auto attribute : attributes) {
 		if (attribute.getAttributeName() == attributeName) {
 			return attribute;
 		}
 	}
-	throw exception("Attribute Not Found!");
+	string buff = "Attribute \"";
+	buff.append(attributeName);
+	buff.append("\" Not Found!");
+	throw exception(buff.c_str());
 }
 
 TableHeader Table::GetTableHeader()
@@ -660,12 +679,12 @@ TableHeader Table::GetTableHeader()
 	return header;
 }
 
-int Table::getRecordLength()
+int Table::getRecordLength() const
 {
 	return recordLength;
 }
 
-int Table::getRecordCount()
+int Table::getRecordCount() const
 {
 	return recordCount;
 }

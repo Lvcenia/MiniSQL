@@ -29,6 +29,7 @@ public:
 	string getValue();
 	bool FitCondition(string attributeVal, Type type);
 	static bool GetMinimalConditoins(vector<Condition>& conditions, Type type);
+	static bool FitAllConditions(const vector<Condition>& conditions, Type type, string value);
 private:
 	string attributeName;
 	OP op;
@@ -187,19 +188,19 @@ public:
 	Table(string tableName, const vector<Attribute>& attributes);//create a new table
 	Table(const TableHeader& header);//create from file
 	~Table();
-	string getTableName();
+	string getTableName() const;
 	void setTableName(string tableName);
-	const vector<Attribute>& getAttributes();
+	const vector<Attribute>& getAttributes() const;
 	void setAttributes(const vector<Attribute>& attributes);
-	int getPrimaryKeyIndex();
+	int getPrimaryKeyIndex() const;
 	void setPrimaryKeyIndex(int primaryKeyIndex);
-	int getRowLength();
+	int getRowLength() const;
 	void addAttribute(Attribute& attribute);
 	bool hasAttribute(string attributeName);
-	const Attribute& getAttribute(string attributeName);//若未找到，则抛出异常
+	const Attribute& getAttribute(string attributeName) const;//若未找到，则抛出异常
 	TableHeader GetTableHeader();
-	int getRecordLength();//获取记录长度
-	int getRecordCount();//获取记录数
+	int getRecordLength() const;//获取记录长度
+	int getRecordCount() const;//获取记录数
 	
 private:
 	string name;

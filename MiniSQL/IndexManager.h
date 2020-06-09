@@ -25,7 +25,7 @@ public:
 	const QueryResult& deleteValuesAll(const string &indexName);/*delete all the values*/
 	const QueryResult& selectValues(const string &indexName, const list<string> &attributes, Table& table, vector<Condition> conditions, const string &fileName);/*select values specified by expressions*/
 	const QueryResult& insertValues(const string &indexName, string indexKey, const ADDRESS &recordOffset);/*insert indexkey to bplus tree after insertion with RM*/
-	bool keyExists(const string &indexName, string keyValue, const int length);/*find if a key exists in index specified by indexName*/
+	bool keyExists(const string &indexName, string keyValue);/*find if a key exists in index specified by indexName*/
 	static IndexManager* getIndexManagerPtr(list<string> indexName) { static IndexManager im(indexName); return &im; }/*get an instance of IndexManager*/
 
 private:
@@ -40,4 +40,5 @@ private:
 	ADDRESS getNextToEndOffset(const string &fileName, const int &recordLength);
 	void deleteRecordFromFile(const string &keyIndexName, const list<string> &indexList, const string &fileName, const ADDRESS &recordOffset, const int &recordLength);
 	void renewEndOffset(const string &fileName, const int &recordLength);
+	void PushToRecordBuffer(const list<string> attributes, const Table& table, RecordBuffer& recordBuffer, const ADDRESS& address, const string& fileName);
 };

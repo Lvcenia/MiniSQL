@@ -34,10 +34,12 @@ public:
 	int GetMaxKeyCount();
 	int GetOffset();
 	int GetLength();
+	int GetElementCount();
 	Type GetType();
 	BPTLeafNode* GetLeafWithKey(string key);
 	BPTLeafNode* GetFirstLeaf();
 	const IndexHeader& GetHeader();
+	void Clear();
 
 	void Debug();
 

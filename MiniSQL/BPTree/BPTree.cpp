@@ -153,6 +153,11 @@ int BPTree::GetLength()
 	return length;
 }
 
+int BPTree::GetElementCount()
+{
+	return elementCount;
+}
+
 Type BPTree::GetType()
 {
 	return type;
@@ -166,7 +171,6 @@ BPTLeafNode * BPTree::GetLeafWithKey(string key)
 	}
 	catch (const std::exception& e)
 	{
-		cout << e.what() << endl;
 		return NULL;
 	}
 }
@@ -202,6 +206,12 @@ const IndexHeader & BPTree::GetHeader()
 	header.tableName[i] = '\0';
 
 	return header;
+}
+
+void BPTree::Clear()
+{
+	delete root;
+	root = NULL;
 }
 
 void BPTree::Debug()
