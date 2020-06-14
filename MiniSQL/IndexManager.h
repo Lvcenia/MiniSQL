@@ -5,8 +5,6 @@
 #include "BPTree/BPTree.h"
 #include "Generals.h"
 #include "BufferManager.h"
-#include "CatalogManager.h"
-#include "RecordManager.h"
 using namespace std;
 
 #define BLOCKSIZE 4096
@@ -31,7 +29,6 @@ public:
 private:
 	map<string, BPTree*> indexDictionary;
 	BufferManager* bufferManager;
-	CatalogManager* catalogManager;
 
 
 	void CreateFromFile(string name);

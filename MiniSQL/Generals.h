@@ -9,6 +9,14 @@
 
 using namespace std;
 
+enum Type
+{
+	INT,
+	CHAR,
+	FLOAT,
+	UNDEFINEDTYPE
+};
+
 enum OP {
 	Equal,
 	NotEqual,
@@ -124,13 +132,7 @@ public:
 };
 
 
-enum Type
-{
-	INT,
-	CHAR,
-	FLOAT,
-	UNDEFINEDTYPE
-};
+
 Type stringToType(std::string s);
 
 struct AttributeInfo {
