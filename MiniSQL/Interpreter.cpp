@@ -15,10 +15,10 @@ typedef std::string::iterator Iterator;
 
 
  //sql 语句总执行入口
-QueryResult Interpreter::executeSql(const string & sql) {
+void Interpreter::executeSql(const string & sql) {
 	parse(sql);
 	check();
-	return execute();
+	execute();
 }
  //总语法分析
 void Interpreter::parse(const string& sql) {
@@ -78,11 +78,11 @@ void Interpreter::check()
 	}
 }
  //执行语句
-QueryResult Interpreter::execute()
+void Interpreter::execute()
 {
 	try {
 		for (auto& vsb : vStatementBlock) {
-			vsb->execute();
+			rets.push_back(vsb->execute());
 			if (vStatementBlock.size() == 1)
 				break;
 		}
