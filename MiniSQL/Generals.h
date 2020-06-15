@@ -218,7 +218,7 @@ private:
 
 
 
-//记录查询结果的缓存类，全局唯一
+//记录查询结果的缓存类，全局唯一（个人觉得不唯一，特殊情况：执行一个文件时，建议：每个结果queryresult存一个 recordbuffer，interpreter里存vector<queryresult>）
 class RecordBuffer
 {
 public:
