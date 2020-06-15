@@ -16,11 +16,11 @@ class Interpreter
 public:
 	Interpreter() {};
 	~Interpreter() {};
-	QueryResult executeSql(const std::string& sql); // 总执行
+	void executeSql(const std::string& sql); // 总执行,结果保存在vector<QueryResult>里,因为执行一个文件里的多条语句就有多条结果，所以用vector
 	void parse(const std::string& sql); // 总语法分析
 	void check(); // 语句检查
-	QueryResult execute(); // 执行
-	//void print();
+	void execute(); // 执行
+	void print(); // 依次输出执行结果
 	//void readInput(const std::string& s);
 	void executeFile(const std::string& fileName); // 执行文件
 	std::shared_ptr<StatementBlock>& gettPtr() { return tptr; } 
@@ -41,10 +41,12 @@ private:
 	void deleteParser(Iterator& begin, Iterator end);
 	void quitParser(Iterator& begin, Iterator end);
 	void execfileParser(Iterator& begin, Iterator end);
+
 	// 各类语句信息类的指针集
 	std::vector<std::shared_ptr<StatementBlock>> vStatementBlock;
 	std::string tmpStoredSql;
 	//RECORDBUFFER* rb;
 	std::shared_ptr<StatementBlock> tptr;
+	vector<QueryResult> rets;  // 查询的结果, 一个文件中多条sql语句会有多个结果
 };
 #endif
