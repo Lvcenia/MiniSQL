@@ -8,9 +8,9 @@
 #include <memory>
 #include <functional>
 
-class StatementBlock;
+class StatementBlock; // 各种sql语句类的基类，对各种sql语句实现自我检查和执行
 
-
+// 交互类，被主函数调用，分析执行sql或sql文件，打印结果
 class Interpreter
 {
 public:
@@ -42,11 +42,12 @@ private:
 	void quitParser(Iterator& begin, Iterator end);
 	void execfileParser(Iterator& begin, Iterator end);
 
-	// 各类语句信息类的指针集
-	std::vector<std::shared_ptr<StatementBlock>> vStatementBlock;
-	std::string tmpStoredSql;
+private:
+	std::vector<std::shared_ptr<StatementBlock>> vStatementBlock;// 各类语句信息类的指针集
+	std::string tmpStoredSql; // 暂存的一条sql语句
 	//RECORDBUFFER* rb;
-	std::shared_ptr<StatementBlock> tptr;
+	std::shared_ptr<StatementBlock> tptr; // 暂存的一个sql语句对应的类
+
 	vector<QueryResult> rets;  // 查询的结果, 一个文件中多条sql语句会有多个结果
 };
 #endif
