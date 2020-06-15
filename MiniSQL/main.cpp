@@ -11,7 +11,7 @@ using namespace std;
 //主函数
 int main()
 {
-	RecordBuffer recordBuffer(); // 把它放这里似乎有些不妥，不如放在QueryResult里
+	//RecordBuffer recordBuffer(); // 把它放这里似乎有些不妥，不如放在QueryResult里
 
 	//创建几个Manager对象并各自初始化
 	CatalogManager catalogManager;
@@ -54,11 +54,8 @@ int main()
 			else
 			{
 				//sql = sql.substr(0, sql.length() - 1);
-				//QueryResult res =  interperter.executeSql(sql);
-				//cout << res.content;
-
-				// 判断res是否是正确的返回，并且是否有返回查询记录
-				// 是，接下来输出查询结果 
+				//interperter.executeSql(sql); // 进入执行
+				//interperter.print(); // 输出执行结果
 			}
 			cout << "MiniSql->>";
 			sql.clear();
