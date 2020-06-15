@@ -58,7 +58,7 @@ void CreateTableBlock::check()
 	delete pcb;
 }
 
-void CreateTableBlock::execute()
+QueryResult CreateTableBlock::execute()
 {
 	//auto api = API::getAPIPtr();
 	auto api = new API(); // detele at the end
@@ -128,7 +128,7 @@ void CreateIndexBlock::check()
 	delete pcb;
 }
 
-void CreateIndexBlock::execute()
+QueryResult CreateIndexBlock::execute()
 {
 	auto api = new API();
 	//auto api = API::getAPIPtr();
@@ -184,7 +184,7 @@ void InsertTableBlock::check()
 	delete pcb;
 }
 
-void InsertTableBlock::execute()
+QueryResult InsertTableBlock::execute()
 {
 	auto api = new API();
 	//auto api = API::getAPIPtr();
@@ -220,7 +220,7 @@ void QuitBlock::check()
 	//no need to check
 }
 
-void QuitBlock::execute()
+QueryResult QuitBlock::execute()
 {
 	throw Quit();
 }
@@ -243,7 +243,7 @@ void DropTableBlock::check()
 	delete pcb;
 }
 
-void DropTableBlock::execute()
+QueryResult DropTableBlock::execute()
 {
 	auto api = new API();
 	//auto api = API::getAPIPtr();
@@ -271,7 +271,7 @@ void DropIndexBlock::check()
 	delete pcb;
 }
 
-void DropIndexBlock::execute()
+QueryResult DropIndexBlock::execute()
 {
 	auto api = new API();
 	//auto api = API::getAPIPtr();
@@ -340,7 +340,7 @@ void DeleteBlock::check()
 	delete pcb;
 }
 
-void DeleteBlock::execute()
+QueryResult DeleteBlock::execute()
 {
 	if (doNothingFlag)return;
 
@@ -437,7 +437,7 @@ void SelectBlock::check()
 	delete pcb;
 }
 
-void SelectBlock::execute()
+QueryResult SelectBlock::execute()
 {
 	if (doNothingFlag)return;
 
@@ -552,7 +552,7 @@ bool compareExp(const std::string& left, const std::string& right, Type type, OP
 	return false;
 }
 
-void execBlock::execute() 
+QueryResult execBlock::execute()
 {
 	string file = fileName;
 	
@@ -560,4 +560,5 @@ void execBlock::execute()
 	ip->getVsb().clear();
 	ip->executeFile(fileName);
 	ip->getVsb().push_back(ip->gettPtr());
+	return QueryResult(); // ¿Õ½á¹û
 }
