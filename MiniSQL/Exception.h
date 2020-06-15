@@ -5,6 +5,10 @@
 #include <exception>
 #include <string>
 
+
+/*定义了一些自定义异常类，用于处理并区分各种错误，从而实现某些功能*/
+
+
 class GrammarError :public std::exception{
 public:
 	GrammarError(std::string s):errorInfo("Grammar Error: "+s) {}
