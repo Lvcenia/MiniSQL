@@ -426,8 +426,13 @@ RecordBuffer::~RecordBuffer()
 
 void RecordBuffer::output()
 {
-	for (auto info : content) {
-		cout << info << endl;
+	if (content.empty()) {
+		std:cout << "\n" << "No Records." << std::endl;
+	}
+	else {
+		for (auto& info : content) {
+			cout << info << endl;
+		}
 	}
 }
 
