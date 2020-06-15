@@ -13,11 +13,20 @@
 
 
 
-
+/*各种sql语句对应的类
+*
+*作用：接收interpreter传来的被初步语法分析的sql语句处理后的结果，
+*      接着进行检查，检查数据库中是否已存在、是否不存在...等问题
+*      没有问题就调用api中的各种接口执行sql语句
+*      并将结果返回给interpreter
+*
+*/
 
 
 class Interpreter;
+
 // an interface 
+// 所有sql语句对应类的基类
 class StatementBlock{
 public:
 	virtual QueryResult execute() = 0;
@@ -26,6 +35,7 @@ public:
 	virtual ~StatementBlock() {};
 };
 
+// 新建表：check检查是否已存在表，execute调用api中新建表函数
 class CreateTableBlock :public StatementBlock {
 public:
 	CreateTableBlock(Table table) :table(table) {};
@@ -41,6 +51,7 @@ private:
 	std::string primaryKeyName;
 };
 
+// 新建索引：check检查是否已存在索引、存在表、存在属性，execute调用api中新建索引函数
 class CreateIndexBlock :public StatementBlock {
 public:
 	CreateIndexBlock(std::string indexName,std::string tableName, std::string attributeName) 
@@ -55,6 +66,7 @@ private:
 	std::string attributeName;
 };
 
+//	插入记录： check检查是否存在表、属性数量是否对应、属性类型是否对应，execute调用api中插入记录函数
 class InsertTableBlock :public StatementBlock {
 public:
 	InsertTableBlock(std::string tableName, std::vector<std::string> values) 
@@ -68,9 +80,11 @@ private:
 	std::vector<std::string> values;
 };
 
+// 查询记录：check检查是否存在表、属性、条件中属性类型与值是否对应，execute调用api中的查询函数
 class SelectBlock:public StatementBlock {
 public:
-	SelectBlock(Interpreter* const ip):star(false),doNothingFlag(false),ip(ip){}
+	//SelectBlock(Interpreter* const ip):star(false),doNothingFlag(false),ip(ip){}
+	SelectBlock(Interpreter* const ip):star(false),doNothingFlag(false){}
 	void setStar(bool star) { this->star = star; }
 	void setTableName(std::string& tableName) { this->tableName = tableName; }
 	void setAttributes(std::list<std::string>& attributes) { this-> attributes = attributes; }
@@ -85,10 +99,10 @@ private:
 	std::list<std::string> attributes;
 	std::string tableName;
 	std::list<Expression> exps;
-	Interpreter* const ip;
+	//Interpreter* const ip;
 };
 
-
+// 退出数据库： 直接抛出退出异常进行退出
 class QuitBlock :public StatementBlock {
 public:
 	QuitBlock(){}
@@ -100,6 +114,7 @@ public:
 private:
 };
 
+// 删除表：check检查是否存在表，execute调用api中的删除表函数
 class DropTableBlock :public StatementBlock {
 public:
 	DropTableBlock(std::string s) :tableName(s) {}
@@ -111,6 +126,7 @@ private:
 	std::string tableName;
 };
 
+// 删除索引：check检查是否存在索引， execute调用api中的删除索引函数
 class DropIndexBlock :public StatementBlock {
 public:
 	DropIndexBlock(std::string s) :indexName(s) {}
@@ -123,7 +139,7 @@ private:
 	std::string indexName;
 };
 
-
+// 删除记录：check检查是否存在表、条件中的属性及类型是否与值对应，execute调用api中的删除记录函数
 class DeleteBlock : public StatementBlock{
 public:
 	DeleteBlock(std::string tableName) :tableName(tableName), flag(false), doNothingFlag(false) {}
@@ -141,6 +157,7 @@ private:
 	bool doNothingFlag;
 };
 
+// 执行一个sql文件：execute直接打卡文件读入sql语句，并反调用interpreter，把文件中的所有sql语句分析处理完，再检查、执行，这样，又回到了上面各种sql语句对应的类
 class execBlock : public StatementBlock {
 public:
 	execBlock(std::string s,Interpreter* ip) :fileName(s),ip(ip){};
@@ -150,10 +167,11 @@ public:
 	virtual ~execBlock() {};
 private:
 	std::string fileName;
-	Interpreter* const ip;
+	Interpreter* const ip; // 用于反调用interpreter
 };
 
 
+// 检查类型是否匹配
 class CheckType {
 public:
 	CheckType(){}
@@ -168,6 +186,7 @@ private:
 	Table table;
 };
 
+// 用于比较的 模板函数
 template<typename T>
 auto compareFunc(OPERATOR oper)->bool(*)(T, T) {
 	switch (oper) {
@@ -187,7 +206,7 @@ auto compareFunc(OPERATOR oper)->bool(*)(T, T) {
 	return nullptr;
 }
 
-
+// 处理表达式
 bool compareExp(const std::string& left, const std::string& right, Type type, OPERATOR op);
 
 #endif
