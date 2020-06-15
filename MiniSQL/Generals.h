@@ -92,7 +92,7 @@ class QueryResult
 public:
 	QueryResult() {};
 	//成功时用这个
-	QueryResult(QueryState state, int affcRows, double exectime,RecordBuffer& rb)
+	QueryResult(QueryState state, int affcRows, double exectime, RecordBuffer& rb):records(rb)
 	{
 		this->state = state;
 		this->affectedRows = affcRows;
@@ -128,7 +128,8 @@ public:
 	int affectedRows;
 	//query的执行时间
 	double execTime;
-	
+	// 查询的记录
+	RecordBuffer records;
 };
 
 
@@ -223,6 +224,7 @@ class RecordBuffer
 public:
 	RecordBuffer();
 	RecordBuffer(const vector<string>& content);
+	RecordBuffer(const RecordBuffer& that) { content = vector<string>(that.content); }
 	~RecordBuffer();
 	void output();//简易输出
 	void addContent(string info);//追加内容
