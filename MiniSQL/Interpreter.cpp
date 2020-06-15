@@ -404,11 +404,16 @@ void Interpreter::executeFile(const string & fileName)
 //{
 //	API::getAPIPtr();
 //}
-//
-//
+
+
 //void Interpreter::print()
 //{
 //	for (auto& vsb : vStatementBlock) {
 //		vsb->print();
 //	}
 //}
+
+void Interpreter::print(){
+
+}
+
