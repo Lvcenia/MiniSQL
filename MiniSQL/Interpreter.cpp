@@ -6,7 +6,7 @@
 #include <fstream>
 #include <sstream>
 #include "Exception.h"
-//#include "CatalogManager.h"
+#include "CatalogManager.h"
 //#include "API.h"
 
 using namespace std;
@@ -170,11 +170,11 @@ void Interpreter::createTableParser(Iterator& begin, Iterator end) {
 }
 
 void Interpreter::createIndexParser(Iterator& begin, Iterator end) {
-	string indexName = readWord(begin, end, IsVariableName());	//read index
+	string indexName = readWord(begin, end, IsVariableName());	//read indexname
 	readWord(begin, end, IsString("on"));	//read on
 	string tableName = readWord(begin, end, IsVariableName());	//read tableName
 	readWord(begin, end, IsString("("));	//read left brace
-	string attributeName = readWord(begin, end, IsVariableName());	//read attribute
+	string attributeName = readWord(begin, end, IsVariableName());	//read attributename
 	readWord(begin, end, IsString(")"));	//read right brace 
 
 	readToEnd(begin, end);
