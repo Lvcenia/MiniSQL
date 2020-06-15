@@ -106,6 +106,9 @@ public:
 			break;
 		}
 	}
+	QueryResult(const QueryResult& that) : state(that.state),content(that.content),
+	                        affectedRows(that.affectedRows),execTime(that.execTime),
+		                    records(that.records) {}
 	//出错时用这个
 	QueryResult(QueryState state, exception e = exception(""))
 	{
