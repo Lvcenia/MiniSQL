@@ -106,6 +106,7 @@ public:
 			break;
 		}
 	}
+	// 拷贝构造，方便interpreter 操作 （哈哈）add by dgz
 	QueryResult(const QueryResult& that) : state(that.state),content(that.content),
 	                        affectedRows(that.affectedRows),execTime(that.execTime),
 		                    records(that.records) {}
@@ -124,6 +125,22 @@ public:
 
 
 	~QueryResult() {};
+
+	// 丁贵州添加：（个人想法）
+	// 打印执行结果
+	void PrintResult() {
+		std::cout << content << endl;
+	}
+	// 返回执行状态
+	bool GetQueryState() {
+		return (state == Success) ? true : false;
+	}
+	// 打印查询的结果记录
+	void PrintRecords() {
+		records.output();
+	}
+	
+public:
 	QueryState state;
 	//结果的内容
 	string content;
@@ -227,6 +244,7 @@ class RecordBuffer
 public:
 	RecordBuffer();
 	RecordBuffer(const vector<string>& content);
+	// 拷贝构造, 似乎是这样写拷贝构造的吧
 	RecordBuffer(const RecordBuffer& that) { content = vector<string>(that.content); }
 	~RecordBuffer();
 	void output();//简易输出
