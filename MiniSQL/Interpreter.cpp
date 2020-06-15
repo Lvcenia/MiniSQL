@@ -413,7 +413,12 @@ void Interpreter::executeFile(const string & fileName)
 //	}
 //}
 
+// 打印结果
 void Interpreter::print(){
-
+	for (auto &ret : rets) {
+		std::cout << std::endl; // 分隔行 
+		ret.PrintResult(); // 先打印执行结果
+		ret.PrintRecords(); // 再打印查询结果
+	}
 }
 
