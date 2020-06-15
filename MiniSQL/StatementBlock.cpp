@@ -64,9 +64,11 @@ QueryResult CreateTableBlock::execute()
 	auto api = new API(); // detele at the end
 
 	//api->createTableCmd(table);
-	api->CreateTable(table);  // TODO : here is a queryresult must to be returned , add a queryresult in statementblock
+	QueryResult ret = api->CreateTable(table);  // TODO : here is a queryresult must to be returned , add a queryresult in statementblock
 
 	delete api;
+
+	return ret;
 }
 
 void CreateTableBlock::print()
@@ -133,10 +135,12 @@ QueryResult CreateIndexBlock::execute()
 	auto api = new API();
 	//auto api = API::getAPIPtr();
 
-	api->CreateIndex(indexName, tableName, attributeName);
+	QueryResult ret = api->CreateIndex(indexName, tableName, attributeName);
 	//api->createIndexCmd(indexName, tableName, attributeName);
 
 	delete api;
+
+	return ret;
 }
 
 void CreateIndexBlock::print()
@@ -199,11 +203,13 @@ QueryResult InsertTableBlock::execute()
 		v.push_back(content);
 	}
 
-	api->InsertValuesInto(tableName, v);
+	QueryResult ret = api->InsertValuesInto(tableName, v);
 	//api->insertValuesCmd(v, pcb->getTable(tableName));
 
 	delete pcb;
 	delete api;
+
+	return ret;
 }
 
 void InsertTableBlock::print()
@@ -223,6 +229,7 @@ void QuitBlock::check()
 QueryResult QuitBlock::execute()
 {
 	throw Quit();
+	// no return
 }
 
 void QuitBlock::print()
@@ -248,10 +255,12 @@ QueryResult DropTableBlock::execute()
 	auto api = new API();
 	//auto api = API::getAPIPtr();
 
-	api->DropTable(tableName);
+	QueryResult ret = api->DropTable(tableName);
 	//api->dropTableCmd(tableName);
 
 	delete api;
+
+	return ret;
 }
 
 void DropTableBlock::print()
@@ -276,10 +285,12 @@ QueryResult DropIndexBlock::execute()
 	auto api = new API();
 	//auto api = API::getAPIPtr();
 
-	api->DropIndex(indexName);
+	QueryResult ret = api->DropIndex(indexName);
 	//api->dropIndexCmd(indexName);
 
 	delete api;
+
+	return ret;
 }
 
 void DropIndexBlock::print()
@@ -346,14 +357,23 @@ QueryResult DeleteBlock::execute()
 
 	auto api = new API();
 	//auto api = API::getAPIPtr();
-
-	if (!flag)
-		api->DeleteFromTable(tableName);
+	
+	if (!flag) {
+		QueryResult ret = api->DeleteFromTable(tableName);
 		//api->deleteValuesCmd(tableName);
-	else api->deleteValuesCmd(tableName, exps);
-	//else api->deleteValuesCmd(tableName, exps);
 
-	delete api;
+		delete api;
+
+		return ret;
+	}
+	else {
+		QueryResult ret = api->deleteValuesCmd(tableName, exps);
+		//else api->deleteValuesCmd(tableName, exps);
+
+		delete api;
+
+		return ret;
+	}
 }
 
 void DeleteBlock::print()
@@ -444,17 +464,24 @@ QueryResult SelectBlock::execute()
 	auto api = new API();
 	//auto api = API::getAPIPtr();
 
-	if (exps.size() == 0)
+	if (exps.size() == 0) {
 
-		QueryResult ret  = api->Select(attributes, tableName);
+		QueryResult ret = api->Select(attributes, tableName);
 		//api->selectValuesCmd(attributes, tableName, ip->getRecordBuffer());
 
-	else
+		delete api;
+
+		return ret;
+	}
+	else {
 
 		QueryResult ret = api->Select(attributes, tableName, exps);
 		//api->selectValuesCmd(attributes, tableName, exps, ip->getRecordBuffer());
 
-	delete api;
+		delete api;
+
+		return ret;
+	}
 }
 
 void SelectBlock::print()
