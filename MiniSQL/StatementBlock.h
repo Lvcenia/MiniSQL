@@ -20,7 +20,7 @@ class Interpreter;
 // an interface 
 class StatementBlock{
 public:
-	virtual void execute() = 0;
+	virtual QueryResult execute() = 0;
 	virtual void print() = 0;
 	virtual void check() = 0;
 	virtual ~StatementBlock() {};
@@ -32,7 +32,7 @@ public:
 	CreateTableBlock(Table table, std::string primaryKeyName) 
 		:table(table),primaryKeyName(primaryKeyName) {};
 	virtual void check();
-	virtual void execute();
+	virtual QueryResult execute();
 	virtual void print();
 
 	virtual ~CreateTableBlock() {};
@@ -45,7 +45,7 @@ class CreateIndexBlock :public StatementBlock {
 public:
 	CreateIndexBlock(std::string indexName,std::string tableName, std::string attributeName) 
 		:indexName(indexName),tableName(tableName),attributeName(attributeName) {};
-	virtual void execute();
+	virtual QueryResult execute();
 	virtual void check();
 	virtual void print();
 	virtual ~CreateIndexBlock() {};
@@ -59,7 +59,7 @@ class InsertTableBlock :public StatementBlock {
 public:
 	InsertTableBlock(std::string tableName, std::vector<std::string> values) 
 	:tableName(tableName),values(values) {};
-	virtual void execute();
+	virtual QueryResult execute();
 	virtual void check();
 	virtual void print();
 	virtual ~InsertTableBlock() {};
@@ -75,7 +75,7 @@ public:
 	void setTableName(std::string& tableName) { this->tableName = tableName; }
 	void setAttributes(std::list<std::string>& attributes) { this-> attributes = attributes; }
 	void setExpressions(std::list<Expression>& exps) { this->exps = exps; }
-	virtual void execute();
+	virtual QueryResult execute();
 	virtual void check();
 	virtual void print();
 	~SelectBlock(){}
@@ -92,7 +92,7 @@ private:
 class QuitBlock :public StatementBlock {
 public:
 	QuitBlock(){}
-	virtual void execute();
+	virtual QueryResult execute();
 	virtual void check();
 	virtual void print();
 
@@ -103,7 +103,7 @@ private:
 class DropTableBlock :public StatementBlock {
 public:
 	DropTableBlock(std::string s) :tableName(s) {}
-	virtual void execute();
+	virtual QueryResult execute();
 	virtual void check();
 	virtual void print();
 	virtual ~DropTableBlock(){}
@@ -114,7 +114,7 @@ private:
 class DropIndexBlock :public StatementBlock {
 public:
 	DropIndexBlock(std::string s) :indexName(s) {}
-	virtual void execute();
+	virtual QueryResult execute();
 	virtual void check();
 	virtual void print();
 
@@ -130,7 +130,7 @@ public:
 	DeleteBlock(std::string tableName, std::list<Expression> exps)
 	 :tableName(tableName),exps(exps),flag(true),doNothingFlag(false){}
 	 
-	virtual void execute();
+	virtual QueryResult execute();
 	virtual void check();
 	virtual void print();
 	virtual ~DeleteBlock(){}
@@ -144,7 +144,7 @@ private:
 class execBlock : public StatementBlock {
 public:
 	execBlock(std::string s,Interpreter* ip) :fileName(s),ip(ip){};
-	virtual void execute();;
+	virtual QueryResult execute();;
 	virtual void print() {};
 	virtual void check() {};
 	virtual ~execBlock() {};
