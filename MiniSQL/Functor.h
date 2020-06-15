@@ -12,6 +12,9 @@
 #include <functional>
 
 
+/*定义了一些用于分析sql语法的函数，供interpreter调用*/
+
+
 // can't understand
 std::string readWord(std::string::iterator& sIter, std::string::iterator end, std::function<bool(char)> f = [](char c)->bool {
 	return isalnum(c) || c == '_' || c == '.';
