@@ -14,17 +14,21 @@ class API
 public:
 	API();
 	~API();
+	static API* getInstance();
 	void Init(CatalogManager* p_catalogManager, IndexManager* p_indexManager, RecordManager* p_recordManager);
 	QueryResult CreateTable(const Table& table);
-	QueryResult CreateDatabase(const string& databaseName);
+	//QueryResult CreateDatabase(const string& databaseName);
+	//QueryResult DropDatabase(const string& databaseName);
 	QueryResult CreateIndex(const string& tableName, const string& indexName, const string& attributeName);
 	QueryResult DropTable(const string& tableName);
-	QueryResult DropDatabase(const string& databaseName);
 	QueryResult DropIndex(const string indexName,const string& tableName,const string& attributeName);
 	QueryResult InsertValuesInto(const string& tableName,const vector<string>& values);
-	QueryResult Select(const list<string> attributes,const string& tableName);
-	QueryResult DeleteFromTable();
-	//QueryResult Update();
+	QueryResult Select(const list<string> attributes,const string& tableName, const list<Expression>& exprs);
+	QueryResult Select(const string& tableName, const list<Expression>& exprs);
+
+	QueryResult DeleteFromTable(const string& tableName);
+	QueryResult DeleteFromTableWhere(const string& tableName, const list<Expression>& exprs);
+
 
 private:
 	CatalogManager* p_catalogManager;
