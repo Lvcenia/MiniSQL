@@ -85,7 +85,6 @@ enum QueryState
 };
 
 //记录一次用户操作是否成功的数据类，由API或interpreter生成并传递到最外层，在主循环中显示
-//如果操作成功，不用填第四个参数
 class RecordBuffer;
 class QueryResult
 {
