@@ -20,6 +20,7 @@ public:
 		TableName(_TableName), AttrName(_AttrName) {};
 	IndexInfo(std::string _IndexName) :
 		IndexName(_IndexName) {};
+	IndexInfo() {}
 	bool valid() {
 		return IndexName != "";
 	}
@@ -31,7 +32,7 @@ public:
 	~CatalogManager();
 	string PrimaryKeyIndex(TableHeader table);
 
-	QueryResult CreateTableCatalog(const Table& table);
+	QueryResult CreateTableCatalog(const TableHeader& table);
 	QueryResult DropTableCatalog(const std::string& TableName);
 	QueryResult CreateIndexCatalog(std::string IndexName, std::string TableName, std::string AttributeName);
 	QueryResult DropIndexCatalog(std::string IndexName);
@@ -47,14 +48,14 @@ public:
 	IndexInfo GetIndexInfo(const std::string& TableName, std::string AttrName);
 	static CatalogManager* getInstance();
 
-	std::map<std::string, TableHeader> AllTables;
-	std::map<std::string, IndexInfo> Allindexs;
+	std::map<std::string, TableHeader> AllTables();
+	std::map<std::string, IndexInfo> Allindexs();
 private:
-	std::string IndexDirection = "";
-	std::string TableDirection = "";
-	std::string TableInfoFileDir = "";
+	const std::string TableCatalogDirection = "data/catalog/tables/";
+	const std::string TableNameCatalog = "data/catalog/tables.cat";
+	const std::string IndexCatalogDirection = "data/catalog/index.cat";
 	QueryResult DropLineFromFile(std::string FileName, std::string ElementToDrop, int ElementOrder);
-	bool LineExist(std::string FileName, std::string LineInfo);
+	bool LineExist(std::string FileName, std::string LineInfo,int element);
 };
 
 #endif // !__CatalogManager__
