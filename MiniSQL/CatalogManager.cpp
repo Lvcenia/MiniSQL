@@ -147,6 +147,7 @@ TableHeader CatalogManager::GetTableHeader(const std::string& TableName) {
     }
     return table;
 }
+
 /***************************/
 IndexInfo CatalogManager::GetIndexInfo(const std::string& IndexName) {
     ifstream IndexCata;

@@ -1,5 +1,6 @@
 #pragma once
 /*包含一些全局范围内的数据类，比如查询结果*/
+#include <iostream>
 #include <string>
 #include<cstring>
 #include<vector>
@@ -85,7 +86,25 @@ enum QueryState
 };
 
 //记录一次用户操作是否成功的数据类，由API或interpreter生成并传递到最外层，在主循环中显示
-class RecordBuffer;
+//记录查询结果的缓存类，全局唯一（个人觉得不唯一，特殊情况：执行一个文件时，建议：每个结果queryresult存一个 recordbuffer，interpreter里存vector<queryresult>）
+class RecordBuffer
+{
+public:
+	RecordBuffer();
+	RecordBuffer(const vector<string>& content);
+	// 拷贝构造, 似乎是这样写拷贝构造的吧
+	RecordBuffer(const RecordBuffer& that) { content = vector<string>(that.content); }
+	~RecordBuffer();
+	void output();//简易输出
+	void addContent(string info);//追加内容
+	void clearContent();//清空
+	const vector<string>& getContent();//获取内容
+	int getLineCount();//获取行数
+
+private:
+	vector<string> content;
+};
+
 class QueryResult
 {
 public:
@@ -237,24 +256,6 @@ private:
 
 
 
-//记录查询结果的缓存类，全局唯一（个人觉得不唯一，特殊情况：执行一个文件时，建议：每个结果queryresult存一个 recordbuffer，interpreter里存vector<queryresult>）
-class RecordBuffer
-{
-public:
-	RecordBuffer();
-	RecordBuffer(const vector<string>& content);
-	// 拷贝构造, 似乎是这样写拷贝构造的吧
-	RecordBuffer(const RecordBuffer& that) { content = vector<string>(that.content); }
-	~RecordBuffer();
-	void output();//简易输出
-	void addContent(string info);//追加内容
-	void clearContent();//清空
-	const vector<string>& getContent();//获取内容
-	int getLineCount();//获取行数
-
-private:
-	vector<string> content;
-};
 
 
 

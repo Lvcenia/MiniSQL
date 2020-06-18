@@ -16,9 +16,17 @@ typedef std::string::iterator Iterator;
 
  //sql 语句总执行入口
 void Interpreter::executeSql(const string & sql) {
-	parse(sql);
-	check();
-	execute();
+	try
+	{
+		parse(sql);
+		check();
+		execute();
+	}
+	catch (exception& e) {
+		cout << e.what();
+		vStatementBlock.clear();
+	}
+
 }
  //总语法分析
 void Interpreter::parse(const string& sql) {

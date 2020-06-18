@@ -16,8 +16,8 @@ using namespace std;
 
 void CreateTableBlock::check()
 {
-	//auto pcb = CatalogManager::getCatalogManager();
-	auto pcb = new CatalogManager();  // delete at the end
+	auto pcb = CatalogManager::getInstance();
+	//auto pcb = new CatalogManager();  // delete at the end
 
 	//if (pcb->isTableExist(table.getTableName()))
 	if (pcb->TableExist(table.getTableName()))
@@ -55,18 +55,18 @@ void CreateTableBlock::check()
 	//table.setTableVec(tableVec);
 	table.setAttributes(tableVec);
 
-	delete pcb;
+	//delete pcb;
 }
 
 QueryResult CreateTableBlock::execute()
 {
-	//auto api = API::getAPIPtr();
-	auto api = new API(); // detele at the end
+	auto api = API::getInstance();
+	//auto api = new API(); // detele at the end
 
 	//api->createTableCmd(table);
 	QueryResult ret = api->CreateTable(table);  // TODO : here is a queryresult must to be returned , add a queryresult in statementblock
 
-	delete api;
+	//delete api;
 
 	return ret;
 }
@@ -97,8 +97,8 @@ void CreateTableBlock::print()
 
 void CreateIndexBlock::check()
 {
-	//auto pcb = CatalogManager::getCatalogManager();
-	auto pcb =  new CatalogManager();  // delete at hte end
+	auto pcb = CatalogManager::getInstance();
+	//auto pcb =  new CatalogManager();  // delete at hte end
 
 	//if (pcb->isIndexExist(indexName))
 	if (pcb->IndexExist(indexName))
@@ -127,18 +127,18 @@ void CreateIndexBlock::check()
 		return;
 	else throw CatalogError("attribute(" + attributeName + ") is not unique or primary key");
 
-	delete pcb;
+	//delete pcb;
 }
 
 QueryResult CreateIndexBlock::execute()
 {
-	auto api = new API();
-	//auto api = API::getAPIPtr();
+	//auto api = new API();
+	auto api = API::getInstance();
 
 	QueryResult ret = api->CreateIndex(indexName, tableName, attributeName);
 	//api->createIndexCmd(indexName, tableName, attributeName);
 
-	delete api;
+	//delete api;
 
 	return ret;
 }
@@ -153,8 +153,8 @@ void CreateIndexBlock::print()
 
 void InsertTableBlock::check()
 {
-	//auto pcb = CatalogManager::getCatalogManager();
-	auto pcb = new CatalogManager();  // delete at hte end
+	auto pcb = CatalogManager::getInstance();
+	//auto pcb = new CatalogManager();  // delete at hte end
 
 	auto table = Table(pcb->GetTableHeader(tableName));
 	//auto table = pcb->getTable(tableName);
@@ -185,16 +185,16 @@ void InsertTableBlock::check()
 		}
 	}
 	
-	delete pcb;
+	//delete pcb;
 }
 
 QueryResult InsertTableBlock::execute()
 {
-	auto api = new API();
-	//auto api = API::getAPIPtr();
+	//auto api = new API();
+	auto api = API::getInstance();
 
-	//auto pcb = CatalogManager::getCatalogManager();
-	auto pcb = new CatalogManager();  // delete at hte end
+	auto pcb = CatalogManager::getInstance();
+	//auto pcb = new CatalogManager();  // delete at hte end
 
 	vector<string> v;
 	//list<string> v;
@@ -206,8 +206,8 @@ QueryResult InsertTableBlock::execute()
 	QueryResult ret = api->InsertValuesInto(tableName, v);
 	//api->insertValuesCmd(v, pcb->getTable(tableName));
 
-	delete pcb;
-	delete api;
+	//delete pcb;
+	//delete api;
 
 	return ret;
 }
@@ -239,26 +239,25 @@ void QuitBlock::print()
 
 void DropTableBlock::check()
 {
-	//auto pcb = CatalogManager::getCatalogManager();
-	auto pcb = new CatalogManager();  // delete at hte end
+	auto pcb = CatalogManager::getInstance();
+	//auto pcb = new CatalogManager();  // delete at hte end
 
 	if (!pcb->TableExist(tableName))
 	//if (!pcb->isTableExist(tableName))
 
 		throw CatalogError("The table does not exist");
 
-	delete pcb;
+	//delete pcb;
 }
 
 QueryResult DropTableBlock::execute()
 {
-	auto api = new API();
-	//auto api = API::getAPIPtr();
+	//auto api = new API();
+	auto api = API::getInstance();
 
 	QueryResult ret = api->DropTable(tableName);
 	//api->dropTableCmd(tableName);
 
-	delete api;
 
 	return ret;
 }
@@ -270,25 +269,23 @@ void DropTableBlock::print()
 
 void DropIndexBlock::check()
 {
-	//auto pcb = CatalogManager::getCatalogManager();
-	auto pcb = new CatalogManager();  // delete at hte end
+	auto pcb = CatalogManager::getInstance();
+	//auto pcb = new CatalogManager();  // delete at hte end
 
 	if (!pcb->IndexExist(indexName))
 	//if (!pcb->isIndexExist(indexName))
 		throw CatalogError("The index does not exist");
 
-	delete pcb;
 }
 
 QueryResult DropIndexBlock::execute()
 {
-	auto api = new API();
+	auto api = API::getInstance();
 	//auto api = API::getAPIPtr();
 
-	QueryResult ret = api->DropIndex(indexName);
+	QueryResult ret = api->DropIndex(indexName,"","");
 	//api->dropIndexCmd(indexName);
 
-	delete api;
 
 	return ret;
 }
@@ -300,8 +297,8 @@ void DropIndexBlock::print()
 
 void DeleteBlock::check()
 {
-	//auto pcb = CatalogManager::getCatalogManager();
-	auto pcb = new CatalogManager();  // delete at hte end
+	auto pcb = CatalogManager::getInstance();
+	//auto pcb = new CatalogManager();  // delete at hte end
 
 	if(!pcb->TableExist(tableName))
 	//if(!pcb->isTableExist(tableName))
@@ -353,24 +350,24 @@ void DeleteBlock::check()
 
 QueryResult DeleteBlock::execute()
 {
-	if (doNothingFlag)return;
+	if (doNothingFlag)return QueryResult();
 
-	auto api = new API();
+	auto api = API::getInstance();
 	//auto api = API::getAPIPtr();
 	
 	if (!flag) {
 		QueryResult ret = api->DeleteFromTable(tableName);
 		//api->deleteValuesCmd(tableName);
 
-		delete api;
+		
 
 		return ret;
 	}
 	else {
-		QueryResult ret = api->deleteValuesCmd(tableName, exps);
+		QueryResult ret = api->DeleteFromTableWhere(tableName, exps);
 		//else api->deleteValuesCmd(tableName, exps);
 
-		delete api;
+		
 
 		return ret;
 	}
@@ -391,8 +388,8 @@ void DeleteBlock::print()
 
 void SelectBlock::check()
 {
-	//auto pcb = CatalogManager::getCatalogManager();
-	auto pcb = new CatalogManager();  // delete at hte end
+	auto pcb = CatalogManager::getInstance();
+	//auto pcb = new CatalogManager();  // delete at hte end
 
 	Table table = Table(pcb->GetTableHeader(tableName));
 	//Table table = pcb->getTable(tableName);
@@ -459,29 +456,29 @@ void SelectBlock::check()
 
 QueryResult SelectBlock::execute()
 {
-	if (doNothingFlag)return;
+	if (doNothingFlag)return QueryResult();
 
-	auto api = new API();
+	auto api = API::getInstance();
 	//auto api = API::getAPIPtr();
 
-	if (exps.size() == 0) {
+	//if (exps.size() == 0) {
 
-		QueryResult ret = api->Select(attributes, tableName);
-		//api->selectValuesCmd(attributes, tableName, ip->getRecordBuffer());
+	//	QueryResult ret = api->Select(attributes, tableName);
+	//	//api->selectValuesCmd(attributes, tableName, ip->getRecordBuffer());
 
-		delete api;
+	//	
 
-		return ret;
-	}
-	else {
+	//	return ret;
+	//}
+	//else {
 
 		QueryResult ret = api->Select(attributes, tableName, exps);
 		//api->selectValuesCmd(attributes, tableName, exps, ip->getRecordBuffer());
 
-		delete api;
+		
 
 		return ret;
-	}
+	//}
 }
 
 void SelectBlock::print()

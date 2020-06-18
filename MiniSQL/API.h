@@ -16,7 +16,7 @@ public:
 	~API();
 	static API* getInstance();
 	void Init(CatalogManager* p_catalogManager, IndexManager* p_indexManager, RecordManager* p_recordManager);
-	QueryResult CreateTable(const Table& table);
+	QueryResult CreateTable(Table& table);
 	//QueryResult CreateDatabase(const string& databaseName);
 	//QueryResult DropDatabase(const string& databaseName);
 	QueryResult CreateIndex(const string& tableName, const string& indexName, const string& attributeName);
@@ -34,6 +34,8 @@ private:
 	CatalogManager* p_catalogManager;
 	IndexManager* p_indexManager;
 	RecordManager* p_recordManager;
+	OP OPERATOR_to_OP(OPERATOR o);
+	Condition expr_to_Condition(const Expression& expr);
 
 
 
