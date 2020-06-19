@@ -4,6 +4,8 @@
 #include<vector>
 #include<exception>
 #include<ctime>
+#include<direct.h>
+#include<io.h>
 using std::exception;
 CatalogManager* CatalogManager::getInstance()
 {
@@ -11,7 +13,15 @@ CatalogManager* CatalogManager::getInstance()
     return &ctm;
 }
 CatalogManager::CatalogManager() {
-
+    if (_access("data/", 0) == -1) {
+        _mkdir("data/");
+    }
+    if (_access("data/catalog/", 0) == -1) {
+        _mkdir("data/catalog/");
+    }
+    if (_access("data/catalog/tables/", 0) == -1) {
+        _mkdir("data/catalog/tables/");
+    }
 }
 CatalogManager::~CatalogManager() {
 
