@@ -37,6 +37,9 @@ QueryResult API::CreateTable(Table & table)
 {
 	try
 	{
+		p_recordManager->createTable(table);
+		cout << table.GetTableHeader().tableName << " " << table.GetTableHeader().attributes[0].name;
+		cout << table.GetTableHeader().tableName << " " << table.getAttributes()[0].getAttributeName();
 		p_catalogManager->CreateTableCatalog(table.GetTableHeader());
 		string tableName = table.getTableName();
 

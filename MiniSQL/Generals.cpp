@@ -621,6 +621,7 @@ const vector<Attribute>& Table::getAttributes() const
 void Table::setAttributes(const vector<Attribute>& attributes)
 {
 	this->attributes = vector<Attribute>(attributes);
+	this->rowLength = attributes.size();
 }
 
 int Table::getPrimaryKeyIndex() const
@@ -678,7 +679,7 @@ TableHeader Table::GetTableHeader()
 	header.rowLength = rowLength;
 	header.recordCount = recordCount;
 	header.recordLength = recordLength;
-	for (i = 0; i < rowLength; i++) {
+	for (i = 0; i < this->getAttributes().size(); i++) {
 		header.attributes[i] = attributes[i].GetInfo();
 	}
 	return header;

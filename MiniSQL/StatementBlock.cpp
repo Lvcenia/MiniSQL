@@ -54,6 +54,7 @@ void CreateTableBlock::check()
 
 	//table.setTableVec(tableVec);
 	table.setAttributes(tableVec);
+	
 
 	//delete pcb;
 }
@@ -393,6 +394,7 @@ void SelectBlock::check()
 
 	Table table = Table(pcb->GetTableHeader(tableName));
 	//Table table = pcb->getTable(tableName);
+
 
 	vector<Attribute> tableVec = table.getAttributes();
 	//vector<Data> tableVec = table.getTableVec();

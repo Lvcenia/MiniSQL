@@ -134,8 +134,10 @@ TableHeader CatalogManager::GetTableHeader(const std::string& TableName) {
     try {
         TableCatalogFile.open(TableCatalogDirection + TableName);
         TableCatalogFile >> table.tableName >> table.recordCount >> table.recordLength >> table.rowLength >> table.primaryKeyIndex;
+        //std::cout << table.tableName << table.recordCount << table.recordLength << table.rowLength << table.primaryKeyIndex;
         int NumOfAttr;
         TableCatalogFile >> NumOfAttr;
+
         for (int i = 1; i <= NumOfAttr; ++i) {
             string S_type;
             TableCatalogFile >> table.attributes[i].isPrimaryKey>>table.attributes[i].isUnique
@@ -194,6 +196,7 @@ std::map<std::string, IndexInfo> CatalogManager::Allindexs(){
         LineStream >> _indexname >> _tablename >> _attrname;
         result.insert(std::pair<string, IndexInfo>(_indexname, IndexInfo(_tablename, _attrname, _indexname)));
     }
+    return result;
 }
 /***************************************/
 QueryResult CatalogManager::DropLineFromFile(std::string FileName, std::string ElementToDrop, int ElementOrder) {
