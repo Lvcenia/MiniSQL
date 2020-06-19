@@ -146,7 +146,7 @@ TableHeader CatalogManager::GetTableHeader(const std::string& TableName) {
         TableCatalogFile >> table.tableName >> table.recordCount >> table.recordLength >> table.rowLength >> table.primaryKeyIndex;
         int NumOfAttr;
         TableCatalogFile >> NumOfAttr;
-        for (int i = 1; i <= NumOfAttr; ++i) {
+        for (int i = 0; i < NumOfAttr; ++i) {
             string S_type;
             TableCatalogFile >> table.attributes[i].isPrimaryKey>>table.attributes[i].isUnique
                 >>table.attributes[i].length>>table.attributes[i].name>>table.attributes[i].offset>>S_type;
@@ -217,7 +217,7 @@ QueryResult CatalogManager::DropLineFromFile(std::string FileName, std::string E
         for (; getline(INFILE, Line);) {
             istringstream LineStream(Line);
             string _tmp;
-            for (int i = 1; i <= ElementOrder; ++i) {
+            for (int i = 0; i < ElementOrder; ++i) {
                 LineStream >> _tmp;
             }
             if (_tmp != ElementToDrop)OUTFILE << Line << endl;
@@ -242,7 +242,7 @@ bool CatalogManager::LineExist(std::string FileName, std::string LineInfo,int el
     string Line,__TMP;
     for (; getline(___File, Line);) {
         istringstream LineStream(Line);
-        for (int i = 1; i <= element; ++i) {
+        for (int i = 0; i < element; ++i) {
             
             LineStream >> __TMP;
             if (__TMP == LineInfo)return 1;
