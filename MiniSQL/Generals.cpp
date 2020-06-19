@@ -576,9 +576,9 @@ Table::Table(string tableName, const vector<Attribute>& attributes)
 	for (auto attribute : attributes) {
 		this->recordLength += attribute.getLength();
 	}
-	this->rowLength = attributes.size();
+	this->attrCount = attributes.size();
 	this->primaryKeyIndex = -1;
-	for (int i = 0; i < rowLength; i++) {
+	for (int i = 0; i < attrCount; i++) {
 		if (this->attributes[i].isPrimary()) {
 			this->primaryKeyIndex = i;
 			break;
@@ -591,9 +591,9 @@ Table::Table(const TableHeader & header)
 	this->recordCount = header.recordCount;
 	this->name = string(header.tableName);
 	this->primaryKeyIndex = header.primaryKeyIndex;
-	this->rowLength = header.rowLength;
+	this->attrCount = header.attrCount;
 	this->recordLength = header.recordLength;
-	for (int i = 0; i < rowLength; i++) {
+	for (int i = 0; i < attrCount; i++) {
 		this->attributes.push_back(Attribute(header.attributes[i]));
 	}
 }
@@ -621,7 +621,7 @@ const vector<Attribute>& Table::getAttributes() const
 void Table::setAttributes(const vector<Attribute>& attributes)
 {
 	this->attributes = vector<Attribute>(attributes);
-	this->rowLength = attributes.size();
+	this->attrCount = attributes.size();
 }
 
 int Table::getPrimaryKeyIndex() const
@@ -634,14 +634,15 @@ void Table::setPrimaryKeyIndex(int primaryKeyIndex)
 	this->primaryKeyIndex = primaryKeyIndex;
 }
 
-int Table::getRowLength() const
+int Table::getAttributeCount() const
 {
-	return rowLength;
+	return attrCount;
 }
 
 void Table::addAttribute(Attribute & attribute)
 {
 	this->attributes.push_back(attribute);
+	this->attrCount++;
 }
 
 bool Table::hasAttribute(string attributeName)
@@ -676,7 +677,7 @@ TableHeader Table::GetTableHeader()
 	}
 	header.tableName[i] = '\0';
 	header.primaryKeyIndex = primaryKeyIndex;
-	header.rowLength = rowLength;
+	header.attrCount = attrCount;
 	header.recordCount = recordCount;
 	header.recordLength = recordLength;
 	for (i = 0; i < this->getAttributes().size(); i++) {

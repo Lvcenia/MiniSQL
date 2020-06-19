@@ -215,7 +215,7 @@ public:
 #define MAXAttributeCount 32
 struct TableHeader {
 	char tableName[32];
-	int rowLength;
+	int attrCount;
 	AttributeInfo attributes[MAXAttributeCount];
 	int primaryKeyIndex;
 	int recordLength;
@@ -235,7 +235,7 @@ public:
 	void setAttributes(const vector<Attribute>& attributes);
 	int getPrimaryKeyIndex() const;
 	void setPrimaryKeyIndex(int primaryKeyIndex);
-	int getRowLength() const;
+	int getAttributeCount() const;
 	void addAttribute(Attribute& attribute);
 	bool hasAttribute(string attributeName);
 	const Attribute& getAttribute(string attributeName) const;//若未找到，则抛出异常
@@ -247,7 +247,7 @@ private:
 	string name;
 	vector<Attribute> attributes;
 	int primaryKeyIndex;//-1 if no primary key
-	int rowLength;
+	int attrCount;
 	int recordLength;
 	int recordCount;
 };

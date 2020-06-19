@@ -41,7 +41,7 @@ QueryResult CatalogManager::CreateTableCatalog(const TableHeader& table) {
         Cata_File << table.tableName << endl;
         Cata_File << table.recordCount << endl;
         Cata_File << table.recordLength << endl;
-        Cata_File << table.rowLength << endl;
+        Cata_File << table.attrCount << endl;
         Cata_File << table.primaryKeyIndex << endl;
         int cnt = 0;
         for (const auto& attr : table.attributes) ++cnt;
@@ -143,7 +143,7 @@ TableHeader CatalogManager::GetTableHeader(const std::string& TableName) {
     ifstream TableCatalogFile;
     try {
         TableCatalogFile.open(TableCatalogDirection + TableName);
-        TableCatalogFile >> table.tableName >> table.recordCount >> table.recordLength >> table.rowLength >> table.primaryKeyIndex;
+        TableCatalogFile >> table.tableName >> table.recordCount >> table.recordLength >> table.attrCount >> table.primaryKeyIndex;
         //std::cout << table.tableName << table.recordCount << table.recordLength << table.rowLength << table.primaryKeyIndex;
         int NumOfAttr;
         TableCatalogFile >> NumOfAttr;
