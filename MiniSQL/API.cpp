@@ -231,10 +231,20 @@ QueryResult API::Select(const list<string> attributes, const string& tableName, 
 {
 	try
 	{
-		/*
+		vector<string> attrVec;
+		Table table = Table(p_catalogManager->GetTableHeader(tableName));
+		for (const auto& item : attrVec)
+		{
+			attrVec.push_back(item);
+		}
+		vector<Condition> conditions;
+		for (auto expr : exprs) {
 
-
-		*/
+			conditions.push_back(expr_to_Condition(expr));
+		}
+		QueryResult res = p_recordManager->selectValues(attrVec, table, conditions);
+		res.showRocords = true;
+		return res;
 	}
 	catch (const std::exception& e)
 	{
@@ -244,7 +254,23 @@ QueryResult API::Select(const list<string> attributes, const string& tableName, 
 
 QueryResult API::Select(const string& tableName, const list<Expression>& exprs)
 {
-	return QueryResult();
+	try
+	{
+		Table table = Table(p_catalogManager->GetTableHeader(tableName));
+
+		vector<Condition> conditions;
+		for (auto expr : exprs) {
+
+			conditions.push_back(expr_to_Condition(expr));
+		}
+		QueryResult res = p_recordManager->selectValues(table, conditions);
+		res.showRocords = true;
+		return res;
+	}
+	catch (const std::exception& e)
+	{
+		return QueryResult(Fail, e);
+	}
 }
 
 QueryResult API::DeleteFromTable(const string& tableName)
@@ -256,7 +282,9 @@ QueryResult API::DeleteFromTable(const string& tableName)
 
 		*/
 		Table table = Table(p_catalogManager->GetTableHeader(tableName));
-		p_recordManager->deleteValues(table,vector<Condition>());
+		QueryResult res = p_recordManager->deleteValues(table,vector<Condition>());
+		
+		return res;
 	}
 	catch (const std::exception& e)
 	{
@@ -275,7 +303,8 @@ QueryResult API::DeleteFromTableWhere(const string& tableName, const list<Expres
 			conditions.push_back(expr_to_Condition(expr));
 		}
 		
-		p_recordManager->deleteValues(table,conditions);
+		QueryResult res = p_recordManager->deleteValues(table,conditions);
+		return res;
 	}
 	catch (const std::exception& e)
 	{

@@ -346,7 +346,7 @@ void DeleteBlock::check()
 		flag = true;
 	}
 	exps = tmpExps;
-	delete pcb;
+	//delete pcb;
 }
 
 QueryResult DeleteBlock::execute()
@@ -453,7 +453,7 @@ void SelectBlock::check()
 	}
 	exps = expTmp;
 
-	delete pcb;
+	//delete pcb;
 }
 
 QueryResult SelectBlock::execute()
@@ -475,7 +475,6 @@ QueryResult SelectBlock::execute()
 	//else {
 
 		QueryResult ret = api->Select(attributes, tableName, exps);
-		ret.showRocords = true;
 		//api->selectValuesCmd(attributes, tableName, exps, ip->getRecordBuffer());
 
 		
