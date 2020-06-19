@@ -10,6 +10,19 @@ RecordManager::~RecordManager()
 {
 }
 
+const QueryResult& RecordManager::createTable(Table& tableInfo)
+{
+	auto start = clock();
+
+	auto header = tableInfo.GetTableHeader();
+	bufferManager->writeARecord((unsigned char*)&header, sizeof(TableHeader), tableInfo.getTableName(), 0);
+
+	auto end = clock();
+	auto time = (double)(end - start) / CLOCKS_PER_SEC;
+	RecordBuffer rb;
+	return QueryResult(Success, 0, time, rb);
+}
+
 const QueryResult& RecordManager::dropTable(const Table& tableInfo)
 {
 	auto start = clock();

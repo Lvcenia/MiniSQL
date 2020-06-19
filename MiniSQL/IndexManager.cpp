@@ -37,7 +37,7 @@ const QueryResult & IndexManager::createIndex(const string & indexName, Attribut
 		memcpy(key, recordData, sizeof(recordData));
 		string keyVal(key);
 		delete key;
-		index->Insert(key, recordOffset);
+		index->Insert(keyVal, recordOffset);
 	}
 	SaveToFile(indexName);
 	auto end = clock();
