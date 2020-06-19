@@ -155,7 +155,11 @@ public:
 	}
 	// 打印查询的结果记录
 	void PrintRecords() {
-		records.output();
+		if (showRocords)
+		{
+			records.output();
+		}
+
 	}
 	
 public:
@@ -168,6 +172,7 @@ public:
 	double execTime;
 	// 查询的记录
 	RecordBuffer records;
+	bool showRocords = false;
 };
 
 
