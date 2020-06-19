@@ -43,9 +43,6 @@ QueryResult CatalogManager::CreateTableCatalog(const TableHeader& table) {
         Cata_File << table.recordLength << endl;
         Cata_File << table.attrCount << endl;
         Cata_File << table.primaryKeyIndex << endl;
-        int cnt = 0;
-        for (const auto& attr : table.attributes) ++cnt;
-        Cata_File << cnt << endl;
         for (const auto& attr : table.attributes) {
             Cata_File << attr.isPrimaryKey << ' ' << attr.isUnique << ' ' << attr.length << ' ' << attr.name << ' ' << attr.offset << ' ' << attr.type << endl;
         }
@@ -145,15 +142,13 @@ TableHeader CatalogManager::GetTableHeader(const std::string& TableName) {
         TableCatalogFile.open(TableCatalogDirection + TableName);
         TableCatalogFile >> table.tableName >> table.recordCount >> table.recordLength >> table.attrCount >> table.primaryKeyIndex;
         //std::cout << table.tableName << table.recordCount << table.recordLength << table.rowLength << table.primaryKeyIndex;
-        int NumOfAttr;
-        TableCatalogFile >> NumOfAttr;
-        for (int i = 0; i < NumOfAttr; ++i) {
+        for (int i = 0; i < table.attrCount; ++i) {
             string S_type;
             TableCatalogFile >> table.attributes[i].isPrimaryKey>>table.attributes[i].isUnique
                 >>table.attributes[i].length>>table.attributes[i].name>>table.attributes[i].offset>>S_type;
             table.attributes[i].type = stringToType(S_type);
         }
-    }catch(CatalogError e){
+    }catch(...){
 
     }
     return table;
