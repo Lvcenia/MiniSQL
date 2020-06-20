@@ -16,7 +16,9 @@ const QueryResult& RecordManager::createTable(Table& tableInfo)
 
 	auto header = tableInfo.GetTableHeader();
 	bufferManager->newFile(tableInfo.getTableName());
-	bufferManager->writeARecord((unsigned char*)&header, sizeof(TableHeader), tableInfo.getTableName(), 0);
+	int tail = 4096;
+	bufferManager->writeARecord((unsigned char*)(&tail), sizeof(int), tableInfo.getTableName(), 0);
+	bufferManager->writeARecord((unsigned char*)&header, sizeof(TableHeader), tableInfo.getTableName(), sizeof(int));
 
 	auto end = clock();
 	auto time = (double)(end - start) / CLOCKS_PER_SEC;
