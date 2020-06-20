@@ -46,6 +46,7 @@ public:
 	TableHeader GetTableHeader(const std::string& TableName);
 	IndexInfo GetIndexInfo(const std::string& IndexName);
 	IndexInfo GetIndexInfo(const std::string& TableName, std::string AttrName);
+	vector<IndexInfo> GetIndexInfoByTableName(const std::string& TableName);
 	static CatalogManager* getInstance();
 
 	std::map<std::string, TableHeader> AllTables();

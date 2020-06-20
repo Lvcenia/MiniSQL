@@ -140,6 +140,7 @@ bool CatalogManager::AttributeExist(const std::string& TableName, std::string At
 /*******************************/
 TableHeader CatalogManager::GetTableHeader(const std::string& TableName) {
     TableHeader table;
+    memset(&table, 0, sizeof TableHeader);
     ifstream TableCatalogFile;
     try {
         TableCatalogFile.open(TableCatalogDirection + TableName);
@@ -152,7 +153,9 @@ TableHeader CatalogManager::GetTableHeader(const std::string& TableName) {
             table.attributes[i].type = stringToType(S_type);
         }
     }catch(...){
-
+        CatalogError CE("error in GetTableHeader");
+        throw CE;
+        return table;
     }
     return table;
 }
@@ -180,6 +183,26 @@ IndexInfo CatalogManager::GetIndexInfo(const std::string& TableName, std::string
         if (TableName==_tablename && _attrname==AttrName) return IndexInfo(_tablename, _attrname, _indexname);
     }
     return IndexInfo();
+}
+vector<IndexInfo> CatalogManager::GetIndexInfoByTableName(const std::string& TableName) {
+    vector<IndexInfo> Indices;
+    string Line,_indexname,_tablename,_attrname;
+    try {
+        ifstream IndexFile;
+        IndexFile.open(IndexCatalogDirection);
+        
+        for (; getline(IndexFile, Line);) {
+            istringstream LineStream(Line);
+            LineStream >> _indexname >> _tablename >> _attrname;
+            if (_tablename == TableName)Indices.push_back(IndexInfo(_tablename, _attrname, _indexname));
+        }
+    }
+    catch (...) {
+        CatalogError CE("error in DropLineFromFile");
+        throw CE;
+        return Indices;
+    }
+    return Indices;
 }
 /**********************************/
 map<std::string, TableHeader> CatalogManager::AllTables(){
