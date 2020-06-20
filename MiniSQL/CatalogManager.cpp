@@ -43,9 +43,12 @@ QueryResult CatalogManager::CreateTableCatalog(const TableHeader& table) {
         Cata_File << table.recordLength << endl;
         Cata_File << table.attrCount << endl;
         Cata_File << table.primaryKeyIndex << endl;
-        for (const auto& attr : table.attributes) {
-            Cata_File << attr.isPrimaryKey << ' ' << attr.isUnique << ' ' << attr.length << ' ' << attr.name << ' ' << attr.offset << ' ' << attr.type << endl;
+        for (int i = 0; i < table.attrCount; i++)
+        {
+            const auto& attr = table.attributes[i];
+            Cata_File << attr.isPrimaryKey << ' ' << attr.isUnique << ' ' << attr.length << ' ' << attr.name << ' ' << attr.offset << ' ' << typeToString(attr.type) << endl;
         }
+
         Cata_File.close();
         ofstream TableNameCatalogFile;
         TableNameCatalogFile.open(TableNameCatalog,std::ios_base::app);

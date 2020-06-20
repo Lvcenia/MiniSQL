@@ -37,15 +37,14 @@ QueryResult API::CreateTable(Table & table)
 {
 	try
 	{
-		p_recordManager->createTable(table);
-		cout << table.GetTableHeader().tableName << " " << table.GetTableHeader().attributes[0].name;
-		cout << table.GetTableHeader().tableName << " " << table.getAttributes()[0].getAttributeName();
+		QueryResult res;
+		res = p_recordManager->createTable(table);
 		p_catalogManager->CreateTableCatalog(table.GetTableHeader());
 		string tableName = table.getTableName();
 
 		vector<Attribute> tableVec = table.getAttributes();
 		//for each field on the table
-		QueryResult res;
+		
 		
 		for (auto attr : tableVec)
 		{
@@ -223,6 +222,7 @@ QueryResult API::InsertValuesInto(const string & tableName, const vector<string>
 	}
 	catch (const std::exception& e)
 	{
+		cout << e.what();
 		return QueryResult(Fail, e);
 	}
 }

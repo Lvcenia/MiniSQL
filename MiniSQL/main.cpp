@@ -4,6 +4,7 @@
 #include <iostream>
 #include "API.h"
 #include "Interpreter.h"
+#include "Exception.h"
 #include "BufferManager.h"
 using namespace std;
 
@@ -14,16 +15,16 @@ int main()
 	//RecordBuffer recordBuffer(); // 把它放这里似乎有些不妥，不如放在QueryResult里
 
 	//创建几个Manager对象并各自初始化
-	CatalogManager catalogManager;
-	IndexManager indexManager;
-	RecordManager recordManager;
-	BufferManager bufferManager;
+	//CatalogManager catalogManager;
+	//IndexManager indexManager;
+	//RecordManager recordManager;
+	//BufferManager bufferManager;
 	Interpreter interpreter;
 
-	API api;
+	//API api;
 
 
-	cout << "*******************Welcome to MiniSQL!*******************" << endl;
+	cout << "------------------------ Welcome to MiniSQL! -------------------------" << endl;
 
 	//string userInput;
 	////接收输入、调用Interpreter处理输入、显示处理结果的循环
@@ -40,32 +41,39 @@ int main()
 	string sql;
 	while (1)
 	{
-		string line;
-		cout << "\nMiniSql->>";
-		getline(cin, line);
+		try {
+			string line;
+			cout << "\nMiniSql->>";
+			getline(cin, line);
 
-		sql += (line + ' ');
-		//find a semicolon
-		if (line.find_first_of(';') < line.size())
-		{
-
-			while (sql.back() == ' ' || sql.back() == '\t')
-				sql = sql.substr(0, sql.length() - 1);
-			if (sql.back() != ';' || sql.find_first_of(';') < sql.size() - 1)
-				cout << "ERROR: There is some characters at the end of the sql after the semicolon;" << endl;
-			else
+			sql += (line + ' ');
+			//find a semicolon
+			if (line.find_first_of(';') < line.size())
 			{
-				sql = sql.substr(0, sql.length() - 1);
-				interpreter.executeSql(sql); // 进入执行
-				interpreter.print(); // 输出执行结果
+
+				while (sql.back() == ' ' || sql.back() == '\t')
+					sql = sql.substr(0, sql.length() - 1);
+				if (sql.back() != ';' || sql.find_first_of(';') < sql.size() - 1)
+					cout << "ERROR: There is some characters at the end of the sql after the semicolon;" << endl;
+				else
+				{
+					sql = sql.substr(0, sql.length() - 1);
+					interpreter.executeSql(sql); // 进入执行
+					interpreter.print(); // 输出执行结果
+				}
+				sql.clear();
 			}
-			sql.clear();
+			else
+				cout << ">>>";
+
 		}
-		else
-			cout << ">>>";
+		
+		catch (Quit& q) {
+			break;
+		}
 
 
 	}
-	cout << "*******************Bye!*******************" << endl;
+	cout << "-------------------------------- Bye! --------------------------------" << endl;
 	return 0;
 }

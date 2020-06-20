@@ -179,6 +179,9 @@ public:
 
 Type stringToType(std::string s);
 
+string typeToString(Type t);
+
+
 struct AttributeInfo {
 	char name[32];
 	Type type;
@@ -194,9 +197,9 @@ private:
 	string name;
 	Type type;
 	int length;
-	int offset;
-	bool isUnique;
-	bool isPrimaryKey;
+	int offset = 0;
+	bool isUnique = false;
+	bool isPrimaryKey = false;
 public:
 	Attribute();
 	Attribute(const std::string& attributeName, Type type, int length, bool isUnique, bool isPrimary, int offset);

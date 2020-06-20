@@ -100,6 +100,10 @@ void Interpreter::execute()
 		vStatementBlock.clear();
 		throw runtime_error(e.what());
 	}
+	catch (Quit& q) {
+		throw Quit();
+
+	}
 	vStatementBlock.clear();
 }
 

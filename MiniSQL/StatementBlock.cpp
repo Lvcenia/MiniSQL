@@ -177,7 +177,7 @@ void InsertTableBlock::check()
 		//TYPE type = tableVec[i].getType();
 
 		if (!ct.isType(values[i], type)) 
-			throw CatalogError("The type does not match");
+			throw CatalogError("The type of " + values[i] + " does not match defined type ");
 		if (type == CHAR) {
 			if (values[i].length() <= tableVec[i].getLength() + 2)
 				values[i] = string(values[i].begin() + 1, values[i].end() - 1);
@@ -392,7 +392,11 @@ void SelectBlock::check()
 	auto pcb = CatalogManager::getInstance();
 	//auto pcb = new CatalogManager();  // delete at hte end
 
+	if (!pcb->TableExist(tableName))
+		throw CatalogError("The table does not exist");
+
 	Table table = Table(pcb->GetTableHeader(tableName));
+	std::cout << "table: " + tableName;
 	//Table table = pcb->getTable(tableName);
 
 

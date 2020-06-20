@@ -1,0 +1,7 @@
+insert into student values ('st01','zhangsan',25,'se',1.14514);
+
+insert into student values ('st02','zhangsan',25,'se',11.4514);
+
+insert into student values ('st03','zhangsan',25,'se',114.514);
+
+insert into student values ('st04','zhangsan',25,'se',1145.14);

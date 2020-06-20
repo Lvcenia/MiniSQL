@@ -410,6 +410,23 @@ Type stringToType(std::string s)
 		return Type::UNDEFINEDTYPE;
 }
 
+string typeToString(Type t)
+{
+	switch (t)
+	{
+	case INT:return "int";
+		break;
+	case CHAR:return "char";
+		break;
+	case FLOAT:return "float";
+		break;
+	case UNDEFINEDTYPE:return "undefined";
+		break;
+	default:
+		break;
+	}
+}
+
 
 RecordBuffer::RecordBuffer()
 {
