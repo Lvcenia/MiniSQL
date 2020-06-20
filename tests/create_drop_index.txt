@@ -1,0 +1,28 @@
+==================================create==================================
+//功能测试
+
+create index snameidx on student(sname);
+
+//错误测试 重复索引
+
+create index snameidx on student(sid);
+
+
+//错误测试 表不存在
+
+create index snameidx on studentttttt(sname);
+
+
+//错误测试 字段不唯一
+
+create index gpaidx on student(gpa);
+
+
+==================================drop=================================
+//功能测试
+
+drop index snameidx;
+
+//错误测试 索引不存在
+
+drop index sssssss;

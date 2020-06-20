@@ -1,0 +1,22 @@
+create table student2(
+sid char(10),
+sname char(20) unique,
+credits int,
+dept_name char(8),
+gpa float,
+primary key (sid)
+);
+
+insert into student2 values ('st01','zhangsan',25,'se',1.14514);
+
+insert into student2 values ('st02','lisi',25,'se',2.33);
+
+insert into student2 values ('st03','wangmazi',25,'cs',3.65);
+
+insert into student2 values ('st04','alice',25,'se',4.22);
+
+insert into student2 values ('st05','lixiuli',25,'cs',2.12);
+
+insert into student2 values ('st06','sakamoto',25,'se',3.98);
+
+select * from student;

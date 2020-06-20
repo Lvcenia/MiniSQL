@@ -1,0 +1,41 @@
+==================================create==================================
+//功能测试
+
+create table student(
+sid char(10),
+sname char(20) unique,
+credits int,
+dept_name char(8),
+gpa float,
+primary key (sid)
+);
+
+//错误测试1. 缺少类型
+
+create table student(
+sid,
+sname char(20) unique,
+credits int,
+dept_name char(8),
+gpa float,
+primary key (sid)
+);
+
+//错误测试2. 缺少主键
+
+create table student(
+sid char(10),
+sname char(20) unique,
+credits int,
+dept_name char(8),
+gpa float
+);
+
+=================================drop===========================================
+//功能测试
+
+drop table student;
+
+//错误测试 表不存在
+
+drop table studenttttttt;

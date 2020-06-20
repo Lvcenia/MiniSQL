@@ -46,9 +46,9 @@ QueryResult API::CreateTable(Table & table)
 			{
 				//在主键上建立索引
 				string attributeName = attr.getAttributeName();
-				p_indexManager->createIndex("$"+tableName +"$"+attributeName, attr, table.getRecordLength(), tableName);
+				p_indexManager->createIndex(p_catalogManager->PrimaryKeyIndex(table.GetTableHeader()), attr, table.getRecordLength(), tableName);
 				//索引信息写入catalog
-				p_catalogManager->CreateIndexCatalog("$" + tableName + "$" + attributeName, tableName, attributeName);
+				p_catalogManager->CreateIndexCatalog(p_catalogManager->PrimaryKeyIndex(table.GetTableHeader()), tableName, attributeName);
 			}
 		}
 		auto end = clock();
@@ -171,32 +171,32 @@ QueryResult API::InsertValuesInto(const string & tableName, const vector<string>
 		vector<string>::const_iterator it = values.cbegin();
 		string tableName = table.getTableName();
 
-		for (auto attr : table.getAttributes())
-		{
-			if (attr.isPrimary() || attr.isUniqueKey())
-			{
-				string indexName = "$" + table.getTableName() + "$" + attr.getAttributeName();
-				//如果是唯一值或主键，并且没有创建索引，就为它创建索引
-				if (!p_catalogManager->IndexExist(indexName))
-				{
-					p_indexManager->createIndex(indexName, attr, table.getRecordLength(), table.getTableName());
-					p_catalogManager->CreateIndexCatalog(indexName, table.getTableName(), attr.getAttributeName());
-					if (p_indexManager->keyExists(indexName, *it))
-					{
-						return QueryResult(Fail, CatalogError("Duplicate primary or unique key"));
-					} 
-				}
-				//如果已经有索引，保证值不重复
-				else
-				{
-					if (p_indexManager->keyExists(p_catalogManager->GetIndexInfo(table.getTableName(),attr.getAttributeName()).IndexName, *it))
-					{
-						return QueryResult(Fail, CatalogError("Duplicate primary or unique key"));
-					}
-				}
-			}
-			it++;
-		}
+		//for (auto attr : table.getAttributes())
+		//{
+		//	if (attr.isPrimary() || attr.isUniqueKey())
+		//	{
+		//		string indexName = "$" + table.getTableName() + "$" + attr.getAttributeName();
+		//		//如果是唯一值或主键，并且没有创建索引，就为它创建索引
+		//		if (!p_catalogManager->IndexExist(indexName))
+		//		{
+		//			p_indexManager->createIndex(indexName, attr, table.getRecordLength(), table.getTableName());
+		//			p_catalogManager->CreateIndexCatalog(indexName, table.getTableName(), attr.getAttributeName());
+		//			if (p_indexManager->keyExists(indexName, *it))
+		//			{
+		//				return QueryResult(Fail, CatalogError("Duplicate primary or unique key"));
+		//			} 
+		//		}
+		//		//如果已经有索引，保证值不重复
+		//		else
+		//		{
+		//			if (p_indexManager->keyExists(p_catalogManager->GetIndexInfo(table.getTableName(),attr.getAttributeName()).IndexName, *it))
+		//			{
+		//				return QueryResult(Fail, CatalogError("Duplicate primary or unique key"));
+		//			}
+		//		}
+		//	}
+		//	it++;
+		//}
 
 		//在数据表中插入
 		auto address = p_recordManager->insertValues(table, values);
@@ -208,7 +208,11 @@ QueryResult API::InsertValuesInto(const string & tableName, const vector<string>
 			if (attr.isPrimary() || attr.isUniqueKey())
 			{
 				IndexInfo indexinfo = p_catalogManager->GetIndexInfo(tableName, attr.getAttributeName());
-				p_indexManager->insertValues(indexinfo.IndexName, *it, address);
+				if (indexinfo.valid())
+				{
+					p_indexManager->insertValues(indexinfo.IndexName, *it, address);
+				}
+				
 			}
 			it++;
 		}

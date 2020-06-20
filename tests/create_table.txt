@@ -1,8 +1,0 @@
-create table student(
-sid char(10),
-sname char(20) unique,
-credits int,
-dept_name char(8),
-gpa float,
-primary key (sid)
-);

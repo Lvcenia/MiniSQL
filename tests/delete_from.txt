@@ -1,0 +1,12 @@
+//功能测试 全删
+
+delete from student;
+
+
+//功能测试，条件删
+
+delete from student where sid == 'st01';
+
+delete from student where sid == 'st01' and sname == 'zhangsan';
+
+delete from student where gpa > 2 and sname == 'zhangsan';

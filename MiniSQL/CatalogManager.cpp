@@ -54,8 +54,8 @@ QueryResult CatalogManager::CreateTableCatalog(const TableHeader& table) {
         TableNameCatalogFile.open(TableNameCatalog,std::ios_base::app);
         TableNameCatalogFile << table.tableName;
         TableNameCatalogFile.close();
-        CreateIndexCatalog(PrimaryKeyIndex(table), table.tableName, 
-            table.attributes[table.primaryKeyIndex].name);
+        //CreateIndexCatalog(PrimaryKeyIndex(table), table.tableName, 
+        //    table.attributes[table.primaryKeyIndex].name);
     }
     catch (...) {
         CatalogError CE("error in CreateTableCatalog");

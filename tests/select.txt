@@ -1,0 +1,8 @@
+select * from student;
+
+select sid from student;
+
+select sid from student where sname=='alice';
+
+select sname from student where gpa>1.5 and gpa <3.0;
+
