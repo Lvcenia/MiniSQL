@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 #include <iostream>
 #include <vector>
 #include <string>
@@ -22,8 +22,8 @@ public:
 	string GetKey(int index);
 	bool ContainsKey(string key);
 	int GetKeyCount();
-	virtual void RemoveKey(string key);//¼òµ¥ÒÆ³ı
-	void InsertKey(string key);//¼òµ¥²åÈë+ÅÅĞò
+	virtual void RemoveKey(string key);//ç®€å•ç§»é™¤
+	void InsertKey(string key);//ç®€å•æ’å…¥+æ’åº
 	void InsertKey(string key, int index);
 	bool IsSiblingWith(BPTNode* node);
 

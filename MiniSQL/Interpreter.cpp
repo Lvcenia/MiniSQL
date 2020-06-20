@@ -1,4 +1,4 @@
-#include "Interpreter.h"
+ï»¿#include "Interpreter.h"
 #include "StatementBlock.h"
 #include "Functor.h"
 #include <iostream>
@@ -14,7 +14,7 @@ using namespace std;
 typedef std::string::iterator Iterator;
 
 
- //sql Óï¾ä×ÜÖ´ĞĞÈë¿Ú
+ //sql è¯­å¥æ€»æ‰§è¡Œå…¥å£
 void Interpreter::executeSql(const string & sql) {
 	try
 	{
@@ -28,7 +28,7 @@ void Interpreter::executeSql(const string & sql) {
 	}
 
 }
- //×ÜÓï·¨·ÖÎö
+ //æ€»è¯­æ³•åˆ†æ
 void Interpreter::parse(const string& sql) {
 
 	string str = sql + ' ';
@@ -65,7 +65,7 @@ void Interpreter::parse(const string& sql) {
 
 
 }
- //¼ì²éÓï¾ä
+ //æ£€æŸ¥è¯­å¥
 void Interpreter::check()
 {
 	bool flag = true;
@@ -85,7 +85,7 @@ void Interpreter::check()
 		throw CatalogError(s.substr(0, s.size() - 1));
 	}
 }
- //Ö´ĞĞÓï¾ä
+ //æ‰§è¡Œè¯­å¥
 void Interpreter::execute()
 {
 	try {
@@ -109,7 +109,7 @@ void Interpreter::execute()
 
 
 
- //¸÷ÖÖÓï·¨·ÖÎö
+ //å„ç§è¯­æ³•åˆ†æ
 void Interpreter::createTableParser(Iterator& begin, Iterator end) {
 	string s;
 	Table table;
@@ -425,12 +425,12 @@ void Interpreter::executeFile(const string & fileName)
 //	}
 //}
 
-// ´òÓ¡½á¹û
+// æ‰“å°ç»“æœ
 void Interpreter::print(){
 	for (auto &ret : rets) {
-		std::cout << std::endl; // ·Ö¸ôĞĞ 
-		ret.PrintResult(); // ÏÈ´òÓ¡Ö´ĞĞ½á¹û
-		ret.PrintRecords(); // ÔÙ´òÓ¡²éÑ¯½á¹û
+		std::cout << std::endl; // åˆ†éš”è¡Œ 
+		ret.PrintResult(); // å…ˆæ‰“å°æ‰§è¡Œç»“æœ
+		ret.PrintRecords(); // å†æ‰“å°æŸ¥è¯¢ç»“æœ
 	}
 }
 

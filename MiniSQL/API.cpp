@@ -1,18 +1,15 @@
-#include "API.h"
+﻿#include "API.h"
 
 API::API()
 {
 	this->p_recordManager = RecordManager::getRecordMangerPtr();
 	this->p_catalogManager = CatalogManager::getInstance();
-	list<string> indexNames;
-	//for (auto tableName : p_catalogManager->AllTables)
-	//{
-	//	vector<string> indexName = p_catalogManager->getIndexVecFromTableName(tableName);;
-	//	for (auto name : indexName)
-	//		indexNames.insert(indexNames.end(), name);
-	//}
-	this->p_indexManager = IndexManager::getIndexManagerPtr(indexNames);
-	
+	list<string> indexes;
+	for (auto& index : p_catalogManager->Allindexs())
+	{
+		indexes.push_back(index.second.IndexName);
+	}
+	this->p_indexManager = IndexManager::getIndexManagerPtr(indexes);
 	
 }
 
@@ -28,68 +25,52 @@ API* API::getInstance()
 
 }
 
-void API::Init(CatalogManager * p_catalogManager, IndexManager * p_indexManager, RecordManager * p_recordManager)
-{
-
-}
-
 QueryResult API::CreateTable(Table & table)
 {
 	try
 	{
-		QueryResult res;
-		res = p_recordManager->createTable(table);
+		auto start = clock();
+		//创建table.data数据文件
+		p_recordManager->createTable(table);
+		//创建表的Catalog信息
 		p_catalogManager->CreateTableCatalog(table.GetTableHeader());
 		string tableName = table.getTableName();
 
 		vector<Attribute> tableVec = table.getAttributes();
 		//for each field on the table
 		
-		
+		QueryResult res;
 		for (auto attr : tableVec)
 		{
 			if (attr.isPrimary())
 			{
-				//create an index on the primary key
-				string tableName = table.getTableName();
+				//在主键上建立索引
 				string attributeName = attr.getAttributeName();
-				QueryResult r1 =  p_indexManager->createIndex("$"+tableName +"$"+attributeName, attr, table.getRecordLength(), tableName);
-				res = r1;
-				//write the index info into catalog
-				QueryResult r2 = p_catalogManager->CreateIndexCatalog("$" + tableName + "$" + attributeName, tableName, attributeName);
-				res.execTime += r2.execTime;
+				p_indexManager->createIndex("$"+tableName +"$"+attributeName, attr, table.getRecordLength(), tableName);
+				//索引信息写入catalog
+				p_catalogManager->CreateIndexCatalog("$" + tableName + "$" + attributeName, tableName, attributeName);
 			}
 		}
-		return res;
+		auto end = clock();
+		auto time = (double)(end - start) / CLOCKS_PER_SEC;
+		RecordBuffer rb;
+		return QueryResult(Success, 0, time,rb);
 		
 
 	}
 	catch (const std::exception& e)
 	{
+		cout << e.what();
 		return QueryResult(Fail, e);
 	}
 }
 
-/*��Ҫ��*/
-//QueryResult API::CreateDatabase(const string & databaseName)
-//{
-//	try
-//	{
-//		/*
-//		
-//		
-//		*/
-//	}
-//	catch (const std::exception& e)
-//	{
-//		return QueryResult(Fail, e);
-//	}
-//}
 
 QueryResult API::CreateIndex(const string & tableName, const string& indexName, const string& attributeName)
 {
 	try
 	{
+		auto start = clock();
 		Table table = Table(p_catalogManager->GetTableHeader(tableName));
 		for (auto attr : table.getAttributes())
 		{
@@ -110,7 +91,7 @@ QueryResult API::CreateIndex(const string & tableName, const string& indexName, 
 					}
 					else
 					{
-						//throw IndexOnTheSameAttributeException();
+						return QueryResult(Fail, CatalogError("Index on the same attribute exists"));
 					}
 				}
 				else
@@ -122,6 +103,10 @@ QueryResult API::CreateIndex(const string & tableName, const string& indexName, 
 				}
 			}
 		}
+		auto end = clock();
+		auto time = (double)(end - start) / CLOCKS_PER_SEC;
+		RecordBuffer rb;
+		return QueryResult(Success, 0, time, rb);
 	}
 	catch (const std::exception& e)
 	{
@@ -133,15 +118,20 @@ QueryResult API::DropTable(const string & tableName)
 {
 	try
 	{	
+		auto start = clock();
+		int  affectedRows = Table(p_catalogManager->GetTableHeader(tableName)).getRecordCount();
 		Table table = Table(p_catalogManager->GetTableHeader(tableName));
-		//for (auto indexname : p_catalogManager->DropTableIndex)
-		//{
-		//	p_indexManager->dropIndex(indexname);
-		//	p_catalogManager->DropIndexCatalog(indexname);
-		//}
+		for (auto indexinfo : p_catalogManager->GetIndexInfoByTableName(tableName))
+		{
+			p_indexManager->dropIndex(indexinfo.IndexName);
+		}
 		p_catalogManager->DropTableIndex(tableName);
 		p_catalogManager->DropTableCatalog(tableName);
 		p_recordManager->dropTable(table);
+		auto end = clock();
+		auto time = (double)(end - start) / CLOCKS_PER_SEC;
+		RecordBuffer rb;
+		return QueryResult(Success, affectedRows, time, rb);
 	}
 	catch (const std::exception& e)
 	{
@@ -149,30 +139,22 @@ QueryResult API::DropTable(const string & tableName)
 	}
 }
 
-//��Ҫ��
-//QueryResult API::DropDatabase(const string & databaseName)
-//{
-//	try
-//	{
-//		/*
-//
-//
-//		*/
-//	}
-//	catch (const std::exception& e)
-//	{
-//		return QueryResult(Fail, e);
-//	}
-//}
 
 QueryResult API::DropIndex(const string indexName, const string & tableName, const string & attributeName)
 {
 	try
 	{
-		//drop the index file
-		p_indexManager->dropIndex(indexName);
+		auto start = clock();
+
 		//delete the index info from catalog
 		p_catalogManager->DropIndexCatalog(indexName);
+		//drop the index file
+		p_indexManager->dropIndex(indexName);
+		
+		auto end = clock();
+		auto time = (double)(end - start) / CLOCKS_PER_SEC;
+		RecordBuffer rb;
+		return QueryResult(Success, 0, time, rb);
 	}
 	catch (const std::exception& e)
 	{
@@ -184,41 +166,57 @@ QueryResult API::InsertValuesInto(const string & tableName, const vector<string>
 {
 	try
 	{
+		auto start = clock();
 		Table table = Table(p_catalogManager->GetTableHeader(tableName));
 		vector<string>::const_iterator it = values.cbegin();
+		string tableName = table.getTableName();
 
 		for (auto attr : table.getAttributes())
 		{
 			if (attr.isPrimary() || attr.isUniqueKey())
 			{
-				if (!p_catalogManager->IndexExist(table.getTableName()))
+				string indexName = "$" + table.getTableName() + "$" + attr.getAttributeName();
+				//如果是唯一值或主键，并且没有创建索引，就为它创建索引
+				if (!p_catalogManager->IndexExist(indexName))
 				{
-					string indexName = "$" + table.getTableName() + "$" + attr.getAttributeName();
 					p_indexManager->createIndex(indexName, attr, table.getRecordLength(), table.getTableName());
 					p_catalogManager->CreateIndexCatalog(indexName, table.getTableName(), attr.getAttributeName());
-					if (p_indexManager->keyExists("$" + table.getTableName() + "$" + attr.getAttributeName(), *it))
+					if (p_indexManager->keyExists(indexName, *it))
 					{
-					}//throw PriOrUniqExistException(field.getAttribute());
+						return QueryResult(Fail, CatalogError("Duplicate primary or unique key"));
+					} 
 				}
+				//如果已经有索引，保证值不重复
 				else
 				{
 					if (p_indexManager->keyExists(p_catalogManager->GetIndexInfo(table.getTableName(),attr.getAttributeName()).IndexName, *it))
 					{
-					}//throw PriOrUniqExistException(field.getAttribute());
+						return QueryResult(Fail, CatalogError("Duplicate primary or unique key"));
+					}
 				}
 			}
 			it++;
 		}
 
-		p_recordManager->insertValues(table, values);
+		//在数据表中插入
+		auto address = p_recordManager->insertValues(table, values);
 
+		//更新索引中的信息
 		it = values.cbegin();
-		//for (auto field : table.getTableVec())
-		//{
-		//	if (field.isPrimary() || field.isUnique())
-		//		imPtr->insertValues(cmPtr->getIndexName(field.getAttribute(), table.getTableName()), *it, address);
-		//	it++;
-		//}
+		for (auto attr : table.getAttributes())
+		{
+			if (attr.isPrimary() || attr.isUniqueKey())
+			{
+				IndexInfo indexinfo = p_catalogManager->GetIndexInfo(tableName, attr.getAttributeName());
+				p_indexManager->insertValues(indexinfo.IndexName, *it, address);
+			}
+			it++;
+		}
+		auto end = clock();
+		auto time = (double)(end - start) / CLOCKS_PER_SEC;
+		RecordBuffer rb;
+		return QueryResult(Success,1, time, rb);
+		
 	}
 	catch (const std::exception& e)
 	{
@@ -227,23 +225,65 @@ QueryResult API::InsertValuesInto(const string & tableName, const vector<string>
 	}
 }
 
+/*Select 
+1.不使用索引：没有condition，或者condition中attribute没有索引
+2.使用索引：condition中的attribute有索引
+
+*/
 QueryResult API::Select(const list<string> attributes, const string& tableName, const list<Expression>& exprs)
 {
 	try
 	{
+		auto start = clock();
 		vector<string> attrVec;
+		vector<string> indexedAttrsInCondition;
 		Table table = Table(p_catalogManager->GetTableHeader(tableName));
-		for (const auto& item : attrVec)
+		bool hasIndexedAttr = false;
+		//所有要select的attribute
+		for (const auto& item : attributes)
 		{
 			attrVec.push_back(item);
 		}
 		vector<Condition> conditions;
 		for (auto expr : exprs) {
-
+			if (expr.leftOperand.isAttribute)
+			{
+				//如果这个属性上有索引
+				if (p_catalogManager->GetIndexInfo(tableName, expr.leftOperand.operandName).valid())
+				{
+					indexedAttrsInCondition.push_back(expr.leftOperand.operandName);
+				}
+			}
+			if (expr.rightOperand.isAttribute)
+			{
+				//如果这个属性上有索引
+				if (p_catalogManager->GetIndexInfo(tableName, expr.rightOperand.operandName).valid())
+				{
+					indexedAttrsInCondition.push_back(expr.leftOperand.operandName);
+				}
+			}
 			conditions.push_back(expr_to_Condition(expr));
 		}
-		QueryResult res = p_recordManager->selectValues(attrVec, table, conditions);
+		//如果没有condition 或者where里的attr没有索引 直接用recordManager
+		if (conditions.size()<1 || indexedAttrsInCondition.size()< 1)
+		{
+			QueryResult res = p_recordManager->selectValues(attrVec, table, conditions);
+			auto end = clock();
+			auto time = ((double)end - (double)start) / CLOCKS_PER_SEC;
+			res.execTime = time;
+			res.showRocords = true;
+
+			return res;
+		}
+		//否则使用索引来select,如果有多个带索引的attribute，用第一个
+		auto useIndexInfo = p_catalogManager->GetIndexInfo(tableName, indexedAttrsInCondition[0]);
+		QueryResult res = p_indexManager->selectValues(useIndexInfo.IndexName,attributes,table,conditions,tableName);
+
+		auto end = clock();
+		auto time = ((double)end - (double)start) / CLOCKS_PER_SEC;
+		res.execTime = time;
 		res.showRocords = true;
+
 		return res;
 	}
 	catch (const std::exception& e)
@@ -252,37 +292,48 @@ QueryResult API::Select(const list<string> attributes, const string& tableName, 
 	}
 }
 
-QueryResult API::Select(const string& tableName, const list<Expression>& exprs)
-{
-	try
-	{
-		Table table = Table(p_catalogManager->GetTableHeader(tableName));
+//这个Select废弃
+//QueryResult API::Select(const string& tableName, const list<Expression>& exprs)
+//{
+//	try
+//	{
+//		Table table = Table(p_catalogManager->GetTableHeader(tableName));
+//
+//		vector<Condition> conditions;
+//		for (auto expr : exprs) {
+//
+//			conditions.push_back(expr_to_Condition(expr));
+//		}
+//		QueryResult res = p_recordManager->selectValues(table, conditions);
+//		res.showRocords = true;
+//		return res;
+//	}
+//	catch (const std::exception& e)
+//	{
+//		return QueryResult(Fail, e);
+//	}
+//}
 
-		vector<Condition> conditions;
-		for (auto expr : exprs) {
 
-			conditions.push_back(expr_to_Condition(expr));
-		}
-		QueryResult res = p_recordManager->selectValues(table, conditions);
-		res.showRocords = true;
-		return res;
-	}
-	catch (const std::exception& e)
-	{
-		return QueryResult(Fail, e);
-	}
-}
-
+//删除表中所有值
 QueryResult API::DeleteFromTable(const string& tableName)
 {
 	try
 	{
-		/*
-
-
-		*/
+		auto start = clock();
 		Table table = Table(p_catalogManager->GetTableHeader(tableName));
+		//删除record中的值
 		QueryResult res = p_recordManager->deleteValues(table,vector<Condition>());
+		//删除表中所有索引  并且删除表中索引的catalog
+		for (auto& indexinfo : p_catalogManager->GetIndexInfoByTableName(tableName))
+		{
+			p_indexManager->dropIndex(indexinfo.IndexName);
+			p_catalogManager->DropIndexCatalog(indexinfo.IndexName);
+		}
+
+		auto end = clock();
+		auto time = ((double)end - (double)start) / CLOCKS_PER_SEC;
+		res.execTime = time;
 		
 		return res;
 	}
@@ -292,18 +343,70 @@ QueryResult API::DeleteFromTable(const string& tableName)
 	}
 }
 
+
+/*条件删除
+数据文件中的内容要删
+表内所有索引中的内容也要相应地删掉
+*/
 QueryResult API::DeleteFromTableWhere(const string& tableName, const list<Expression>& exprs)
 {
 	try
 	{
-		vector<Condition> conditions;
+		auto start = clock();
+		vector<string> attrVec;
+		vector<string> indexedAttrsInCondition;
 		Table table = Table(p_catalogManager->GetTableHeader(tableName));
+		bool hasIndexedAttr = false;
+
+		list<string> indexlist;
+		for (auto& indexinfo : p_catalogManager->GetIndexInfoByTableName(tableName))
+		{
+			indexlist.push_back(indexinfo.IndexName);
+		}
+
+		string primaryKey = table.getAttributes()[table.getPrimaryKeyIndex()].getAttributeName();
+
+		vector<Condition> conditions;
 		for (auto expr : exprs) {
-			
+			if (expr.leftOperand.isAttribute)
+			{
+				//如果这个属性上有索引
+				if (p_catalogManager->GetIndexInfo(tableName, expr.leftOperand.operandName).valid())
+				{
+					indexedAttrsInCondition.push_back(expr.leftOperand.operandName);
+				}
+			}
+			if (expr.rightOperand.isAttribute)
+			{
+				//如果这个属性上有索引
+				if (p_catalogManager->GetIndexInfo(tableName, expr.rightOperand.operandName).valid())
+				{
+					indexedAttrsInCondition.push_back(expr.leftOperand.operandName);
+				}
+			}
 			conditions.push_back(expr_to_Condition(expr));
 		}
-		
-		QueryResult res = p_recordManager->deleteValues(table,conditions);
+		//如果没有condition 或者where里的attr没有索引 索引用主键删
+		if (conditions.size() < 1 || indexedAttrsInCondition.size() < 1)
+		{
+			p_indexManager->deleteValues(p_catalogManager->GetIndexInfo(tableName, primaryKey).IndexName, list<string>(), indexlist, tableName, table.getRecordLength());
+			QueryResult res = p_recordManager->selectValues(attrVec, table, conditions);
+			auto end = clock();
+			auto time = ((double)end - (double)start) / CLOCKS_PER_SEC;
+			res.execTime = time;
+			res.showRocords = true;
+
+			return res;
+		}
+		//否则用第一个索引来删
+		auto useIndexname = *indexlist.begin();
+		QueryResult res = p_indexManager->deleteValues(useIndexname, indexlist, conditions, tableName, table.getRecordLength());
+
+		auto end = clock();
+		auto time = ((double)end - (double)start) / CLOCKS_PER_SEC;
+		res.execTime = time;
+		res.showRocords = true;
+
 		return res;
 	}
 	catch (const std::exception& e)

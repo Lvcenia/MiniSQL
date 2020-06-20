@@ -1,4 +1,4 @@
-#include "RecordManager.h"
+ï»¿#include "RecordManager.h"
 #include <ctime>
 
 RecordManager::RecordManager()
@@ -35,7 +35,7 @@ const QueryResult& RecordManager::dropTable(const Table& tableInfo)
 	return QueryResult(Success, count, time, rb);
 }
 
-const QueryResult& RecordManager::insertValues(const Table& tableInfo, const vector<string>& values)
+ADDRESS RecordManager::insertValues(const Table& tableInfo, const vector<string>& values)
 {
 	auto start = clock();
 	ADDRESS tail = *((int*)(bufferManager->fetchARecord(tableInfo.getTableName(), 0)));
@@ -54,11 +54,11 @@ const QueryResult& RecordManager::insertValues(const Table& tableInfo, const vec
 	int returnvalue = tail;
 	tail += recordLength;
 	bufferManager->writeARecord((BYTE*)(&tail), 4, tableInfo.getTableName(), 0);	//update the tail of the record
-	delete buffer;
+	delete []buffer;
 	auto end = clock();
 	auto time = (double)(end - start) / CLOCKS_PER_SEC;
 	RecordBuffer rb;
-	return QueryResult(Success, 1, time, rb);
+	return tail;
 }
 
 const QueryResult& RecordManager::deleteValues(const Table& tableInfo, const vector<Condition>& conditions)
@@ -81,7 +81,7 @@ const QueryResult& RecordManager::deleteValues(const Table& tableInfo, const vec
 				memcpy(buff, buffer + offset, attribute.getLength());
 				buff[attribute.getLength()] = '\0';
 				values.insert(pair<string, string>(attribute.getAttributeName(), string(buff)));
-				delete buff;
+				delete []buff;
 				types.insert(pair<string, Type>(attribute.getAttributeName(), attribute.getType()));
 				offset += attribute.getLength();
 			}
@@ -92,7 +92,7 @@ const QueryResult& RecordManager::deleteValues(const Table& tableInfo, const vec
 				}
 			}
 			if (flag) {
-				//±ê¼ÇÎ»ÒÑÉ¾³ý
+				//æ ‡è®°ä½å·²åˆ é™¤
 				bufferManager->writeARecord((BYTE*)DeleteInfo, 8, tableInfo.getTableName(), it.value());
 				count++;
 			}
@@ -125,7 +125,7 @@ const QueryResult& RecordManager::selectValues(const Table& tableInfo, const vec
 				memcpy(buff, buffer + offset, attribute.getLength());
 				buff[attribute.getLength()] = '\0';
 				values.insert(pair<string, string>(attribute.getAttributeName(), string(buff)));
-				delete buff;
+				delete []buff;
 				types.insert(pair<string, Type>(attribute.getAttributeName(), attribute.getType()));
 				offset += attribute.getLength();
 			}
@@ -171,7 +171,7 @@ const QueryResult& RecordManager::selectValues(const vector<string>& attributes,
 				memcpy(buff, buffer + offset, attribute.getLength());
 				buff[attribute.getLength()] = '\0';
 				values.insert(pair<string, string>(attribute.getAttributeName(), string(buff)));
-				delete buff;
+				delete []buff;
 				types.insert(pair<string, Type>(attribute.getAttributeName(), attribute.getType()));
 				offset += attribute.getLength();
 			}

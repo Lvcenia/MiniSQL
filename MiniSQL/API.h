@@ -1,13 +1,15 @@
-#pragma once
+ï»¿#pragma once
 #include "Generals.h"
 #include "CatalogManager.h"
 #include "IndexManager.h"
 #include "RecordManager.h"
+#include "Exception.h"
 #include <vector>
 #include <list>
+#include <ctime>
 using namespace std;
 
-/*APIÄ£¿é¸ºÔğ½ÓÊÕInterpreterµÄÖ¸ÁîÊäÈë£¬µ÷ÓÃÆäËûÄ£¿éµÄ½Ó¿Ú²¢Í³Ò»²¶»ñ´íÎóĞÅÏ¢¡¢·µ»ØĞÅÏ¢µ½Intepreter£¬×îÖÕ´«µİµ½Ö÷º¯Êı*/
+/*APIæ¨¡å—è´Ÿè´£æ¥æ”¶Interpreterçš„æŒ‡ä»¤è¾“å…¥ï¼Œè°ƒç”¨å…¶ä»–æ¨¡å—çš„æ¥å£å¹¶ç»Ÿä¸€æ•è·é”™è¯¯ä¿¡æ¯ã€è¿”å›ä¿¡æ¯åˆ°Intepreterï¼Œæœ€ç»ˆä¼ é€’åˆ°ä¸»å‡½æ•°*/
 class API
 {
 
@@ -15,17 +17,13 @@ public:
 	API();
 	~API();
 	static API* getInstance();
-	void Init(CatalogManager* p_catalogManager, IndexManager* p_indexManager, RecordManager* p_recordManager);
 	QueryResult CreateTable(Table& table);
-	//QueryResult CreateDatabase(const string& databaseName);
-	//QueryResult DropDatabase(const string& databaseName);
 	QueryResult CreateIndex(const string& tableName, const string& indexName, const string& attributeName);
 	QueryResult DropTable(const string& tableName);
 	QueryResult DropIndex(const string indexName,const string& tableName,const string& attributeName);
 	QueryResult InsertValuesInto(const string& tableName,const vector<string>& values);
 	QueryResult Select(const list<string> attributes,const string& tableName, const list<Expression>& exprs);
-	QueryResult Select(const string& tableName, const list<Expression>& exprs);
-
+	//QueryResult Select(const string& tableName, const list<Expression>& exprs);
 	QueryResult DeleteFromTable(const string& tableName);
 	QueryResult DeleteFromTableWhere(const string& tableName, const list<Expression>& exprs);
 

@@ -1,4 +1,4 @@
-#include "CatalogManager.h"
+﻿#include "CatalogManager.h"
 #include "Exception.h"
 #include<fstream>
 #include<vector>

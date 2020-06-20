@@ -1,4 +1,4 @@
-#ifndef _BUFFERMANAGER_H_
+ï»¿#ifndef _BUFFERMANAGER_H_
 #define _BUFFERMANAGER_H_
 
 #include <string>
@@ -11,7 +11,7 @@ typedef int ADDRESS;
 using std::string;
 using std::exception;
 
-//ÎÄ¼ş²Ù×÷Òì³£
+//æ–‡ä»¶æ“ä½œå¼‚å¸¸
 class FileOperateException :public exception
 {
 private:
@@ -22,7 +22,7 @@ public:
 	virtual const char* what()const { return errorLog.c_str(); }
 };
 
-//Êı¾İ¿éÈ«²¿Õ¼ÓÃÒì³£
+//æ•°æ®å—å…¨éƒ¨å ç”¨å¼‚å¸¸
 class BlockAllPinnedException : public std::exception
 {
 private:
@@ -32,15 +32,15 @@ public:
 	virtual const char* what()const { return errLog.c_str(); }
 };
 
-//Êı¾İ¿éÀà
+//æ•°æ®å—ç±»
 class Block
 {
 private:
-	BYTE data[BLOCKSIZE];	//»º³åÇøÊı¾İ
-	bool isDirty;			//¼ÇÂ¼»º³åÇøÖĞÊı¾İÊÇ·ñºÍ´ÅÅÌÒ»Ñù, ²»Ò»ÑùÔòÎªtrue,·ñÔòÎªfalse
-	bool isPinned;			//Ëø¶¨±êÖ¾
-	ADDRESS tag;			//Êı¾İ¿é¶ÔÓ¦ÎÄ¼şÖĞÊı¾İÎ»ÖÃ
-	string filename;		//Êı¾İ¿éËùÊôÎÄ¼şÃû
+	BYTE data[BLOCKSIZE];	//ç¼“å†²åŒºæ•°æ®
+	bool isDirty;			//è®°å½•ç¼“å†²åŒºä¸­æ•°æ®æ˜¯å¦å’Œç£ç›˜ä¸€æ ·, ä¸ä¸€æ ·åˆ™ä¸ºtrue,å¦åˆ™ä¸ºfalse
+	bool isPinned;			//é”å®šæ ‡å¿—
+	ADDRESS tag;			//æ•°æ®å—å¯¹åº”æ–‡ä»¶ä¸­æ•°æ®ä½ç½®
+	string filename;		//æ•°æ®å—æ‰€å±æ–‡ä»¶å
 public:
 	Block():isDirty(false),isPinned(false) {}
 	~Block() {}
@@ -60,10 +60,10 @@ public:
 class BufferManager
 {
 private:
-	FILE * cur_file;	//µ±Ç°´ò¿ªµÄÎÄ¼şÖ¸Õë
-	string cur_filename;	//µ±Ç°´ò¿ªµÄÎÄ¼şÃû
-	Block *blocks;			//Êı¾İ¿é
-	ArrayList subQueque;	//Êı¾İ¿éË³Ğò¶ÓÁĞ
+	FILE * cur_file;	//å½“å‰æ‰“å¼€çš„æ–‡ä»¶æŒ‡é’ˆ
+	string cur_filename;	//å½“å‰æ‰“å¼€çš„æ–‡ä»¶å
+	Block *blocks;			//æ•°æ®å—
+	ArrayList subQueque;	//æ•°æ®å—é¡ºåºé˜Ÿåˆ—
 	void writeABlock(const int& index);
 	int fetchABlock(const std::string& filename, const ADDRESS& address);
 	int substitute(const std::string& filename, const ADDRESS& tag, BYTE* buffer);

@@ -1,4 +1,4 @@
-#include "BufferManager.h"
+ï»¿#include "BufferManager.h"
 
 //#define _BufferManager_DEBUG_
 #ifdef _BufferManager_DEBUG_
@@ -13,22 +13,22 @@ BufferManager::BufferManager() :
 
 BufferManager::~BufferManager()
 {
-	//½«»º³åÇøÖĞµÄÊı¾İÈ«²¿Ğ´Èë´ÅÅÌ
+	//å°†ç¼“å†²åŒºä¸­çš„æ•°æ®å…¨éƒ¨å†™å…¥ç£ç›˜
 	for (int i = 0; i < BLOCKNUM; i++)
 	{
 		if (blocks[i].isDirtyBit()) {
 			writeABlock(i);
 		}
 	}
-	//¹Ø±Õµ±Ç°ÎÄ¼ş
+	//å…³é—­å½“å‰æ–‡ä»¶
 	if (cur_file != NULL) {
 		fclose(cur_file);
 	}
-	//»ØÊÕÄÚ´æ
+	//å›æ”¶å†…å­˜
 	delete[] blocks;
 }
 
-//·µ»ØÒ»¸ö¾²Ì¬BufferManager¶ÔÏóµÄÖ¸Õë
+//è¿”å›ä¸€ä¸ªé™æ€BufferManagerå¯¹è±¡çš„æŒ‡é’ˆ
 BufferManager* BufferManager::getBufferManager()
 {
 	static BufferManager bm;
@@ -36,8 +36,8 @@ BufferManager* BufferManager::getBufferManager()
 }
 
 /*
-	×÷ÓÃ:´´½¨Ò»¸öÃûÎª<filename>.dataµÄÎÄ¼ş
-	×¢:´´½¨Ê§°Ü·µ»Øfalse,³É¹¦·µ»Øtrue
+	ä½œç”¨:åˆ›å»ºä¸€ä¸ªåä¸º<filename>.dataçš„æ–‡ä»¶
+	æ³¨:åˆ›å»ºå¤±è´¥è¿”å›false,æˆåŠŸè¿”å›true
 */
 bool BufferManager::newFile(const string& filename)
 {
@@ -51,19 +51,19 @@ bool BufferManager::newFile(const string& filename)
 }
 
 /*
-	×÷ÓÃ:É¾³ı<filename>.dataÎÄ¼şÔÚ´ÅÅÌºÍ»º³åÇøÖĞµÄËùÓĞÊı¾İ
-	×¢:¸Ãº¯ÊıÔÚÉ¾³ıÊ§°ÜÊ±»áÅ×FileOperateExceptionÒì³£
+	ä½œç”¨:åˆ é™¤<filename>.dataæ–‡ä»¶åœ¨ç£ç›˜å’Œç¼“å†²åŒºä¸­çš„æ‰€æœ‰æ•°æ®
+	æ³¨:è¯¥å‡½æ•°åœ¨åˆ é™¤å¤±è´¥æ—¶ä¼šæŠ›FileOperateExceptionå¼‚å¸¸
 */
 void BufferManager::delFile(const string&filename)
 {
 	string fn = filename + ".data";
-	//ÒªÉ¾³ıµÄÎÄ¼şÕıÔÚ´ò¿ª,ÔòÏÈ¹Ø±Õ¸ÃÎÄ¼ş
+	//è¦åˆ é™¤çš„æ–‡ä»¶æ­£åœ¨æ‰“å¼€,åˆ™å…ˆå…³é—­è¯¥æ–‡ä»¶
 	if (cur_filename == fn) {
 		fclose(cur_file);
 		cur_filename = "";
 		cur_file = NULL;
 	}
-	//É¾³ı»º³åÇøÖĞÊôÓÚ¸ÃÎÄ¼şµÄÊı¾İ
+	//åˆ é™¤ç¼“å†²åŒºä¸­å±äºè¯¥æ–‡ä»¶çš„æ•°æ®
 	for (int i = 0; i < BLOCKNUM; i++) {
 		if (blocks[i].getFileName() == fn) {
 			blocks[i].clear();
@@ -72,13 +72,13 @@ void BufferManager::delFile(const string&filename)
 #endif
 		}
 	}
-	//É¾³ı´ÅÅÌÉÏµÄ¸ÃÎÄ¼ş
+	//åˆ é™¤ç£ç›˜ä¸Šçš„è¯¥æ–‡ä»¶
 	if ((remove(fn.c_str())) == -1)
 		throw FileOperateException("Fail to remove ",fn);
 }
 
 /*
-	×÷ÓÃ:½«ÏÂ±êÎªindexµÄÊı¾İ¿éĞ´Èë´ÅÅÌ
+	ä½œç”¨:å°†ä¸‹æ ‡ä¸ºindexçš„æ•°æ®å—å†™å…¥ç£ç›˜
 */
 void BufferManager::writeABlock(const int& index) 
 {
@@ -91,12 +91,12 @@ void BufferManager::writeABlock(const int& index)
 }
 
 /*
-	×÷ÓÃ:´ÓfilenameÎÄ¼şÖĞ¶ÁÈ¡tag¸öÊı¾İ¿é
-	·µ»ØÖµ:È¡³öÊı¾İÔÚ»º³åÇøÖĞµÄ¿é±àºÅ
+	ä½œç”¨:ä»filenameæ–‡ä»¶ä¸­è¯»å–tagä¸ªæ•°æ®å—
+	è¿”å›å€¼:å–å‡ºæ•°æ®åœ¨ç¼“å†²åŒºä¸­çš„å—ç¼–å·
 */
 int BufferManager::fetchABlock(const string&filename, const ADDRESS& tag)
 {
-	//Èç¹ûÒª¶ÁÈ¡µÄÎÄ¼ş²»ÊÇÒÑ´ò¿ªµÄÎÄ¼ş, Ôò¹Ø±ÕÖ®Ç°µÄÎÄ¼ş, ½«filenameÎÄ¼şÉèÎªµ±Ç°ÎÄ¼ş
+	//å¦‚æœè¦è¯»å–çš„æ–‡ä»¶ä¸æ˜¯å·²æ‰“å¼€çš„æ–‡ä»¶, åˆ™å…³é—­ä¹‹å‰çš„æ–‡ä»¶, å°†filenameæ–‡ä»¶è®¾ä¸ºå½“å‰æ–‡ä»¶
 	if (cur_filename != filename || cur_file == NULL)
 	{
 		if (cur_file != NULL) fclose(cur_file);
@@ -106,40 +106,40 @@ int BufferManager::fetchABlock(const string&filename, const ADDRESS& tag)
 		cur_filename = filename;
 	}
 
-	//½«Êı¾İ´ÓÎÄ¼şÖĞÈ¥¶Á³öÀ´
+	//å°†æ•°æ®ä»æ–‡ä»¶ä¸­å»è¯»å‡ºæ¥
 	BYTE buffer[BLOCKSIZE];
 	fseek(cur_file, BLOCKSIZE*tag, SEEK_SET);
 	fread(buffer, BLOCKSIZE, 1, cur_file);
 
-	//½«Êı¾İĞ´Èë»º³åÇø, indexÎªĞ´ÈëÊı¾İ¿éµÄ±àºÅ
+	//å°†æ•°æ®å†™å…¥ç¼“å†²åŒº, indexä¸ºå†™å…¥æ•°æ®å—çš„ç¼–å·
 	int index = substitute(filename, tag, buffer);
 	return index;
 }
 
 /*
-	×÷ÓÃ:ÕÒ³öºÏÊÊµÄÊı¾İ¿é, ½«filename,tag,bufferµÈĞÅÏ¢ÌîÈë¸ÃÊı¾İ¿é
-	·µ»ØÖµ:±»Ìî³äÊı¾İ¿éµÄ±àºÅ
-	×¢:ÔÚËùÓĞÊı¾İ¿â¶¼pinnedµÄÊ±ºò,»áÅ×³öBlockAllPinnedExceptionÒì³£
+	ä½œç”¨:æ‰¾å‡ºåˆé€‚çš„æ•°æ®å—, å°†filename,tag,bufferç­‰ä¿¡æ¯å¡«å…¥è¯¥æ•°æ®å—
+	è¿”å›å€¼:è¢«å¡«å……æ•°æ®å—çš„ç¼–å·
+	æ³¨:åœ¨æ‰€æœ‰æ•°æ®åº“éƒ½pinnedçš„æ—¶å€™,ä¼šæŠ›å‡ºBlockAllPinnedExceptionå¼‚å¸¸
 */
 int BufferManager::substitute(const string& filename, const ADDRESS& tag, BYTE* buffer)
 {
 	int iterator = subQueque.getHead();
 	while (iterator != -1 && blocks[iterator].isPinnnedBit())
 	{
-		//½«ÒÑÂúµÄÊı¾İ¿é·Åµ½¶ÓÁĞÎ²²¿
+		//å°†å·²æ»¡çš„æ•°æ®å—æ”¾åˆ°é˜Ÿåˆ—å°¾éƒ¨
 		subQueque.moveToTail(iterator);
 		iterator = subQueque.getHead();
 	}
 
-	//ËùÓĞµÄÊı¾İ¿é¶¼pinnnedÁË
+	//æ‰€æœ‰çš„æ•°æ®å—éƒ½pinnnedäº†
 	if (iterator == -1) {
 		throw BlockAllPinnedException();
 	}
 
-	//Èç¹ûÒªÊ¹ÓÃµÄÊı¾İ¿éÒÑÓĞÊı¾İ, ½«Ô­À´µÄÊı¾İĞ´Èë´ÅÅÌ
+	//å¦‚æœè¦ä½¿ç”¨çš„æ•°æ®å—å·²æœ‰æ•°æ®, å°†åŸæ¥çš„æ•°æ®å†™å…¥ç£ç›˜
 	if (blocks[iterator].isDirtyBit()) writeABlock(iterator);
 
-	//Ìî³äÊı¾İ¿é
+	//å¡«å……æ•°æ®å—
 	subQueque.moveToTail(iterator);
 	blocks[iterator].setBlockData(buffer);
 	blocks[iterator].setDirtyBit(false);
@@ -150,8 +150,8 @@ int BufferManager::substitute(const string& filename, const ADDRESS& tag, BYTE* 
 }
 
 /*
-	×÷ÓÃ:¼ì²éÔÚ»º³åÇøÖĞÊÇ·ñÓĞ¶ÔÓ¦filename,Æ«ÒÆÁ¿ÎªtagµÄÊı¾İ¿é
-	·µ»ØÖµ: Èô´æÔÚ¶ÔÓ¦µÄ, Ôò·µ»ØÊı¾İ¿éµÄ±àºÅ,²»´æÔÚÔò·µ»Ø-1
+	ä½œç”¨:æ£€æŸ¥åœ¨ç¼“å†²åŒºä¸­æ˜¯å¦æœ‰å¯¹åº”filename,åç§»é‡ä¸ºtagçš„æ•°æ®å—
+	è¿”å›å€¼: è‹¥å­˜åœ¨å¯¹åº”çš„, åˆ™è¿”å›æ•°æ®å—çš„ç¼–å·,ä¸å­˜åœ¨åˆ™è¿”å›-1
 */
 int BufferManager::hit(const string& fileName, const ADDRESS& tag)
 {
@@ -166,8 +166,8 @@ int BufferManager::hit(const string& fileName, const ADDRESS& tag)
 }
 
 /*
-	×÷ÓÃ:²éÑ¯nameÎÄ¼şÖĞÆ«ÒÆÁ¿ÔÚ»º³åÇøÖĞµÄµØÖ·
-	·µ»ØÖµ:»º³åÇøµØÖ·
+	ä½œç”¨:æŸ¥è¯¢nameæ–‡ä»¶ä¸­åç§»é‡åœ¨ç¼“å†²åŒºä¸­çš„åœ°å€
+	è¿”å›å€¼:ç¼“å†²åŒºåœ°å€
 */
 BYTE* BufferManager::fetchARecord(const string&name, const ADDRESS& address)
 {
@@ -175,21 +175,21 @@ BYTE* BufferManager::fetchARecord(const string&name, const ADDRESS& address)
 	int tag = address / BLOCKSIZE;
 	string fn = name + ".data";
 	if ((blockIndex = hit(fn, tag)) == -1) {
-		//»º³åÇøÖĞ²»´æÔÚÒª²éµÄ¼ÇÂ¼,Ôò´Ó´ÅÅÌÖĞ¼ÓÔØ
+		//ç¼“å†²åŒºä¸­ä¸å­˜åœ¨è¦æŸ¥çš„è®°å½•,åˆ™ä»ç£ç›˜ä¸­åŠ è½½
 		blockIndex = fetchABlock(fn, tag);
 	}
 	else {
-		//½«»îÔ¾µÄÊı¾İ¿é·Åµ½Î²²¿
+		//å°†æ´»è·ƒçš„æ•°æ®å—æ”¾åˆ°å°¾éƒ¨
 		subQueque.moveToTail(blockIndex);
 	}
 
-	//¼ÇÂ¼µØÖ·ÔÚÊı¾İ¿éµØÖ·»ù´¡ÉÏµÄÆ«ÒÆÁ¿
+	//è®°å½•åœ°å€åœ¨æ•°æ®å—åœ°å€åŸºç¡€ä¸Šçš„åç§»é‡
 	int offset = address - tag * BLOCKSIZE;
 	return blocks[blockIndex].getBlockData() + offset;
 }
 
 /*
-	×÷ÓÃ:½«record¼ÇÂ¼Ğ´ÔÚÎÄ¼ş¶ÔÓ¦Î»ÖÃµÄ»º³åÇøÉÏ
+	ä½œç”¨:å°†recordè®°å½•å†™åœ¨æ–‡ä»¶å¯¹åº”ä½ç½®çš„ç¼“å†²åŒºä¸Š
 */
 void BufferManager::writeARecord(BYTE* record, int len, const string& name, const ADDRESS& address)
 {
@@ -197,28 +197,28 @@ void BufferManager::writeARecord(BYTE* record, int len, const string& name, cons
 	int tag = address / BLOCKSIZE;
 	string fn = name + ".data";
 	if ((blockIndex = hit(fn, tag)) == -1) {
-		//»º³åÇøÖĞ²»´æÔÚÒªĞ´µÄ¼ÇÂ¼,Ôò´Ó´ÅÅÌÖĞ¼ÓÔØ
+		//ç¼“å†²åŒºä¸­ä¸å­˜åœ¨è¦å†™çš„è®°å½•,åˆ™ä»ç£ç›˜ä¸­åŠ è½½
 		blockIndex = fetchABlock(fn, tag);
 	}
 	else {
-		//½«»îÔ¾µÄÊı¾İ¿é·Åµ½Î²²¿
+		//å°†æ´»è·ƒçš„æ•°æ®å—æ”¾åˆ°å°¾éƒ¨
 		subQueque.moveToTail(blockIndex);
 	}
 
-	//¼ÇÂ¼µØÖ·ÔÚÊı¾İ¿éµØÖ·»ù´¡ÉÏµÄÆ«ÒÆÁ¿
+	//è®°å½•åœ°å€åœ¨æ•°æ®å—åœ°å€åŸºç¡€ä¸Šçš„åç§»é‡
 	int offset = address - tag * BLOCKSIZE;
 	memcpy(blocks[blockIndex].getBlockData() + offset, record, len);
 
 	blocks[blockIndex].setDirtyBit(true);
 }
 
-//½«Ö¸¶¨Êı¾İ¿éÉèÎªpinned
+//å°†æŒ‡å®šæ•°æ®å—è®¾ä¸ºpinned
 void BufferManager::setBlockPinned(int index)
 {
 	blocks[index].setPinnedBit(true);
 }
 
-//½«Ö¸¶¨Êı¾İ¿éÉèÎªnot pinned
+//å°†æŒ‡å®šæ•°æ®å—è®¾ä¸ºnot pinned
 void BufferManager::setBlockNotPinned(int index)
 {
 	blocks[index].setPinnedBit(false);
@@ -231,11 +231,11 @@ int main()
 {
 	BufferManager bm;
 	//bm.newFile("test");
-	char buffer[] = "ÕâÊÇÒ»Ìõ²âÊÔÊı¾İ";
+	char buffer[] = "è¿™æ˜¯ä¸€æ¡æµ‹è¯•æ•°æ®";
 	try {
 		bm.writeARecord((BYTE *)buffer, strlen(buffer), "test", 20);
 		bm.setBlockPinned(0);
-		bm.writeARecord((BYTE *)"Õâ»¹ÊÇÒ»Ìõ²âÊÔÊı¾İ", strlen("Õâ»¹ÊÇÒ»Ìõ²âÊÔÊı¾İ"), "test", 100);
+		bm.writeARecord((BYTE *)"è¿™è¿˜æ˜¯ä¸€æ¡æµ‹è¯•æ•°æ®", strlen("è¿™è¿˜æ˜¯ä¸€æ¡æµ‹è¯•æ•°æ®"), "test", 100);
 		std::cout << bm.fetchARecord("test", 20) << std::endl;
 		bm.delFile("test");
 	}

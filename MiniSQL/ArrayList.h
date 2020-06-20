@@ -1,10 +1,10 @@
-#ifndef _ARRAYLIST_
+ï»¿#ifndef _ARRAYLIST_
 #define _ARRAYLIST_
 
 #define BLOCKSIZE 4096
 #define BLOCKNUM 10
 
-//Êı¾İ¿éË³Ğò¶ÓÁĞÀà
+//æ•°æ®å—é¡ºåºé˜Ÿåˆ—ç±»
 class ArrayList
 {
 private:

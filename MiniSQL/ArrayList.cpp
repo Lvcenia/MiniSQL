@@ -1,4 +1,4 @@
-#include "ArrayList.h"
+ï»¿#include "ArrayList.h"
 
 ArrayList::ArrayList() :
 	head(0), tail(BLOCKNUM - 1)
@@ -15,7 +15,7 @@ ArrayList::~ArrayList()
 {
 }
 /*
-	»ñÈ¡¶ÓÁĞÍ·²¿±àºÅ
+	è·å–é˜Ÿåˆ—å¤´éƒ¨ç¼–å·
 */
 int ArrayList::getHead()
 {
@@ -23,7 +23,7 @@ int ArrayList::getHead()
 }
 
 /*
-	×÷ÓÃ:½«Ö¸¶¨±àºÅÒÆµ½¶ÓÁĞÎ²²¿
+	ä½œç”¨:å°†æŒ‡å®šç¼–å·ç§»åˆ°é˜Ÿåˆ—å°¾éƒ¨
 */
 void ArrayList::moveToTail(int index)
 {

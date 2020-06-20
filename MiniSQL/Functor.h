@@ -1,4 +1,4 @@
-
+ï»¿
 
 #ifndef _FUNCTOR_H_
 #define _FUNCTOR_H_
@@ -12,7 +12,7 @@
 #include <functional>
 
 
-/*¶¨ÒåÁËÒ»Ğ©ÓÃÓÚ·ÖÎösqlÓï·¨µÄº¯Êı£¬¹©interpreterµ÷ÓÃ*/
+/*å®šä¹‰äº†ä¸€äº›ç”¨äºåˆ†æsqlè¯­æ³•çš„å‡½æ•°ï¼Œä¾›interpreterè°ƒç”¨*/
 
 
 // can't understand

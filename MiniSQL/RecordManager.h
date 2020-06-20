@@ -40,7 +40,7 @@ public:
 	virtual ~RecordManager();
 	const QueryResult& createTable(Table& tableInfo);
 	const QueryResult& dropTable(const Table& tableInfo);
-	const QueryResult& insertValues(const Table& tableInfo, const vector<string>& values);//先只考虑全值插入，意思values的个数等于属性个数
+	ADDRESS insertValues(const Table& tableInfo, const vector<string>& values);//先只考虑全值插入，意思values的个数等于属性个数
 	const QueryResult& deleteValues(const Table& tableInfo, const vector<Condition>& conditions);
 	const QueryResult& selectValues(const Table& tableInfo, const vector<Condition>& conditions);
 	const QueryResult& selectValues(const vector<string>& attributes, const Table& tableInfo, const vector<Condition>& conditions);

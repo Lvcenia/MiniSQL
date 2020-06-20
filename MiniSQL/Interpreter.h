@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 #ifndef _INTERPRETER_H_
 #define _INTERPRETER_H_
 
@@ -8,21 +8,21 @@
 #include <memory>
 #include <functional>
 
-class StatementBlock; // ¸÷ÖÖsqlÓï¾äÀàµÄ»ùÀà£¬¶Ô¸÷ÖÖsqlÓï¾äÊµÏÖ×ÔÎÒ¼ì²éºÍÖ´ĞĞ
+class StatementBlock; // å„ç§sqlè¯­å¥ç±»çš„åŸºç±»ï¼Œå¯¹å„ç§sqlè¯­å¥å®ç°è‡ªæˆ‘æ£€æŸ¥å’Œæ‰§è¡Œ
 
-// ½»»¥Àà£¬±»Ö÷º¯Êıµ÷ÓÃ£¬·ÖÎöÖ´ĞĞsql»òsqlÎÄ¼ş£¬´òÓ¡½á¹û
+// äº¤äº’ç±»ï¼Œè¢«ä¸»å‡½æ•°è°ƒç”¨ï¼Œåˆ†ææ‰§è¡Œsqlæˆ–sqlæ–‡ä»¶ï¼Œæ‰“å°ç»“æœ
 class Interpreter
 {
 public:
 	Interpreter() {};
 	~Interpreter() {};
-	void executeSql(const std::string& sql); // ×ÜÖ´ĞĞ,½á¹û±£´æÔÚvector<QueryResult>Àï,ÒòÎªÖ´ĞĞÒ»¸öÎÄ¼şÀïµÄ¶àÌõÓï¾ä¾ÍÓĞ¶àÌõ½á¹û£¬ËùÒÔÓÃvector
-	void parse(const std::string& sql); // ×ÜÓï·¨·ÖÎö
-	void check(); // Óï¾ä¼ì²é
-	void execute(); // Ö´ĞĞ
-	void print(); // ÒÀ´ÎÊä³öÖ´ĞĞ½á¹û
+	void executeSql(const std::string& sql); // æ€»æ‰§è¡Œ,ç»“æœä¿å­˜åœ¨vector<QueryResult>é‡Œ,å› ä¸ºæ‰§è¡Œä¸€ä¸ªæ–‡ä»¶é‡Œçš„å¤šæ¡è¯­å¥å°±æœ‰å¤šæ¡ç»“æœï¼Œæ‰€ä»¥ç”¨vector
+	void parse(const std::string& sql); // æ€»è¯­æ³•åˆ†æ
+	void check(); // è¯­å¥æ£€æŸ¥
+	void execute(); // æ‰§è¡Œ
+	void print(); // ä¾æ¬¡è¾“å‡ºæ‰§è¡Œç»“æœ
 	//void readInput(const std::string& s);
-	void executeFile(const std::string& fileName); // Ö´ĞĞÎÄ¼ş
+	void executeFile(const std::string& fileName); // æ‰§è¡Œæ–‡ä»¶
 	std::shared_ptr<StatementBlock>& gettPtr() { return tptr; } 
 	std::vector<std::shared_ptr<StatementBlock>>& getVsb() { return vStatementBlock; }
 	//void setRecordBuffer(RECORDBUFFER& rb) { this->rb = &rb; }
@@ -31,7 +31,7 @@ private:
 	typedef std::string::iterator Iterator;
 	//std::vector<std::string> split(std::string s, std::string::value_type c);
 
-	// ¸÷ÀàÓï¾ä·ÖÎö
+	// å„ç±»è¯­å¥åˆ†æ
 	void createTableParser(Iterator& begin, Iterator end);
 	void createIndexParser(Iterator& begin, Iterator end);
 	void dropTableParser(Iterator& begin, Iterator end);
@@ -43,11 +43,11 @@ private:
 	void execfileParser(Iterator& begin, Iterator end);
 
 private:
-	std::vector<std::shared_ptr<StatementBlock>> vStatementBlock;// ¸÷ÀàÓï¾äĞÅÏ¢ÀàµÄÖ¸Õë¼¯
-	std::string tmpStoredSql; // Ôİ´æµÄÒ»ÌõsqlÓï¾ä
+	std::vector<std::shared_ptr<StatementBlock>> vStatementBlock;// å„ç±»è¯­å¥ä¿¡æ¯ç±»çš„æŒ‡é’ˆé›†
+	std::string tmpStoredSql; // æš‚å­˜çš„ä¸€æ¡sqlè¯­å¥
 	//RECORDBUFFER* rb;
-	std::shared_ptr<StatementBlock> tptr; // Ôİ´æµÄÒ»¸ösqlÓï¾ä¶ÔÓ¦µÄÀà
+	std::shared_ptr<StatementBlock> tptr; // æš‚å­˜çš„ä¸€ä¸ªsqlè¯­å¥å¯¹åº”çš„ç±»
 
-	vector<QueryResult> rets;  // ²éÑ¯µÄ½á¹û, Ò»¸öÎÄ¼şÖĞ¶àÌõsqlÓï¾ä»áÓĞ¶à¸ö½á¹û
+	vector<QueryResult> rets;  // æŸ¥è¯¢çš„ç»“æœ, ä¸€ä¸ªæ–‡ä»¶ä¸­å¤šæ¡sqlè¯­å¥ä¼šæœ‰å¤šä¸ªç»“æœ
 };
 #endif

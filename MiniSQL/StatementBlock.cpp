@@ -1,4 +1,4 @@
-
+ï»¿
 
 #include "StatementBlock.h"
 #include "CatalogManager.h"
@@ -590,5 +590,5 @@ QueryResult execBlock::execute()
 	ip->getVsb().clear();
 	ip->executeFile(fileName);
 	ip->getVsb().push_back(ip->gettPtr());
-	return QueryResult(); // ¿Õ½á¹û
+	return QueryResult(); // ç©ºç»“æžœ
 }

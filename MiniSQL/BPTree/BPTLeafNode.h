@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include "BPTNode.h"
 
 class BPTLeafNode : public BPTNode {

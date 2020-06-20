@@ -1,4 +1,4 @@
-#include "BPTNode.h"
+﻿#include "BPTNode.h"
 
 BPTNode::BPTNode(bool(*comp)(const string& a, const string& b), bool isLeaf, BPTree* tree, int m)
 {

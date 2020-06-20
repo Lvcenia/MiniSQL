@@ -1,4 +1,4 @@
-
+﻿
 #ifndef _EXCEPTION_H_
 #define _EXCEPTION_H_
 
@@ -6,7 +6,7 @@
 #include <string>
 
 
-/*������һЩ�Զ����쳣�࣬���ڴ��������ָ��ִ��󣬴Ӷ�ʵ��ĳЩ����*/
+/*定义了一些自定义异常类，用于处理并区分各种错误，从而实现某些功能*/
 
 
 class GrammarError :public std::exception{

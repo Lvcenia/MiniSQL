@@ -1,4 +1,4 @@
-
+ï»¿
 
 
 #ifndef _STATEMENTBLOCK_H_
@@ -13,12 +13,12 @@
 
 
 
-/*¸÷ÖÖsqlÓï¾ä¶ÔÓ¦µÄÀà
+/*å„ç§sqlè¯­å¥å¯¹åº”çš„ç±»
 *
-*×÷ÓÃ£º½ÓÊÕinterpreter´«À´µÄ±»³õ²½Óï·¨·ÖÎöµÄsqlÓï¾ä´¦ÀíºóµÄ½á¹û£¬
-*      ½Ó×Å½øĞĞ¼ì²é£¬¼ì²éÊı¾İ¿âÖĞÊÇ·ñÒÑ´æÔÚ¡¢ÊÇ·ñ²»´æÔÚ...µÈÎÊÌâ
-*      Ã»ÓĞÎÊÌâ¾Íµ÷ÓÃapiÖĞµÄ¸÷ÖÖ½Ó¿ÚÖ´ĞĞsqlÓï¾ä
-*      ²¢½«½á¹û·µ»Ø¸øinterpreter
+*ä½œç”¨ï¼šæ¥æ”¶interpreterä¼ æ¥çš„è¢«åˆæ­¥è¯­æ³•åˆ†æçš„sqlè¯­å¥å¤„ç†åçš„ç»“æœï¼Œ
+*      æ¥ç€è¿›è¡Œæ£€æŸ¥ï¼Œæ£€æŸ¥æ•°æ®åº“ä¸­æ˜¯å¦å·²å­˜åœ¨ã€æ˜¯å¦ä¸å­˜åœ¨...ç­‰é—®é¢˜
+*      æ²¡æœ‰é—®é¢˜å°±è°ƒç”¨apiä¸­çš„å„ç§æ¥å£æ‰§è¡Œsqlè¯­å¥
+*      å¹¶å°†ç»“æœè¿”å›ç»™interpreter
 *
 */
 
@@ -26,7 +26,7 @@
 class Interpreter;
 
 // an interface 
-// ËùÓĞsqlÓï¾ä¶ÔÓ¦ÀàµÄ»ùÀà
+// æ‰€æœ‰sqlè¯­å¥å¯¹åº”ç±»çš„åŸºç±»
 class StatementBlock{
 public:
 	virtual QueryResult execute() = 0;
@@ -35,7 +35,7 @@ public:
 	virtual ~StatementBlock() {};
 };
 
-// ĞÂ½¨±í£ºcheck¼ì²éÊÇ·ñÒÑ´æÔÚ±í£¬executeµ÷ÓÃapiÖĞĞÂ½¨±íº¯Êı
+// æ–°å»ºè¡¨ï¼šcheckæ£€æŸ¥æ˜¯å¦å·²å­˜åœ¨è¡¨ï¼Œexecuteè°ƒç”¨apiä¸­æ–°å»ºè¡¨å‡½æ•°
 class CreateTableBlock :public StatementBlock {
 public:
 	CreateTableBlock(Table table) :table(table) {};
@@ -51,7 +51,7 @@ private:
 	std::string primaryKeyName;
 };
 
-// ĞÂ½¨Ë÷Òı£ºcheck¼ì²éÊÇ·ñÒÑ´æÔÚË÷Òı¡¢´æÔÚ±í¡¢´æÔÚÊôĞÔ£¬executeµ÷ÓÃapiÖĞĞÂ½¨Ë÷Òıº¯Êı
+// æ–°å»ºç´¢å¼•ï¼šcheckæ£€æŸ¥æ˜¯å¦å·²å­˜åœ¨ç´¢å¼•ã€å­˜åœ¨è¡¨ã€å­˜åœ¨å±æ€§ï¼Œexecuteè°ƒç”¨apiä¸­æ–°å»ºç´¢å¼•å‡½æ•°
 class CreateIndexBlock :public StatementBlock {
 public:
 	CreateIndexBlock(std::string indexName,std::string tableName, std::string attributeName) 
@@ -66,7 +66,7 @@ private:
 	std::string attributeName;
 };
 
-//	²åÈë¼ÇÂ¼£º check¼ì²éÊÇ·ñ´æÔÚ±í¡¢ÊôĞÔÊıÁ¿ÊÇ·ñ¶ÔÓ¦¡¢ÊôĞÔÀàĞÍÊÇ·ñ¶ÔÓ¦£¬executeµ÷ÓÃapiÖĞ²åÈë¼ÇÂ¼º¯Êı
+//	æ’å…¥è®°å½•ï¼š checkæ£€æŸ¥æ˜¯å¦å­˜åœ¨è¡¨ã€å±æ€§æ•°é‡æ˜¯å¦å¯¹åº”ã€å±æ€§ç±»å‹æ˜¯å¦å¯¹åº”ï¼Œexecuteè°ƒç”¨apiä¸­æ’å…¥è®°å½•å‡½æ•°
 class InsertTableBlock :public StatementBlock {
 public:
 	InsertTableBlock(std::string tableName, std::vector<std::string> values) 
@@ -80,7 +80,7 @@ private:
 	std::vector<std::string> values;
 };
 
-// ²éÑ¯¼ÇÂ¼£ºcheck¼ì²éÊÇ·ñ´æÔÚ±í¡¢ÊôĞÔ¡¢Ìõ¼şÖĞÊôĞÔÀàĞÍÓëÖµÊÇ·ñ¶ÔÓ¦£¬executeµ÷ÓÃapiÖĞµÄ²éÑ¯º¯Êı
+// æŸ¥è¯¢è®°å½•ï¼šcheckæ£€æŸ¥æ˜¯å¦å­˜åœ¨è¡¨ã€å±æ€§ã€æ¡ä»¶ä¸­å±æ€§ç±»å‹ä¸å€¼æ˜¯å¦å¯¹åº”ï¼Œexecuteè°ƒç”¨apiä¸­çš„æŸ¥è¯¢å‡½æ•°
 class SelectBlock:public StatementBlock {
 public:
 	//SelectBlock(Interpreter* const ip):star(false),doNothingFlag(false),ip(ip){}
@@ -102,7 +102,7 @@ private:
 	//Interpreter* const ip;
 };
 
-// ÍË³öÊı¾İ¿â£º Ö±½ÓÅ×³öÍË³öÒì³£½øĞĞÍË³ö
+// é€€å‡ºæ•°æ®åº“ï¼š ç›´æ¥æŠ›å‡ºé€€å‡ºå¼‚å¸¸è¿›è¡Œé€€å‡º
 class QuitBlock :public StatementBlock {
 public:
 	QuitBlock(){}
@@ -114,7 +114,7 @@ public:
 private:
 };
 
-// É¾³ı±í£ºcheck¼ì²éÊÇ·ñ´æÔÚ±í£¬executeµ÷ÓÃapiÖĞµÄÉ¾³ı±íº¯Êı
+// åˆ é™¤è¡¨ï¼šcheckæ£€æŸ¥æ˜¯å¦å­˜åœ¨è¡¨ï¼Œexecuteè°ƒç”¨apiä¸­çš„åˆ é™¤è¡¨å‡½æ•°
 class DropTableBlock :public StatementBlock {
 public:
 	DropTableBlock(std::string s) :tableName(s) {}
@@ -126,7 +126,7 @@ private:
 	std::string tableName;
 };
 
-// É¾³ıË÷Òı£ºcheck¼ì²éÊÇ·ñ´æÔÚË÷Òı£¬ executeµ÷ÓÃapiÖĞµÄÉ¾³ıË÷Òıº¯Êı
+// åˆ é™¤ç´¢å¼•ï¼šcheckæ£€æŸ¥æ˜¯å¦å­˜åœ¨ç´¢å¼•ï¼Œ executeè°ƒç”¨apiä¸­çš„åˆ é™¤ç´¢å¼•å‡½æ•°
 class DropIndexBlock :public StatementBlock {
 public:
 	DropIndexBlock(std::string s) :indexName(s) {}
@@ -139,7 +139,7 @@ private:
 	std::string indexName;
 };
 
-// É¾³ı¼ÇÂ¼£ºcheck¼ì²éÊÇ·ñ´æÔÚ±í¡¢Ìõ¼şÖĞµÄÊôĞÔ¼°ÀàĞÍÊÇ·ñÓëÖµ¶ÔÓ¦£¬executeµ÷ÓÃapiÖĞµÄÉ¾³ı¼ÇÂ¼º¯Êı
+// åˆ é™¤è®°å½•ï¼šcheckæ£€æŸ¥æ˜¯å¦å­˜åœ¨è¡¨ã€æ¡ä»¶ä¸­çš„å±æ€§åŠç±»å‹æ˜¯å¦ä¸å€¼å¯¹åº”ï¼Œexecuteè°ƒç”¨apiä¸­çš„åˆ é™¤è®°å½•å‡½æ•°
 class DeleteBlock : public StatementBlock{
 public:
 	DeleteBlock(std::string tableName) :tableName(tableName), flag(false), doNothingFlag(false) {}
@@ -157,7 +157,7 @@ private:
 	bool doNothingFlag;
 };
 
-// Ö´ĞĞÒ»¸ösqlÎÄ¼ş£ºexecuteÖ±½Ó´ò¿¨ÎÄ¼ş¶ÁÈësqlÓï¾ä£¬²¢·´µ÷ÓÃinterpreter£¬°ÑÎÄ¼şÖĞµÄËùÓĞsqlÓï¾ä·ÖÎö´¦ÀíÍê£¬ÔÙ¼ì²é¡¢Ö´ĞĞ£¬ÕâÑù£¬ÓÖ»Øµ½ÁËÉÏÃæ¸÷ÖÖsqlÓï¾ä¶ÔÓ¦µÄÀà
+// æ‰§è¡Œä¸€ä¸ªsqlæ–‡ä»¶ï¼šexecuteç›´æ¥æ‰“å¡æ–‡ä»¶è¯»å…¥sqlè¯­å¥ï¼Œå¹¶åè°ƒç”¨interpreterï¼ŒæŠŠæ–‡ä»¶ä¸­çš„æ‰€æœ‰sqlè¯­å¥åˆ†æå¤„ç†å®Œï¼Œå†æ£€æŸ¥ã€æ‰§è¡Œï¼Œè¿™æ ·ï¼Œåˆå›åˆ°äº†ä¸Šé¢å„ç§sqlè¯­å¥å¯¹åº”çš„ç±»
 class execBlock : public StatementBlock {
 public:
 	execBlock(std::string s,Interpreter* ip) :fileName(s),ip(ip){};
@@ -167,11 +167,11 @@ public:
 	virtual ~execBlock() {};
 private:
 	std::string fileName;
-	Interpreter* const ip; // ÓÃÓÚ·´µ÷ÓÃinterpreter
+	Interpreter* const ip; // ç”¨äºåè°ƒç”¨interpreter
 };
 
 
-// ¼ì²éÀàĞÍÊÇ·ñÆ¥Åä
+// æ£€æŸ¥ç±»å‹æ˜¯å¦åŒ¹é…
 class CheckType {
 public:
 	CheckType(){}
@@ -186,7 +186,7 @@ private:
 	Table table;
 };
 
-// ÓÃÓÚ±È½ÏµÄ Ä£°åº¯Êı
+// ç”¨äºæ¯”è¾ƒçš„ æ¨¡æ¿å‡½æ•°
 template<typename T>
 auto compareFunc(OPERATOR oper)->bool(*)(T, T) {
 	switch (oper) {
@@ -206,7 +206,7 @@ auto compareFunc(OPERATOR oper)->bool(*)(T, T) {
 	return nullptr;
 }
 
-// ´¦Àí±í´ïÊ½
+// å¤„ç†è¡¨è¾¾å¼
 bool compareExp(const std::string& left, const std::string& right, Type type, OPERATOR op);
 
 #endif

@@ -1,4 +1,4 @@
-#include "IndexManager.h"
+﻿#include "IndexManager.h"
 #include "BPTree/BPTLeafNode.h"
 #include <ctime>
 
@@ -26,17 +26,20 @@ const QueryResult & IndexManager::createIndex(const string & indexName, Attribut
 {
 	auto start = clock();
 	auto index = new BPTree(indexName, attribute, fileName);
+	bufferManager->newFile(indexName);
 	indexDictionary.insert(pair<string, BPTree*>(indexName, index));
 	auto endOffset = this->getEndOffset(fileName);
+	cout << fileName << " recordOffset: " << HEADER_BLOCK_OFFSET << " endOffset: " << endOffset;
 	for (ADDRESS recordOffset = HEADER_BLOCK_OFFSET; recordOffset < endOffset; recordOffset += recordLength)
 	{
 		if ((recordOffset / 4096 + 1) * 4096 - recordOffset < recordLength&&recordOffset % 4096 != 0)
 			recordOffset = (recordOffset / 4096 + 1) * 4096;/*eliminate the tail of a block*/
 		auto recordData = bufferManager->fetchARecord(fileName, recordOffset + attribute.getOffset());/*point to the start of the attribute*/
 		char* key = new char[sizeof(recordData)];
+		cout << sizeof(recordData);
 		memcpy(key, recordData, sizeof(recordData));
 		string keyVal(key);
-		delete key;
+		delete []key;
 		index->Insert(keyVal, recordOffset);
 	}
 	SaveToFile(indexName);
