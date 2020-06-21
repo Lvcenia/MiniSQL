@@ -60,7 +60,7 @@ ADDRESS RecordManager::insertValues(const Table& tableInfo, const vector<string>
 	auto end = clock();
 	auto time = (double)(end - start) / CLOCKS_PER_SEC;
 	RecordBuffer rb;
-	return tail;
+	return returnvalue;
 }
 
 const QueryResult& RecordManager::deleteValues(const Table& tableInfo, const vector<Condition>& conditions)

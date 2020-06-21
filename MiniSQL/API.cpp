@@ -329,11 +329,10 @@ QueryResult API::DeleteFromTable(const string& tableName)
 		Table table = Table(p_catalogManager->GetTableHeader(tableName));
 		//删除record中的值
 		QueryResult res = p_recordManager->deleteValues(table,vector<Condition>());
-		//删除表中所有索引  并且删除表中索引的catalog
+		//删除索引中所有值
 		for (auto& indexinfo : p_catalogManager->GetIndexInfoByTableName(tableName))
 		{
-			p_indexManager->dropIndex(indexinfo.IndexName);
-			p_catalogManager->DropIndexCatalog(indexinfo.IndexName);
+			p_indexManager->deleteValuesAll(indexinfo.IndexName);
 		}
 
 		auto end = clock();
