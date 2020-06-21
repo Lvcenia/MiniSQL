@@ -678,7 +678,7 @@ bool Table::hasAttribute(string attributeName)
 
 const Attribute& Table::getAttribute(string attributeName) const
 {
-	for (auto attribute : attributes) {
+	for (auto& attribute : attributes) {
 		if (attribute.getAttributeName() == attributeName) {
 			return attribute;
 		}

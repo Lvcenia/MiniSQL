@@ -73,31 +73,35 @@ QueryResult API::CreateIndex(const string & tableName, const string& indexName, 
 	{
 		auto start = clock();
 		Table table = Table(p_catalogManager->GetTableHeader(tableName));
-		for (auto attr : table.getAttributes())
+		for (auto& attr : table.getAttributes())
 		{
+			cout << attr.getAttributeName();
 			//the attribute you create index on
 			if (attributeName == attr.getAttributeName() )
 			{
+				if(! (attr.isPrimary() || attr.isUniqueKey()))
+					return QueryResult(Fail, CatalogError("Attribute " + attributeName + " is not unique"));
 				if (p_catalogManager->IndexExist(tableName, attributeName))
 				{
-					string idxname = p_catalogManager->GetIndexInfo(tableName, attributeName).IndexName;
-					if (idxname[0] == '$')
-					{
-						p_indexManager->dropIndex(idxname);
-						p_catalogManager->DropIndexCatalog(idxname);
-						//create the index via index manager
-						p_indexManager->createIndex(indexName, attr, table.getRecordLength(), tableName);
-						//write the index info into catalog
-						p_catalogManager->CreateIndexCatalog(indexName, tableName, attributeName);
-					}
-					else
-					{
+					//string idxname = p_catalogManager->GetIndexInfo(tableName, attributeName).IndexName;
+					//if (idxname[0] == '$')
+					//{
+					//	p_indexManager->dropIndex(idxname);
+					//	p_catalogManager->DropIndexCatalog(idxname);
+					//	//create the index via index manager
+					//	p_indexManager->createIndex(indexName, attr, table.getRecordLength(), tableName);
+					//	//write the index info into catalog
+					//	p_catalogManager->CreateIndexCatalog(indexName, tableName, attributeName);
+					//}
+					//else
+					//{
 						return QueryResult(Fail, CatalogError("Index on the same attribute exists"));
-					}
+					//}
 				}
 				else
 				{
 					//create the index via index manager
+					cout << table.getRecordLength();
 					p_indexManager->createIndex(indexName, attr, table.getRecordLength(), tableName);
 					//write the index info into catalog
 					p_catalogManager->CreateIndexCatalog(indexName, tableName, attributeName);
