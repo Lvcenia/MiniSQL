@@ -396,7 +396,6 @@ void SelectBlock::check()
 		throw CatalogError("The table does not exist");
 
 	Table table = Table(pcb->GetTableHeader(tableName));
-	std::cout << "table: " + tableName;
 	//Table table = pcb->getTable(tableName);
 
 

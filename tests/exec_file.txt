@@ -19,4 +19,4 @@ insert into student2 values ('st05','lixiuli',25,'cs',2.12);
 
 insert into student2 values ('st06','sakamoto',25,'se',3.98);
 
-select * from student;
+select * from student2;

@@ -10,7 +10,7 @@ RecordManager::~RecordManager()
 {
 }
 
-const QueryResult& RecordManager::createTable(Table& tableInfo)
+QueryResult RecordManager::createTable(Table& tableInfo)
 {
 	auto start = clock();
 
@@ -26,7 +26,7 @@ const QueryResult& RecordManager::createTable(Table& tableInfo)
 	return QueryResult(Success, 0, time, rb);
 }
 
-const QueryResult& RecordManager::dropTable(const Table& tableInfo)
+QueryResult RecordManager::dropTable(const Table& tableInfo)
 {
 	auto start = clock();
 	int count = tableInfo.getRecordCount();
@@ -63,7 +63,7 @@ ADDRESS RecordManager::insertValues(const Table& tableInfo, const vector<string>
 	return returnvalue;
 }
 
-const QueryResult& RecordManager::deleteValues(const Table& tableInfo, const vector<Condition>& conditions)
+ QueryResult RecordManager::deleteValues(const Table& tableInfo, const vector<Condition>& conditions)
 {
 	auto start = clock();
 	int count = 0;
@@ -107,7 +107,7 @@ const QueryResult& RecordManager::deleteValues(const Table& tableInfo, const vec
 	return QueryResult(Success, count, time, rb);
 }
 
-const QueryResult& RecordManager::selectValues(const Table& tableInfo, const vector<Condition>& conditions)
+ QueryResult RecordManager::selectValues(const Table& tableInfo, const vector<Condition>& conditions)
 {
 	auto start = clock();
 	RecordBuffer rb;
@@ -153,7 +153,7 @@ const QueryResult& RecordManager::selectValues(const Table& tableInfo, const vec
 	return QueryResult(Success, 0, time, rb);
 }
 
-const QueryResult& RecordManager::selectValues(const vector<string>& attributes, const Table& tableInfo, const vector<Condition>& conditions)
+QueryResult RecordManager::selectValues(const vector<string>& attributes, const Table& tableInfo, const vector<Condition>& conditions)
 {
 	auto start = clock();
 	RecordBuffer rb;

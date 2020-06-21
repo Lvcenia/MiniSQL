@@ -253,6 +253,7 @@ QueryResult API::Select(const list<string> attributes, const string& tableName, 
 		for (auto expr : exprs) {
 			if (expr.leftOperand.isAttribute)
 			{
+				cout << expr.leftOperand.operandName;
 				//如果这个属性上有索引
 				if (p_catalogManager->GetIndexInfo(tableName, expr.leftOperand.operandName).valid())
 				{
@@ -277,6 +278,7 @@ QueryResult API::Select(const list<string> attributes, const string& tableName, 
 			auto time = ((double)end - (double)start) / CLOCKS_PER_SEC;
 			res.execTime = time;
 			res.showRocords = true;
+			res.PrintRecords();
 
 			return res;
 		}
@@ -293,6 +295,7 @@ QueryResult API::Select(const list<string> attributes, const string& tableName, 
 	}
 	catch (const std::exception& e)
 	{
+		cout << e.what();
 		return QueryResult(Fail, e);
 	}
 }

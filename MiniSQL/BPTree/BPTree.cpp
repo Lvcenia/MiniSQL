@@ -10,7 +10,7 @@ bool BPTree::CompInt(const string& a, const string& b)
 
 bool BPTree::CompChar(const string& a, const string& b)
 {
-	return a.compare(b);
+	return a < b;
 }
 
 bool BPTree::CompFloat(const string& a, const string& b)
