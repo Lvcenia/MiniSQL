@@ -67,13 +67,14 @@ QueryResult API::CreateTable(Table & table)
 }
 
 
-QueryResult API::CreateIndex(const string & tableName, const string& indexName, const string& attributeName)
+QueryResult API::CreateIndex(const string & indexName, const string& tableName, const string& attributeName)
 {
 	try
 	{
 		auto start = clock();
 		Table table = Table(p_catalogManager->GetTableHeader(tableName));
-		for (auto& attr : table.getAttributes())
+		cout << table.getAttributes().size() << table.getAttributes()[0].getAttributeName();
+		for (auto attr : table.getAttributes())
 		{
 			cout << attr.getAttributeName();
 			//the attribute you create index on

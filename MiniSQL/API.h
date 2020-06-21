@@ -18,7 +18,7 @@ public:
 	~API();
 	static API* getInstance();
 	QueryResult CreateTable(Table& table);
-	QueryResult CreateIndex(const string& tableName, const string& indexName, const string& attributeName);
+	QueryResult CreateIndex(const string& indexName, const string& tableName, const string& attributeName);
 	QueryResult DropTable(const string& tableName);
 	QueryResult DropIndex(const string indexName,const string& tableName,const string& attributeName);
 	QueryResult InsertValuesInto(const string& tableName,const vector<string>& values);
