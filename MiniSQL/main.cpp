@@ -39,11 +39,15 @@ int main()
 	//}
 
 	string sql;
+	bool changesentence = 1;
 	while (1)
 	{
 		try {
 			string line;
-			cout << "\nMiniSql->>";
+			if (changesentence) { 
+				cout << "\nMiniSql->>"; 
+				changesentence = 0;
+			}
 			getline(cin, line);
 
 			sql += (line + ' ');
@@ -62,6 +66,7 @@ int main()
 					interpreter.print(); // 输出执行结果
 				}
 				sql.clear();
+				changesentence = 1;
 			}
 			else
 				cout << ">>>";
