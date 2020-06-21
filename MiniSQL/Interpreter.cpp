@@ -114,9 +114,10 @@ void Interpreter::createTableParser(Iterator& begin, Iterator end) {
 	string s;
 	Table table;
 	string primaryName;
-
+	vector<Attribute> attrs;
 
 	s = readWord(begin, end, IsVariableName()); //read tableName
+	string tablename(s);
 	table.setTableName(s);
 
 	s = readWord(begin, end, IsString("("));
@@ -164,7 +165,8 @@ void Interpreter::createTableParser(Iterator& begin, Iterator end) {
 				readWord(begin, end, IsString("nique"));
 				att.setUnique(true);
 			}
-			table.addAttribute(att);
+			attrs.push_back(att);
+			//table.addAttribute(att);
 		}
 		//check if the end is comming
 		s = readWord(begin, end, IsChar(')'));
@@ -177,6 +179,7 @@ void Interpreter::createTableParser(Iterator& begin, Iterator end) {
 	}
 
 	readToEnd(begin, end);
+	table = Table(tablename, attrs);
 	shared_ptr<StatementBlock> pSB(new CreateTableBlock(table, primaryName));
 	vStatementBlock.push_back(pSB);
 }
@@ -432,5 +435,6 @@ void Interpreter::print(){
 		ret.PrintResult(); // 先打印执行结果
 		ret.PrintRecords(); // 再打印查询结果
 	}
+	rets.clear();
 }
 

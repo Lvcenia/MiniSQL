@@ -29,6 +29,7 @@ QueryResult API::CreateTable(Table & table)
 {
 	try
 	{
+		cout << table.getRecordLength();
 		auto start = clock();
 		//创建table.data数据文件
 		p_recordManager->createTable(table);

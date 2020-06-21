@@ -590,8 +590,12 @@ Table::Table(string tableName, const vector<Attribute>& attributes)
 	this->recordLength = 0;
 	this->name = tableName;
 	this->attributes = vector<Attribute>(attributes);
-	for (auto attribute : attributes) {
+	int offset = 0;
+	for (auto& attribute : this->attributes) {
+		attribute.setOffset(offset);
 		this->recordLength += attribute.getLength();
+		offset += attribute.getLength();
+
 	}
 	this->attrCount = attributes.size();
 	this->primaryKeyIndex = -1;

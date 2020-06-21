@@ -52,7 +52,7 @@ QueryResult CatalogManager::CreateTableCatalog(const TableHeader& table) {
         Cata_File.close();
         ofstream TableNameCatalogFile;
         TableNameCatalogFile.open(TableNameCatalog,std::ios_base::app);
-        TableNameCatalogFile << table.tableName;
+        TableNameCatalogFile << table.tableName <<endl;
         TableNameCatalogFile.close();
         //CreateIndexCatalog(PrimaryKeyIndex(table), table.tableName, 
         //    table.attributes[table.primaryKeyIndex].name);
