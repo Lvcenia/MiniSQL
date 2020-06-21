@@ -25,13 +25,13 @@ BPTree::BPTree(int m, Type type)
 	this->type = type;
 	switch (type)
 	{
-	case Int:
+	case INT:
 		Comp = CompInt;
 		break;
-	case Char:
+	case CHAR:
 		Comp = CompChar;
 		break;
-	case Float:
+	case FLOAT:
 		Comp = CompFloat;
 		break;
 	default:
@@ -56,13 +56,13 @@ BPTree::BPTree(string name, Attribute & attributeInfo, string tableName)
 	this->type = attributeInfo.getType();
 	switch (type)
 	{
-	case Int:
+	case INT:
 		Comp = CompInt;
 		break;
-	case Char:
+	case CHAR:
 		Comp = CompChar;
 		break;
-	case Float:
+	case FLOAT:
 		Comp = CompFloat;
 		break;
 	default:

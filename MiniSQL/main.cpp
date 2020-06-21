@@ -1,34 +1,17 @@
 ﻿// 此文件包含 "main" 函数。程序执行将在此处开始并结束。
 //
 
-#include <Windows.h>
 #include <iostream>
 #include "API.h"
 #include "Interpreter.h"
 #include "Exception.h"
 #include "BufferManager.h"
-
 using namespace std;
-BOOL WINAPI QuitHandler(DWORD dwCtrlType) {
-	if (dwCtrlType == CTRL_CLOSE_EVENT) {
-		// 控制台将要被关闭,将内容写入到磁盘中
-		auto bfm = BufferManager::getBufferManager();
-		if(bfm != nullptr)
-		delete bfm;
-		return FALSE;
-	}
-
-}
-
 
 
 //主函数
 int main()
 {
-	//SetConsoleCtrlHandler(QuitHandler, TRUE);
-
-
-
 	//RecordBuffer recordBuffer(); // 把它放这里似乎有些不妥，不如放在QueryResult里
 
 	//创建几个Manager对象并各自初始化

@@ -33,13 +33,13 @@ bool Condition::FitCondition(string val, Type type)
 	bool(*Comp)(const string & a, const string & b);
 	switch (type)
 	{
-	case Int:
+	case INT:
 		Comp = BPTree::CompInt;
 		break;
-	case Char:
+	case CHAR:
 		Comp = BPTree::CompChar;
 		break;
-	case Float:
+	case FLOAT:
 		Comp = BPTree::CompFloat;
 		break;
 	default:
@@ -86,13 +86,13 @@ bool Condition::GetMinimalConditoins(vector<Condition>& conditions, Type type)
 	bool(*Comp)(const string & a, const string & b);
 	switch (type)
 	{
-	case Int:
+	case INT:
 		Comp = BPTree::CompInt;
 		break;
-	case Char:
+	case CHAR:
 		Comp = BPTree::CompChar;
 		break;
-	case Float:
+	case FLOAT:
 		Comp = BPTree::CompFloat;
 		break;
 	default:
@@ -401,11 +401,11 @@ OPERATOR stringToOperator(std::string s)
 Type stringToType(std::string s)
 {
 	if (s == "int")
-		return Int;
+		return INT;
 	else if (s == "float")
-		return Float;
+		return FLOAT;
 	else if (s == "char")
-		return Char;
+		return CHAR;
 	else
 		return Type::UNDEFINEDTYPE;
 }
@@ -414,11 +414,11 @@ string typeToString(Type t)
 {
 	switch (t)
 	{
-	case Int:return "int";
+	case INT:return "int";
 		break;
-	case Char:return "char";
+	case CHAR:return "char";
 		break;
-	case Float:return "float";
+	case FLOAT:return "float";
 		break;
 	case UNDEFINEDTYPE:return "undefined";
 		break;
@@ -517,9 +517,9 @@ Type Attribute::getType() const
 void Attribute::setType(Type type)
 {
 	this->type = type;
-	if (type == Int)
+	if (type == INT)
 		this->length = sizeof(int);
-	else if (type == Float)
+	else if (type == FLOAT)
 		this->length = sizeof(float);
 }
 

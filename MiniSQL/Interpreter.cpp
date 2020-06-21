@@ -142,14 +142,14 @@ void Interpreter::createTableParser(Iterator& begin, Iterator end) {
 			Type type = stringToType(s);
 			if (type == UNDEFINEDTYPE)
 				throw GrammarError("undefined type: " + s);
-			else if (type == Char) {
+			else if (type == CHAR) {
 				readWord(begin, end, IsString("("));
 				s = readWord(begin, end, IsNum());
 				try {
 					int i = stoi(s);
 					if (i <= 0)
 						throw GrammarError("Cannot define the length of a string less than 1");
-					att.setType(Char);
+					att.setType(CHAR);
 					att.setLength(i);
 				}
 				catch (invalid_argument& e) {

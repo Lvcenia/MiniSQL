@@ -178,7 +178,7 @@ void InsertTableBlock::check()
 
 		if (!ct.isType(values[i], type)) 
 			throw CatalogError("The type of " + values[i] + " does not match defined type ");
-		if (type == Char) {
+		if (type == CHAR) {
 			if (values[i].length() <= tableVec[i].getLength() + 2)
 				values[i] = string(values[i].begin() + 1, values[i].end() - 1);
 			else
@@ -333,9 +333,9 @@ void DeleteBlock::check()
 			else doNothingFlag = true;
 		}
 		else {
-			if (b1&&typeLeft == Char)
+			if (b1&&typeLeft == CHAR)
 				exp.leftOperand.operandName = string(leftName.begin() + 1, leftName.end() - 1);
-			if (b2&&typeRight == Char)
+			if (b2&&typeRight == CHAR)
 				exp.rightOperand.operandName = string(rightName.begin() + 1, rightName.end() - 1);
 			if (b1&&!b2)
 				exp.swap();
@@ -445,9 +445,9 @@ void SelectBlock::check()
 			else doNothingFlag = true;
 		}
 		else {
-			if (b1&&typeLeft == Char)
+			if (b1&&typeLeft == CHAR)
 				exp.leftOperand.operandName = string(leftName.begin() + 1, leftName.end() - 1);
-			if (b2&&typeRight == Char)
+			if (b2&&typeRight == CHAR)
 				exp.rightOperand.operandName = string(rightName.begin() + 1, rightName.end() - 1);
 			if (b1&&!b2)
 				exp.swap();
@@ -506,13 +506,13 @@ void SelectBlock::print()
 
 bool CheckType::isType(const std::string & s, Type type) {
 	switch (type) {
-	case Int:
+	case INT:
 		return isInt(s);
 		break;
-	case Float:
+	case FLOAT:
 		return isFloat(s);
 		break;
-	case Char:
+	case CHAR:
 		return isString(s);
 		break;
 	default:return false;
@@ -545,11 +545,11 @@ bool CheckType::isAttribute(const std::string & s)
 Type CheckType::isWhatType(const std::string & s)
 {	
 	if (isInt(s))
-		return Int;
+		return INT;
 	if (isString(s)) 
-		return Char;
+		return CHAR;
 	if (isFloat(s))
-		return Float;
+		return FLOAT;
 
 	vector<Attribute> v = table.getAttributes();
 	//vector<Data> v = table.getTableVec();
@@ -570,11 +570,11 @@ Type CheckType::isWhatType(const std::string & s)
 bool compareExp(const std::string& left, const std::string& right, Type type, OPERATOR op)
 {
 	switch (type) {
-	case Int:
+	case INT:
 		return compareFunc<int>(op)(stoi(left),stoi(right));
-	case Float:
+	case FLOAT:
 		return compareFunc<float>(op)(stof(left), stof(right));
-	case Char:
+	case CHAR:
 		return compareFunc<std::string>(op)(left, right);
 	}
 

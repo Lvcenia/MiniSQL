@@ -12,9 +12,9 @@ using namespace std;
 
 enum Type
 {
-	Int,
-	Char,
-	Float,
+	INT,
+	CHAR,
+	FLOAT,
 	UNDEFINEDTYPE
 };
 
