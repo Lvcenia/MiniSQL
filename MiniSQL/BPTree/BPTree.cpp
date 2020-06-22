@@ -128,6 +128,8 @@ void BPTree::Delete(string key)
 
 int BPTree::FindAddress(string key)
 {
+	if (root == nullptr)
+		return -1;
 	try
 	{
 		return root->FindKey(key);

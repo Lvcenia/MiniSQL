@@ -83,20 +83,21 @@ QueryResult API::CreateIndex(const string & indexName, const string& tableName, 
 					return QueryResult(Fail, CatalogError("Attribute " + attributeName + " is not unique"));
 				if (p_catalogManager->IndexExist(tableName, attributeName))
 				{
-					//string idxname = p_catalogManager->GetIndexInfo(tableName, attributeName).IndexName;
-					//if (idxname[0] == '$')
-					//{
-					//	p_indexManager->dropIndex(idxname);
-					//	p_catalogManager->DropIndexCatalog(idxname);
-					//	//create the index via index manager
-					//	p_indexManager->createIndex(indexName, attr, table.getRecordLength(), tableName);
-					//	//write the index info into catalog
-					//	p_catalogManager->CreateIndexCatalog(indexName, tableName, attributeName);
-					//}
-					//else
-					//{
+					string idxname = p_catalogManager->GetIndexInfo(tableName, attributeName).IndexName;
+					//如果已经有了系统自动创建的索引 删掉重创
+					if (idxname[0] == '$')
+					{
+						p_indexManager->dropIndex(idxname);
+						p_catalogManager->DropIndexCatalog(idxname);
+						//create the index via index manager
+						p_indexManager->createIndex(indexName, attr, table.getRecordLength(), tableName);
+						//write the index info into catalog
+						p_catalogManager->CreateIndexCatalog(indexName, tableName, attributeName);
+					}
+					else
+					{
 						return QueryResult(Fail, CatalogError("Index on the same attribute exists"));
-					//}
+					}
 				}
 				else
 				{
@@ -175,34 +176,36 @@ QueryResult API::InsertValuesInto(const string & tableName, const vector<string>
 		vector<string>::const_iterator it = values.cbegin();
 		string tableName = table.getTableName();
 
-		//for (auto attr : table.getAttributes())
-		//{
-		//	if (attr.isPrimary() || attr.isUniqueKey())
-		//	{
-		//		string indexName = "$" + table.getTableName() + "$" + attr.getAttributeName();
-		//		//如果是唯一值或主键，并且没有创建索引，就为它创建索引
-		//		if (!p_catalogManager->IndexExist(indexName))
-		//		{
-		//			p_indexManager->createIndex(indexName, attr, table.getRecordLength(), table.getTableName());
-		//			p_catalogManager->CreateIndexCatalog(indexName, table.getTableName(), attr.getAttributeName());
-		//			if (p_indexManager->keyExists(indexName, *it))
-		//			{
-		//				return QueryResult(Fail, CatalogError("Duplicate primary or unique key"));
-		//			} 
-		//		}
-		//		//如果已经有索引，保证值不重复
-		//		else
-		//		{
-		//			if (p_indexManager->keyExists(p_catalogManager->GetIndexInfo(table.getTableName(),attr.getAttributeName()).IndexName, *it))
-		//			{
-		//				return QueryResult(Fail, CatalogError("Duplicate primary or unique key"));
-		//			}
-		//		}
-		//	}
-		//	it++;
-		//}
+		//在数据表中插入，通过已有的索引保证所有值不重复
+		for (auto attr : table.getAttributes())
+		{
+			if (attr.isPrimary() || attr.isUniqueKey())
+			{
+				string indexName = "$" + table.getTableName() + "$" + attr.getAttributeName();
+				//如果是唯一值或主键，并且没有创建索引，就为它创建索引
+				if (!p_catalogManager->IndexExist(tableName,attr.getAttributeName()))
+				{
+					p_indexManager->createIndex(indexName, attr, table.getRecordLength(), tableName);
+					p_catalogManager->CreateIndexCatalog(indexName, table.getTableName(), attr.getAttributeName());
+					if (p_indexManager->keyExists(indexName, *it))
+					{
+						return QueryResult(Fail, CatalogError("Duplicate primary or unique key"));
+					} 
+				}
+				//如果已经有索引，保证值不重复
+				else
+				{
+					string idxName = p_catalogManager->GetIndexInfo(table.getTableName(), attr.getAttributeName()).IndexName;
+					if (p_indexManager->keyExists(idxName, *it))
+					{
+						return QueryResult(Fail, CatalogError("Duplicate primary or unique key"));
+					}
+				}
+			}
+			it++;
+		}
 
-		//在数据表中插入
+
 		auto address = p_recordManager->insertValues(table, values);
 
 		//更新索引中的信息
@@ -290,6 +293,10 @@ QueryResult API::Select(const list<string> attributes, const string& tableName, 
 		//否则使用索引来select,如果有多个带索引的attribute，用第一个
 		auto useIndexInfo = p_catalogManager->GetIndexInfo(tableName, indexedAttrsInCondition[0]);
 		QueryResult res = p_indexManager->selectValues(useIndexInfo.IndexName,attributes,table,conditions,tableName);
+		for (auto& attr : attributes)
+			cout << attr << " ";
+		cout << endl;
+		res.PrintRecords();
 
 		auto end = clock();
 		auto time = ((double)end - (double)start) / CLOCKS_PER_SEC;

@@ -1,4 +1,3 @@
-
 create table student2(
 sid char(10),
 sname char(20) unique,
@@ -7,6 +6,7 @@ dept_name char(8),
 gpa float,
 primary key (sid)
 );
+
 
 insert into student2 values ('st01','zhangsan',25,'se',1.14514);
 
