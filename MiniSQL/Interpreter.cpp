@@ -369,8 +369,35 @@ void Interpreter::executeFile(const string & fileName)
 	}
 	if (errorFlag)
 		throw runtime_error(errorInfo.substr(0, errorInfo.size() - 1));
-	check();
-	execute();
+	//check();
+	//execute();
+	check_execute();
+}
+
+void Interpreter::check_execute() {
+	for (auto& vsb : vStatementBlock) {
+		try {
+			vsb->check();
+		}
+		catch (exception& e) {
+			vStatementBlock.clear();
+			throw CatalogError(e.what());
+		}
+
+		try {
+			rets.push_back(vsb->execute());
+		}
+		catch (exception& e) {
+			cout << e.what();
+			vStatementBlock.clear();
+			throw runtime_error(e.what());
+		}
+		catch (Quit& q) {
+			throw Quit();
+
+		}
+	}
+	vStatementBlock.clear();
 }
 
 

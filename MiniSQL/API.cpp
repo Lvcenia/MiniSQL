@@ -283,20 +283,14 @@ QueryResult API::Select(const list<string> attributes, const string& tableName, 
 			auto time = ((double)end - (double)start) / CLOCKS_PER_SEC;
 			res.execTime = time;
 			res.showRocords = true;
-			for (auto& attr : attributes)
-				cout << attr << " ";
-			cout << endl;
-			res.PrintRecords();
+			//res.PrintRecords();
 
 			return res;
 		}
 		//否则使用索引来select,如果有多个带索引的attribute，用第一个
 		auto useIndexInfo = p_catalogManager->GetIndexInfo(tableName, indexedAttrsInCondition[0]);
 		QueryResult res = p_indexManager->selectValues(useIndexInfo.IndexName,attributes,table,conditions,tableName);
-		for (auto& attr : attributes)
-			cout << attr << " ";
-		cout << endl;
-		res.PrintRecords();
+
 
 		auto end = clock();
 		auto time = ((double)end - (double)start) / CLOCKS_PER_SEC;

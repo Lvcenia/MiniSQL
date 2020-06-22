@@ -160,6 +160,14 @@ QueryResult RecordManager::selectValues(const vector<string>& attributes, const 
 	int recordLength = tableInfo.getRecordLength();
 	ADDRESS tail = *((int*)(bufferManager->fetchARecord(tableInfo.getTableName(), 0)));
 	RecordIterator it(recordLength, tail);
+	string tableheader;
+	for (auto attr : attributes)
+	{
+		tableheader += attr;
+		tableheader += " | ";
+	}
+	tableheader += '\n';
+	rb.addContent(tableheader);
 	while (it.hasNext()) {
 		auto buffer = bufferManager->fetchARecord(tableInfo.getTableName(), it.value());
 		char check[8];
@@ -187,7 +195,7 @@ QueryResult RecordManager::selectValues(const vector<string>& attributes, const 
 				string res = "";
 				for (auto attributeName : attributes) {
 					res.append(values[attributeName]);
-					res.append(" ");
+					res.append(" | ");
 				}
 				rb.addContent(res);
 			}

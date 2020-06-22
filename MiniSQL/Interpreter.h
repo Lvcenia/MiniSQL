@@ -41,6 +41,7 @@ private:
 	void deleteParser(Iterator& begin, Iterator end);
 	void quitParser(Iterator& begin, Iterator end);
 	void execfileParser(Iterator& begin, Iterator end);
+	void check_execute();
 
 private:
 	std::vector<std::shared_ptr<StatementBlock>> vStatementBlock;// 各类语句信息类的指针集

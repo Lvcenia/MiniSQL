@@ -478,6 +478,7 @@ QueryResult SelectBlock::execute()
 	//else {
 
 		QueryResult ret = api->Select(attributes, tableName, exps);
+		ret.showRocords = true;
 		//api->selectValuesCmd(attributes, tableName, exps, ip->getRecordBuffer());
 
 		

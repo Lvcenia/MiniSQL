@@ -93,7 +93,13 @@ public:
 	RecordBuffer();
 	RecordBuffer(const vector<string>& content);
 	// 拷贝构造, 似乎是这样写拷贝构造的吧
-	RecordBuffer(const RecordBuffer& that) { content = vector<string>(that.content); }
+	RecordBuffer(const RecordBuffer& that) { 
+		for (auto iter : that.content)
+		{
+			content.push_back(iter);
+		}
+		
+	}
 	~RecordBuffer();
 	void output();//简易输出
 	void addContent(string info);//追加内容
@@ -127,7 +133,7 @@ public:
 	// 拷贝构造，方便interpreter 操作 （哈哈）add by dgz
 	QueryResult(const QueryResult& that) : state(that.state),content(that.content),
 	                        affectedRows(that.affectedRows),execTime(that.execTime),
-		                    records(that.records) {}
+		                    records(that.records),showRocords(that.showRocords) {}
 	//出错时用这个
 	QueryResult(QueryState state, exception e = exception(""))
 	{
