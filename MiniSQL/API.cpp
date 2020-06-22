@@ -73,10 +73,9 @@ QueryResult API::CreateIndex(const string & indexName, const string& tableName, 
 	{
 		auto start = clock();
 		Table table = Table(p_catalogManager->GetTableHeader(tableName));
-		cout << table.getAttributes().size() << table.getAttributes()[0].getAttributeName();
+
 		for (auto attr : table.getAttributes())
 		{
-			cout << attr.getAttributeName();
 			//the attribute you create index on
 			if (attributeName == attr.getAttributeName() )
 			{
@@ -102,7 +101,6 @@ QueryResult API::CreateIndex(const string & indexName, const string& tableName, 
 				else
 				{
 					//create the index via index manager
-					cout << table.getRecordLength();
 					p_indexManager->createIndex(indexName, attr, table.getRecordLength(), tableName);
 					//write the index info into catalog
 					p_catalogManager->CreateIndexCatalog(indexName, tableName, attributeName);
