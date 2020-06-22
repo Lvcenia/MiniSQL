@@ -20,7 +20,7 @@ IndexManager::~IndexManager()
 		SaveToFile(pair.first);
 		delete pair.second;
 	}
-	if(bufferManager!=nullptr) delete bufferManager;
+	//if(bufferManager!=nullptr) delete bufferManager;
 }
 
 const QueryResult & IndexManager::createIndex(const string & indexName, Attribute & attribute, const int & recordLength, const string & fileName)
