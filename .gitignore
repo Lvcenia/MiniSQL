@@ -260,3 +260,5 @@ paket-files/
 __pycache__/
 *.pyc
 *.data
+MiniSQL_Out/MiniSQL.iobj
+MiniSQL_Out/MiniSQL.ipdb

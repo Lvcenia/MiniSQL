@@ -25,7 +25,7 @@ BOOL WINAPI QuitHandler(DWORD dwCtrlType) {
 //主函数
 int main()
 {
-	//SetConsoleCtrlHandler(QuitHandler, TRUE);
+	SetConsoleCtrlHandler(QuitHandler, TRUE);
 
 
 
