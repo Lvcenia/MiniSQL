@@ -13,8 +13,10 @@ BOOL WINAPI QuitHandler(DWORD dwCtrlType) {
 	if (dwCtrlType == CTRL_CLOSE_EVENT) {
 		// 控制台将要被关闭,将内容写入到磁盘中
 		auto bfm = BufferManager::getBufferManager();
-		if(bfm != nullptr)
-		delete bfm;
+		if (bfm != nullptr) {
+			bfm->saveDataForcedly();
+		}
+		
 		return FALSE;
 	}
 

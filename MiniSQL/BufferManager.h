@@ -78,6 +78,7 @@ public:
 	void setBlockPinned(int index);
 	void setBlockNotPinned(int index);
 	static BufferManager* getBufferManager();
+	void saveDataForcedly(); //强制保存数据,非异常情况请勿调用
 };
 
 #endif

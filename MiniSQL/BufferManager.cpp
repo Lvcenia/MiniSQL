@@ -28,6 +28,21 @@ BufferManager::~BufferManager()
 	delete[] blocks;
 }
 
+void BufferManager::saveDataForcedly()
+{
+	//将缓冲区中的数据全部写入磁盘
+	for (int i = 0; i < BLOCKNUM; i++)
+	{
+		if (blocks[i].isDirtyBit()) {
+			writeABlock(i);
+		}
+	}
+	//关闭当前文件
+	if (cur_file != NULL) {
+		fclose(cur_file);
+	}
+}
+
 //返回一个静态BufferManager对象的指针
 BufferManager* BufferManager::getBufferManager()
 {
