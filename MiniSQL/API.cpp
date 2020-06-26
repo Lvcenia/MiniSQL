@@ -1,5 +1,7 @@
 ﻿#include "API.h"
 
+
+//初始化
 API::API()
 {
 	this->p_recordManager = RecordManager::getRecordMangerPtr();
@@ -25,6 +27,8 @@ API* API::getInstance()
 
 }
 
+
+//创建表
 QueryResult API::CreateTable(Table & table)
 {
 	try
@@ -67,6 +71,7 @@ QueryResult API::CreateTable(Table & table)
 }
 
 
+//创建索引
 QueryResult API::CreateIndex(const string & indexName, const string& tableName, const string& attributeName)
 {
 	try
@@ -121,6 +126,7 @@ QueryResult API::CreateIndex(const string & indexName, const string& tableName, 
 	}
 }
 
+//删除表
 QueryResult API::DropTable(const string & tableName)
 {
 	try
@@ -147,6 +153,7 @@ QueryResult API::DropTable(const string & tableName)
 }
 
 
+//删除索引
 QueryResult API::DropIndex(const string indexName, const string & tableName, const string & attributeName)
 {
 	try
@@ -169,6 +176,7 @@ QueryResult API::DropIndex(const string indexName, const string & tableName, con
 	}
 }
 
+//插入数据
 QueryResult API::InsertValuesInto(const string & tableName, const vector<string>& values)
 {
 	try
@@ -191,7 +199,6 @@ QueryResult API::InsertValuesInto(const string & tableName, const vector<string>
 					p_catalogManager->CreateIndexCatalog(indexName, table.getTableName(), attr.getAttributeName());
 					if (p_indexManager->keyExists(indexName, *it))
 					{
-						//cout << "Duplicate primary or unique key : " + *it;
 						return QueryResult(Fail, &exception(string("Duplicate primary or unique key : " + *it).c_str()));
 					} 
 				}
@@ -201,7 +208,6 @@ QueryResult API::InsertValuesInto(const string & tableName, const vector<string>
 					string idxName = p_catalogManager->GetIndexInfo(table.getTableName(), attr.getAttributeName()).IndexName;
 					if (p_indexManager->keyExists(idxName, *it))
 					{
-						//cout << "Duplicate primary or unique key : " + *it;
 						return QueryResult(Fail, &CatalogError(string("Duplicate primary or unique key : " + *it).c_str()));
 					}
 				}
@@ -382,14 +388,14 @@ QueryResult API::DeleteFromTableWhere(const string& tableName, const list<Expres
 			conditions.push_back(expr_to_Condition(expr));
 		}
 		string useIndexAttr, useIndexname;
-		//如果条件里面的属性有索引，用第一个索引来删
-		if (indexedAttrsInCondition.size() >= 1)
+		//如果条件里面的属性恰有一个索引，用它来删
+		if (indexedAttrsInCondition.size() == 1)
 		{
 			useIndexAttr = indexedAttrsInCondition[0];
 			useIndexname = p_catalogManager->GetIndexInfo(tableName, useIndexAttr).IndexName;
 		}
 
-		//如果没有条件，或者条件里的属性没有索引,用主键删
+		//如果没有条件，或者条件里的属性索引数不是1,用主键删
 		if (conditions.size() < 1 || indexedAttrsInCondition.size() < 1)
 		{
 			for (auto& attr : table.getAttributes())
@@ -402,9 +408,10 @@ QueryResult API::DeleteFromTableWhere(const string& tableName, const list<Expres
 			}
 		}
 
-		p_indexManager->deleteValues(useIndexname, indexlist, conditions, tableName, table.getRecordLength());
+		//去掉当前索引名以适应函数接口
+		indexlist.remove(useIndexname);
 		QueryResult res = p_recordManager->deleteValues(table, conditions);
-		//QueryResult res = p_recordManager->deleteValues(table, conditions);
+		p_indexManager->deleteValues(useIndexname, indexlist, conditions, tableName, table.getRecordLength());
 
 		auto end = clock();
 		auto time = ((double)end - (double)start) / CLOCKS_PER_SEC;

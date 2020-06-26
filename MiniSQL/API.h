@@ -14,25 +14,25 @@ class API
 {
 
 public:
-	API();
+	API();//构造函数和初始化
 	~API();
-	static API* getInstance();
-	QueryResult CreateTable(Table& table);
-	QueryResult CreateIndex(const string& indexName, const string& tableName, const string& attributeName);
-	QueryResult DropTable(const string& tableName);
-	QueryResult DropIndex(const string indexName,const string& tableName,const string& attributeName);
-	QueryResult InsertValuesInto(const string& tableName,const vector<string>& values);
-	QueryResult Select(const list<string> attributes,const string& tableName, const list<Expression>& exprs);
-	QueryResult DeleteFromTable(const string& tableName);
-	QueryResult DeleteFromTableWhere(const string& tableName, const list<Expression>& exprs);
+	static API* getInstance();//单例的接口
+	QueryResult CreateTable(Table& table);//创建表
+	QueryResult CreateIndex(const string& indexName, const string& tableName, const string& attributeName);//创建索引
+	QueryResult DropTable(const string& tableName);//删除表
+	QueryResult DropIndex(const string indexName,const string& tableName,const string& attributeName);//删除索引
+	QueryResult InsertValuesInto(const string& tableName,const vector<string>& values);//插入数据
+	QueryResult Select(const list<string> attributes,const string& tableName, const list<Expression>& exprs);//选择
+	QueryResult DeleteFromTable(const string& tableName);//全表删除
+	QueryResult DeleteFromTableWhere(const string& tableName, const list<Expression>& exprs);//条件删除
 
 
 private:
 	CatalogManager* p_catalogManager;
 	IndexManager* p_indexManager;
 	RecordManager* p_recordManager;
-	OP OPERATOR_to_OP(OPERATOR o);
-	Condition expr_to_Condition(const Expression& expr);
+	OP OPERATOR_to_OP(OPERATOR o);//两个操作符枚举的转换
+	Condition expr_to_Condition(const Expression& expr);//Expression类到Condition类的转换
 
 };
 

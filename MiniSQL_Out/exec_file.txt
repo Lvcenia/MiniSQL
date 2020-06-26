@@ -1,3 +1,5 @@
+drop table student;
+
 create table student2(
 sid char(10),
 sname char(20) unique,
