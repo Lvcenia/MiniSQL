@@ -135,12 +135,28 @@ public:
 	                        affectedRows(that.affectedRows),execTime(that.execTime),
 		                    records(that.records),showRocords(that.showRocords) {}
 	//出错时用这个
-	QueryResult(QueryState state, exception e = exception(""))
+	QueryResult(QueryState state, std::exception e)
 	{
+		this->records = RecordBuffer();
 		stringstream fmt;
+		this->state = state;
 		switch (this->state)
 		{
-		case Fail:fmt << "Query Failed " << e.what();
+		case Fail:fmt << "Query Failed " << (&e)->what();
+			this->content = fmt.str();
+		default:
+			break;
+		}
+	}
+
+	QueryResult(QueryState state, std::exception* e)
+	{
+		this->records = RecordBuffer();
+		stringstream fmt;
+		this->state = state;
+		switch (this->state)
+		{
+		case Fail:fmt << "Query Failed " << e->what();
 			this->content = fmt.str();
 		default:
 			break;
@@ -163,19 +179,25 @@ public:
 	void PrintRecords() {
 		if (showRocords)
 		{
+			if (this->records.getContent().size() <= 1)
+			{
+				cout << "No Records";
+				return;
+			}
+				
 			records.output();
 		}
 
 	}
 	
 public:
-	QueryState state;
+	QueryState state = Success;
 	//结果的内容
-	string content;
+	string content = "";
 	//影响的行数
-	int affectedRows;
+	int affectedRows = 0;
 	//query的执行时间
-	double execTime;
+	double execTime = 0;
 	// 查询的记录
 	RecordBuffer records;
 	bool showRocords = false;

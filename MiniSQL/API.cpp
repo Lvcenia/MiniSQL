@@ -29,7 +29,7 @@ QueryResult API::CreateTable(Table & table)
 {
 	try
 	{
-		cout << table.getRecordLength();
+		//cout << table.getRecordLength();
 		auto start = clock();
 		//创建table.data数据文件
 		p_recordManager->createTable(table);
@@ -80,7 +80,9 @@ QueryResult API::CreateIndex(const string & indexName, const string& tableName, 
 			if (attributeName == attr.getAttributeName() )
 			{
 				if(! (attr.isPrimary() || attr.isUniqueKey()))
-					return QueryResult(Fail, CatalogError("Attribute " + attributeName + " is not unique"));
+					return QueryResult(Fail, &CatalogError("Attribute " + attributeName + " is not unique"));
+				if (attr.isPrimary())
+					return QueryResult(Fail, &CatalogError("Please don't overwrite the primary key Index"));
 				if (p_catalogManager->IndexExist(tableName, attributeName))
 				{
 					string idxname = p_catalogManager->GetIndexInfo(tableName, attributeName).IndexName;
@@ -96,7 +98,7 @@ QueryResult API::CreateIndex(const string & indexName, const string& tableName, 
 					}
 					else
 					{
-						return QueryResult(Fail, CatalogError("Index on the same attribute exists"));
+						return QueryResult(Fail, &CatalogError("Index on the same attribute exists"));
 					}
 				}
 				else
@@ -189,7 +191,8 @@ QueryResult API::InsertValuesInto(const string & tableName, const vector<string>
 					p_catalogManager->CreateIndexCatalog(indexName, table.getTableName(), attr.getAttributeName());
 					if (p_indexManager->keyExists(indexName, *it))
 					{
-						return QueryResult(Fail, CatalogError("Duplicate primary or unique key"));
+						//cout << "Duplicate primary or unique key : " + *it;
+						return QueryResult(Fail, &exception(string("Duplicate primary or unique key : " + *it).c_str()));
 					} 
 				}
 				//如果已经有索引，保证值不重复
@@ -198,7 +201,8 @@ QueryResult API::InsertValuesInto(const string & tableName, const vector<string>
 					string idxName = p_catalogManager->GetIndexInfo(table.getTableName(), attr.getAttributeName()).IndexName;
 					if (p_indexManager->keyExists(idxName, *it))
 					{
-						return QueryResult(Fail, CatalogError("Duplicate primary or unique key"));
+						//cout << "Duplicate primary or unique key : " + *it;
+						return QueryResult(Fail, &CatalogError(string("Duplicate primary or unique key : " + *it).c_str()));
 					}
 				}
 			}
@@ -239,7 +243,6 @@ QueryResult API::InsertValuesInto(const string & tableName, const vector<string>
 /*Select 
 1.不使用索引：没有condition，或者condition中attribute没有索引
 2.使用索引：condition中的attribute有索引
-
 */
 QueryResult API::Select(const list<string> attributes, const string& tableName, const list<Expression>& exprs)
 {
@@ -289,7 +292,7 @@ QueryResult API::Select(const list<string> attributes, const string& tableName, 
 		}
 		//否则使用索引来select,如果有多个带索引的attribute，用第一个
 		auto useIndexInfo = p_catalogManager->GetIndexInfo(tableName, indexedAttrsInCondition[0]);
-		QueryResult res = p_indexManager->selectValues(useIndexInfo.IndexName,attributes,table,conditions,tableName);
+		QueryResult res(p_indexManager->selectValues(useIndexInfo.IndexName,attributes,table,conditions,tableName));
 
 
 		auto end = clock();
@@ -306,27 +309,6 @@ QueryResult API::Select(const list<string> attributes, const string& tableName, 
 	}
 }
 
-//这个Select废弃
-//QueryResult API::Select(const string& tableName, const list<Expression>& exprs)
-//{
-//	try
-//	{
-//		Table table = Table(p_catalogManager->GetTableHeader(tableName));
-//
-//		vector<Condition> conditions;
-//		for (auto expr : exprs) {
-//
-//			conditions.push_back(expr_to_Condition(expr));
-//		}
-//		QueryResult res = p_recordManager->selectValues(table, conditions);
-//		res.showRocords = true;
-//		return res;
-//	}
-//	catch (const std::exception& e)
-//	{
-//		return QueryResult(Fail, e);
-//	}
-//}
 
 
 //删除表中所有值
@@ -399,27 +381,35 @@ QueryResult API::DeleteFromTableWhere(const string& tableName, const list<Expres
 			}
 			conditions.push_back(expr_to_Condition(expr));
 		}
-		//如果没有condition 或者where里的attr没有索引 索引用主键删
+		string useIndexAttr, useIndexname;
+		//如果条件里面的属性有索引，用第一个索引来删
+		if (indexedAttrsInCondition.size() >= 1)
+		{
+			useIndexAttr = indexedAttrsInCondition[0];
+			useIndexname = p_catalogManager->GetIndexInfo(tableName, useIndexAttr).IndexName;
+		}
+
+		//如果没有条件，或者条件里的属性没有索引,用主键删
 		if (conditions.size() < 1 || indexedAttrsInCondition.size() < 1)
 		{
-			p_indexManager->deleteValues(p_catalogManager->GetIndexInfo(tableName, primaryKey).IndexName, list<string>(), indexlist, tableName, table.getRecordLength());
-			QueryResult res = p_recordManager->selectValues(attrVec, table, conditions);
-			auto end = clock();
-			auto time = ((double)end - (double)start) / CLOCKS_PER_SEC;
-			res.execTime = time;
-			res.showRocords = true;
-
-			return res;
+			for (auto& attr : table.getAttributes())
+			{
+				if (attr.isPrimary())
+				{
+					useIndexname = p_catalogManager->GetIndexInfo(tableName, attr.getAttributeName()).IndexName;
+					break;
+				}
+			}
 		}
-		//否则用第一个索引来删
-		auto useIndexname = *indexlist.begin();
-		QueryResult res = p_indexManager->deleteValues(useIndexname, indexlist, conditions, tableName, table.getRecordLength());
+
+		p_indexManager->deleteValues(useIndexname, indexlist, conditions, tableName, table.getRecordLength());
+		QueryResult res = p_recordManager->deleteValues(table, conditions);
+		//QueryResult res = p_recordManager->deleteValues(table, conditions);
 
 		auto end = clock();
 		auto time = ((double)end - (double)start) / CLOCKS_PER_SEC;
 		res.execTime = time;
-		res.showRocords = true;
-
+		
 		return res;
 	}
 	catch (const std::exception& e)

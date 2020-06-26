@@ -30,32 +30,10 @@ int main()
 	SetConsoleCtrlHandler(QuitHandler, TRUE);
 
 
-
-	//RecordBuffer recordBuffer(); // 把它放这里似乎有些不妥，不如放在QueryResult里
-
-	//创建几个Manager对象并各自初始化
-	//CatalogManager catalogManager;
-	//IndexManager indexManager;
-	//RecordManager recordManager;
-	//BufferManager bufferManager;
 	Interpreter interpreter;
-
-	//API api;
 
 
 	cout << "------------------------ Welcome to MiniSQL! -------------------------" << endl;
-
-	//string userInput;
-	////接收输入、调用Interpreter处理输入、显示处理结果的循环
-
-	//while (1)
-	//{
-	//	cout << "MiniSql->>";
-	//	getline(cin, userInput, ';');
-	//	//QueryResult res =  interperter.execSql(userInput);
-	//	//cout << res.content;
-
-	//}
 
 	string sql;
 	bool changesentence = 1;

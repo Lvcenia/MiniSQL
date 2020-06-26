@@ -23,21 +23,21 @@ IndexManager::~IndexManager()
 	//if(bufferManager!=nullptr) delete bufferManager;
 }
 
-const QueryResult & IndexManager::createIndex(const string & indexName, Attribute & attribute, const int & recordLength, const string & fileName)
+QueryResult IndexManager::createIndex(const string & indexName, Attribute & attribute, const int & recordLength, const string & fileName)
 {
 	auto start = clock();
 	auto index = new BPTree(indexName, attribute, fileName);
 	bufferManager->newFile(indexName);
 	indexDictionary.insert(pair<string, BPTree*>(indexName, index));
 	auto endOffset = this->getEndOffset(fileName);
-	cout << fileName << " recordOffset: " << HEADER_BLOCK_OFFSET << " endOffset: " << endOffset;
+
 	for (ADDRESS recordOffset = HEADER_BLOCK_OFFSET; recordOffset < endOffset; recordOffset += recordLength)
 	{
 		if ((recordOffset / 4096 + 1) * 4096 - recordOffset < recordLength&&recordOffset % 4096 != 0)
 			recordOffset = (recordOffset / 4096 + 1) * 4096;/*eliminate the tail of a block*/
 		auto recordData = bufferManager->fetchARecord(fileName, recordOffset + attribute.getOffset());/*point to the start of the attribute*/
 		char* key = new char[sizeof(recordData)];
-		cout << sizeof(recordData);
+
 		memcpy(key, recordData, sizeof(recordData));
 		string keyVal(key);
 		delete []key;
@@ -50,7 +50,7 @@ const QueryResult & IndexManager::createIndex(const string & indexName, Attribut
 	return QueryResult(Success, 0, time, rb);
 }
 
-const QueryResult & IndexManager::dropIndex(const string & indexName)
+QueryResult IndexManager::dropIndex(const string & indexName)
 {
 	auto start = clock();
 	delete indexDictionary[indexName];
@@ -64,7 +64,7 @@ const QueryResult & IndexManager::dropIndex(const string & indexName)
 	return QueryResult(Success, 0, time, rb);
 }
 
-const QueryResult & IndexManager::deleteValues(const string & indexName, const list<string>& indexList, vector<Condition> conditions, const string & fileName, const int & recordLength)
+QueryResult IndexManager::deleteValues(const string & indexName, const list<string>& indexList, vector<Condition> conditions, const string & fileName, const int & recordLength)
 {
 	auto start = clock();
 	auto currentIndex = indexDictionary[indexName];
@@ -200,7 +200,7 @@ const QueryResult & IndexManager::deleteValues(const string & indexName, const l
 	}
 }
 
-const QueryResult& IndexManager::deleteValues(const string& primaryIndexName, const list<string>& primaryKeyValues, const list<string>& indexList, const string& fileName, const int recordLength)
+QueryResult IndexManager::deleteValues(const string& primaryIndexName, const list<string>& primaryKeyValues, const list<string>& indexList, const string& fileName, const int recordLength)
 {
 	auto start = clock();
 	for (auto keyValue : primaryKeyValues) {
@@ -212,7 +212,7 @@ const QueryResult& IndexManager::deleteValues(const string& primaryIndexName, co
 	return QueryResult(Success, primaryKeyValues.size(), time, rb);
 }
 
-const QueryResult& IndexManager::deleteValuesAll(const string& indexName)
+QueryResult IndexManager::deleteValuesAll(const string& indexName)
 {
 	auto start = clock();
 	indexDictionary[indexName]->Clear();
@@ -223,11 +223,20 @@ const QueryResult& IndexManager::deleteValuesAll(const string& indexName)
 	return QueryResult(Success, 0, time, rb);
 }
 
-const QueryResult& IndexManager::selectValues(const string& indexName, const list<string>& attributes, Table& table, vector<Condition> conditions, const string& fileName)
+QueryResult IndexManager::selectValues(const string& indexName, const list<string>& attributes, Table& table, vector<Condition> conditions, const string& fileName)
 {
 	auto start = clock();
 	auto currentIndex = indexDictionary[indexName];
 	RecordBuffer rb;
+	string tableheader;
+	for (auto attr : attributes)
+	{
+		tableheader += attr;
+		tableheader += " | ";
+	}
+	tableheader += '\n';
+	rb.addContent(tableheader);
+
 	if (conditions.size() != 0) {
 		auto res = Condition::GetMinimalConditoins(conditions, currentIndex->GetType());
 		if (res) {
@@ -330,7 +339,7 @@ const QueryResult& IndexManager::selectValues(const string& indexName, const lis
 	}
 }
 
-const QueryResult& IndexManager::insertValues(const string& indexName, string indexKey, const ADDRESS& recordOffset)
+QueryResult IndexManager::insertValues(const string& indexName, string indexKey, const ADDRESS& recordOffset)
 {
 	auto start = clock();
 	indexDictionary[indexName]->Insert(indexKey, recordOffset);
@@ -470,7 +479,7 @@ void IndexManager::PushToRecordBuffer(const list<string> attributes, const Table
 	string res = "";
 	for (auto val : buffVec) {
 		res.append(val);
-		res.append(" ");
+		res.append(" | ");
 	}
 	recordBuffer.addContent(res);
 }

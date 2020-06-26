@@ -23,7 +23,6 @@ public:
 	QueryResult DropIndex(const string indexName,const string& tableName,const string& attributeName);
 	QueryResult InsertValuesInto(const string& tableName,const vector<string>& values);
 	QueryResult Select(const list<string> attributes,const string& tableName, const list<Expression>& exprs);
-	//QueryResult Select(const string& tableName, const list<Expression>& exprs);
 	QueryResult DeleteFromTable(const string& tableName);
 	QueryResult DeleteFromTableWhere(const string& tableName, const list<Expression>& exprs);
 
@@ -34,8 +33,6 @@ private:
 	RecordManager* p_recordManager;
 	OP OPERATOR_to_OP(OPERATOR o);
 	Condition expr_to_Condition(const Expression& expr);
-
-
 
 };
 

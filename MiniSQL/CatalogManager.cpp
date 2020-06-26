@@ -28,7 +28,7 @@ CatalogManager::~CatalogManager() {
 }
 /*******************************/
 string CatalogManager::PrimaryKeyIndex(TableHeader table) {
-    return "PRIKEY_" + (std::string)table.tableName;
+    return "$PRIKEY_" + (std::string)table.tableName;
 }
 
 
@@ -60,7 +60,7 @@ QueryResult CatalogManager::CreateTableCatalog(const TableHeader& table) {
     catch (...) {
         CatalogError CE("error in CreateTableCatalog");
         throw CE;
-        return QueryResult(Fail, CE);
+        return QueryResult(Fail, &CE);
 
     }
     double end = clock();
@@ -80,7 +80,7 @@ QueryResult CatalogManager::DropTableCatalog(const std::string& TableName) {
     catch (...) {
         CatalogError CE("error in DropTableCatalog");
         throw CE;
-        return QueryResult(Fail, CE);
+        return QueryResult(Fail, &CE);
     }
     double end = clock();
     RecordBuffer BF;
@@ -98,7 +98,7 @@ QueryResult CatalogManager::CreateIndexCatalog(std::string IndexName, std::strin
     catch (...) {
         CatalogError CE("error in CreateIndexCatalog");
         throw CE;
-        return QueryResult(Fail, CE);
+        return QueryResult(Fail, &CE);
     }
     double end = clock();
     RecordBuffer BF;
@@ -252,7 +252,7 @@ QueryResult CatalogManager::DropLineFromFile(std::string FileName, std::string E
     catch (...) {
         CatalogError CE("error in DropLineFromFile");
         throw CE;
-        return QueryResult(Fail, CE);
+        return QueryResult(Fail, &CE);
     }
     double end = clock();
     RecordBuffer BF;

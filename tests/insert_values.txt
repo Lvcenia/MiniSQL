@@ -10,3 +10,15 @@ insert into student values ('st04','alice',25,'se',4.22);
 insert into student values ('st05','lixiuli',25,'cs',2.12);
 
 insert into student values ('st06','sakamoto',25,'se',3.98);
+
+insert into student values ('st07','tiger',25,'se',1.14514);
+
+insert into student values ('st08','bob',25,'se',2.33);
+
+insert into student values ('st09','kaito',25,'cs',3.65);
+
+insert into student values ('st10','alicia',25,'se',4.22);
+
+insert into student values ('st11','saga',25,'cs',2.12);
+
+insert into student values ('st12','saka',25,'se',3.98);
