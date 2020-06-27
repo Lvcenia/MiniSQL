@@ -22,7 +22,7 @@ void CreateTableBlock::check()
 	//if (pcb->isTableExist(table.getTableName()))
 	if (pcb->TableExist(table.getTableName()))
 
-		throw CatalogError("The table have already exist");
+		throw CatalogError("The table has already exist");
 
 	set<string> attrSet;
 

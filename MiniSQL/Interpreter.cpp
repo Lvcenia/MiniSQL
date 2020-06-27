@@ -96,7 +96,7 @@ void Interpreter::execute()
 		}
 	}
 	catch (exception& e) {
-		cout << e.what();
+		//cout << e.what();
 		vStatementBlock.clear();
 		throw runtime_error(e.what());
 	}
