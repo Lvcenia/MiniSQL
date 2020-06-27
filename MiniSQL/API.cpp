@@ -284,8 +284,8 @@ QueryResult API::Select(const list<string> attributes, const string& tableName, 
 			}
 			conditions.push_back(expr_to_Condition(expr));
 		}
-		//如果没有condition 或者where里的attr没有索引 直接用recordManager
-		if (conditions.size()<1 || indexedAttrsInCondition.size()< 1)
+		//如果没有condition 或者where里的attr索引数非1 直接用recordManager
+		if (conditions.size()<1 || indexedAttrsInCondition.size() != 1)
 		{
 			QueryResult res = p_recordManager->selectValues(attrVec, table, conditions);
 			auto end = clock();
